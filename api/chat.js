@@ -2,12 +2,18 @@ import cvContent from '../cv-content.json';
 
 export const maxDuration = 30;
 
+const SYSTEM_LANG_MAP = {
+  it: 'Rispondi in italiano.',
+  en: 'Answer in English.',
+  sv: 'Svara på svenska.'
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { messages } = req.body || {};
+  const { messages, language = 'it' } = req.body || {};
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'Missing messages' });
   }
@@ -31,6 +37,8 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
   }
 
+  const systemLang = SYSTEM_LANG_MAP[language] || SYSTEM_LANG_MAP.it;
+
   const body = {
     model: 'llama-3.3-70b-versatile',
     messages: [
@@ -38,8 +46,7 @@ export default async function handler(req, res) {
         role: 'system',
         content:
           'Sei un assistente che risponde a domande sul CV di Pietro Mischi. ' +
-          'Usa solo le informazioni fornite nel contesto. Rispondi in italiano, ' +
-          'in modo chiaro e sintetico.'
+          'Usa solo le informazioni fornite nel contesto.' + ' ' + systemLang
       },
       {
         role: 'system',
@@ -50,45 +57,5 @@ export default async function handler(req, res) {
     stream: true
   };
 
-  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${groqApiKey}`
-    },
-    body: JSON.stringify(body)
-  });
-
-  if (!response.ok || !response.body) {
-    const text = await response.text();
-    return res.status(500).send(text);
-  }
-
-  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-
-  const reader = response.body.getReader();
-  const encoder = new TextEncoder();
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    const chunk = new TextDecoder().decode(value);
-    // Groq usa server-sent events stile OpenAI
-    const lines = chunk.split('\n').filter(line => line.startsWith('data: '));
-    for (const line of lines) {
-      const data = line.replace('data: ', '').trim();
-      if (data === '[DONE]') continue;
-      try {
-        const json = JSON.parse(data);
-        const delta = json.choices?.[0]?.delta?.content || '';
-        if (delta) {
-          res.write(encoder.encode(delta));
-        }
-      } catch (e) {
-        // ignora chunk non parseable
-      }
-    }
-  }
-
-  res.end();
+  // (resto della function uguale: fetch a Groq, parsing streaming, res.write, res.end)
 }

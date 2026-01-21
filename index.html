@@ -2,73 +2,396 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Pietro Mischi - CV Chatbot</title>
+  <title>CV Chatbot – Pietro Mischi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 700px; margin: 20px auto; }
-    #chat { border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto; margin-bottom: 10px; }
-    .msg-user { background: #e0f2ff; padding: 6px 8px; margin: 4px 0; border-radius: 6px; }
-    .msg-assistant { background: #f1f5f9; padding: 6px 8px; margin: 4px 0; border-radius: 6px; }
-    #input-row { display: flex; gap: 6px; }
-    #input { flex: 1; padding: 8px; }
-    button { padding: 8px 12px; }
+    :root {
+      --bg: #0f172a;
+      --card: #0b1220;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 880px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
+      box-shadow:
+        0 18px 45px rgba(15, 23, 42, 0.8),
+        inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      padding: 20px 22px 18px;
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(15, 118, 188, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      font-size: 11px;
+      color: #e0f2fe;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+    }
+
+    select {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #020617;
+      color: var(--text);
+      padding: 5px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .reset-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(248, 113, 113, 0.6);
+      background: rgba(127, 29, 29, 0.4);
+      color: #fee2e2;
+      padding: 5px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+
+    .reset-btn:hover { background: rgba(185, 28, 28, 0.7); }
+    .reset-btn:active { transform: scale(0.97); }
+
+    .chat {
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #020617 0, #020617 55%);
+      padding: 12px 12px 10px;
+      height: 430px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .msg.user {
+      margin-left: auto;
+      background: linear-gradient(to right, #1d4ed8, #0ea5e9);
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+
+    .msg.bot {
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-bottom-left-radius: 2px;
+    }
+
+    .msg.meta {
+      align-self: center;
+      max-width: 100%;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      font-size: 11px;
+      border: 1px dashed rgba(148, 163, 184, 0.4);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 2px;
+    }
+
+    .input-shell {
+      flex: 1;
+      position: relative;
+    }
+
+    #input {
+      width: 100%;
+      padding: 10px 12px;
+      padding-right: 84px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+
+    #input::placeholder { color: #6b7280; }
+
+    .hint {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .send-btn {
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(to right, var(--accent-soft), #22c55e);
+      color: #0b1120;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 10px 22px rgba(8, 47, 73, 0.6);
+      transition: transform 0.06s ease, box-shadow 0.1s ease, filter 0.1s ease;
+    }
+
+    .send-btn:hover { filter: brightness(1.05); }
+    .send-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
+    }
+
+    @media (max-width: 640px) {
+      .shell { padding: 16px 14px 14px; }
+      .chat { height: 360px; }
+      .title { font-size: 18px; }
+      .controls { flex-wrap: wrap; justify-content: flex-end; }
+      .msg { max-width: 92%; }
+      #input { font-size: 13px; padding-right: 70px; }
+      .send-btn { padding: 8px 13px; font-size: 12px; }
+    }
   </style>
 </head>
 <body>
-  <h1>CV Chatbot – Pietro Mischi</h1>
-  <div id="chat"></div>
-  <div id="input-row">
-    <input id="input" placeholder="Chiedi qualcosa sul mio CV..." />
-    <button id="send-btn">Invia</button>
+  <div class="shell">
+    <div class="header">
+      <div class="title-block">
+        <div class="title">CV Chatbot – Pietro Mischi</div>
+        <div class="subtitle" id="subtitle">
+          Ask anything about my background in Banking &amp; Finance.
+        </div>
+      </div>
+      <div class="controls">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span id="model-label">Llama 3.3 · Groq</span>
+        </div>
+        <select id="language-select">
+          <option value="it">Italiano</option>
+          <option value="en">English</option>
+          <option value="sv">Svenska</option>
+        </select>
+        <button class="reset-btn" id="reset-btn">Reset chat</button>
+      </div>
+    </div>
+
+    <div id="chat" class="chat"></div>
+
+    <div class="input-row">
+      <div class="input-shell">
+        <input id="input" autocomplete="off" />
+        <div class="hint" id="hint-label">Invio ↵</div>
+      </div>
+      <button id="send-btn" class="send-btn">Invia</button>
+    </div>
   </div>
 
   <script>
     const chatEl = document.getElementById('chat');
     const inputEl = document.getElementById('input');
     const sendBtn = document.getElementById('send-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const langSelect = document.getElementById('language-select');
+    const subtitleEl = document.getElementById('subtitle');
+    const hintLabel = document.getElementById('hint-label');
 
-    let messages = JSON.parse(localStorage.getItem('cv_chat_messages') || '[]');
+    const STORAGE_KEY = 'cv_chat_messages_v2';
+
+    const uiText = {
+      it: {
+        subtitle: 'Chiedimi qualsiasi cosa sul mio percorso in Banking & Finance.',
+        placeholder: 'Chiedi qualcosa sul mio CV...',
+        send: 'Invia',
+        hint: 'Invio ↵',
+        resetConfirm: 'Vuoi davvero resettare la conversazione?',
+        systemLang: 'Rispondi in italiano.'
+      },
+      en: {
+        subtitle: 'Ask me anything about my Banking & Finance background.',
+        placeholder: 'Ask something about my CV…',
+        send: 'Send',
+        hint: 'Enter ↵',
+        resetConfirm: 'Do you really want to reset the conversation?',
+        systemLang: 'Answer in English.'
+      },
+      sv: {
+        subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
+        placeholder: 'Fråga något om mitt CV…',
+        send: 'Skicka',
+        hint: 'Enter ↵',
+        resetConfirm: 'Vill du verkligen återställa konversationen?',
+        systemLang: 'Svara på svenska.'
+      }
+    };
+
+    let currentLang = langSelect.value;
+    let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+    function applyLanguage() {
+      const t = uiText[currentLang];
+      subtitleEl.textContent = t.subtitle;
+      inputEl.placeholder = t.placeholder;
+      sendBtn.textContent = t.send;
+      hintLabel.textContent = t.hint;
+    }
 
     function render() {
-      chatEl.innerHTML = messages.map(m => `
-        <div class="${m.role === 'user' ? 'msg-user' : 'msg-assistant'}">
-          <strong>${m.role === 'user' ? 'Tu' : 'Bot'}:</strong> ${m.content}
-        </div>
-      `).join('');
+      chatEl.innerHTML = '';
+      if (!messages.length) {
+        const meta = document.createElement('div');
+        meta.className = 'msg meta';
+        meta.textContent = currentLang === 'it'
+          ? 'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.'
+          : currentLang === 'sv'
+          ? 'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.'
+          : 'Tips: ask about banking experience, technical skills or academic projects.';
+        chatEl.appendChild(meta);
+      } else {
+        for (const m of messages) {
+          const div = document.createElement('div');
+          div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
+          div.textContent = m.content;
+          chatEl.appendChild(div);
+        }
+      }
       chatEl.scrollTop = chatEl.scrollHeight;
-      localStorage.setItem('cv_chat_messages', JSON.stringify(messages.slice(-20)));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
     }
 
     async function send() {
       const text = inputEl.value.trim();
       if (!text) return;
       inputEl.value = '';
+
       messages.push({ role: 'user', content: text });
       render();
 
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages })
-      });
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages, language: currentLang })
+        });
 
-      const reader = res.body.getReader();
-      let assistantMsg = { role: 'assistant', content: '' };
-      messages.push(assistantMsg);
+        const reader = res.body.getReader();
+        let assistantMsg = { role: 'assistant', content: '' };
+        messages.push(assistantMsg);
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = new TextDecoder().decode(value);
-        assistantMsg.content += chunk;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = new TextDecoder().decode(value);
+          assistantMsg.content += chunk;
+          render();
+        }
+      } catch (err) {
+        assistantMsg.content += '\n[Error: connection failed]';
         render();
       }
     }
 
     sendBtn.onclick = send;
     inputEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter') send();
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        send();
+      }
     });
 
+    resetBtn.onclick = () => {
+      const t = uiText[currentLang];
+      if (!confirm(t.resetConfirm)) return;
+      messages = [];
+      localStorage.removeItem(STORAGE_KEY);
+      render();
+    };
+
+    langSelect.onchange = () => {
+      currentLang = langSelect.value;
+      applyLanguage();
+      render();
+    };
+
+    applyLanguage();
     render();
   </script>
 </body>
