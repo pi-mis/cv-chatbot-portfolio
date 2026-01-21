@@ -315,14 +315,9 @@
           hint: 'Invio ↵',
           resetConfirm: 'Vuoi davvero resettare la conversazione?',
           metaTips:
-            'Suggerimenti: chiedi delle esperienze in BDO, dei progetti quantitativi (Bitcoin fees, transizione energetica) o del volontariato con Legambiente.',
+            'Suggerimenti: chiedi delle esperienze in BDO, del Master a Stoccolma, o dei progetti accademici.',
           disclaimer:
             'Risposte generate con AI. Potrebbero contenere imprecisioni.',
-          suggestions: [
-            'Puoi spiegare il progetto sulle Bitcoin transaction fees?',
-            'Come hai analizzato le società legate alla transizione energetica globale?',
-            'In che modo il volontariato con Legambiente e le lingue che parli ti hanno fatto crescere?',
-          ],
         },
         en: {
           subtitle:
@@ -332,14 +327,9 @@
           hint: 'Enter ↵',
           resetConfirm: 'Do you really want to reset the conversation?',
           metaTips:
-            'Tips: ask about my work at BDO, my quantitative projects (Bitcoin fees, energy transition), or my volunteering with Legambiente and languages.',
+            'Tips: ask about my BDO experience, my Master in Stockholm, or academic projects.',
           disclaimer:
             'AI-generated answers. They may contain inaccuracies.',
-          suggestions: [
-            'Can you explain your project on Bitcoin transaction fees?',
-            'How did you analyze companies in the global energy transition?',
-            'How did your volunteering with Legambiente and your language skills shape you?',
-          ],
         },
         sv: {
           subtitle:
@@ -349,14 +339,9 @@
           hint: 'Enter ↵',
           resetConfirm: 'Vill du verkligen återställa konversationen?',
           metaTips:
-            'Tips: fråga om min erfarenhet på BDO, mina kvantitativa projekt (Bitcoin-avgifter, energiomställning) eller volontärarbete med Legambiente och mina språk.',
+            'Tips: fråga om min erfarenhet på BDO, min master i Stockholm eller akademiska projekt.',
           disclaimer:
             'Svar genereras av AI och kan innehålla fel.',
-          suggestions: [
-            'Kan du förklara projektet om Bitcoin-transaktionsavgifter?',
-            'Hur analyserade du bolag inom den globala energiomställningen?',
-            'Hur har volontärarbetet med Legambiente och dina språkformat dig?',
-          ],
         },
       };
 
@@ -370,22 +355,6 @@
         sendBtn.textContent = t.send;
         hintLabel.textContent = t.hint;
         disclaimerEl.textContent = t.disclaimer;
-        renderSuggestions();
-      }
-
-      function renderSuggestions() {
-        suggestionsEl.innerHTML = '';
-        const t = uiText[currentLang];
-        t.suggestions.forEach((text) => {
-          const btn = document.createElement('button');
-          btn.className = 'suggestion-btn';
-          btn.textContent = text;
-          btn.onclick = () => {
-            inputEl.value = text;
-            send();
-          };
-          suggestionsEl.appendChild(btn);
-        });
       }
 
       function render() {

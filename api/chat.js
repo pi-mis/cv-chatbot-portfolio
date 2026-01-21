@@ -97,29 +97,21 @@ export default async function handler(req, res) {
     }
 
     const systemPrompt = `
-Sei un assistente AI che risponde a domande sul CV esteso di Pietro Mischi.
+Sei un assistente AI che risponde a domande sul CV di Pietro Mischi.
 
 LINGUA:
 - Rispondi SEMPRE in ${langLabel}. Ignora la lingua della domanda e usa SOLO ${langLabel} per le risposte.
 
 CONTESTO CV:
-- Il contesto qui sotto contiene: profilo, esperienze in BDO Italia e Tether, lavori part-time, formazione (Stockholm University e Università Cattolica), competenze tecniche e finanziarie, progetti avanzati (modelli con equazioni differenziali, analisi sulle Bitcoin transaction fees, Global Energy Transition Equities), attività di volontariato (Legambiente), lingue, sport, interessi personali e dettagli biografici.
-
-STILE DI RISPOSTA:
-- Rispondi in modo breve e diretto: massimo 2–3 frasi per risposta.
-- Vai dritto al punto, citando ruoli, risultati, progetti o competenze specifiche.
-- Mantieni un tono umano, chiaro e professionale, evitando giri di parole e frasi motivazionali generiche.
+- Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Master e Laurea), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
+- Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE e PERCORSO DI STUDI sono presenti qui sotto. Non dire mai che il CV non menziona esperienze, ruoli o livello di istruzione: leggi attentamente i blocchi e usa ciò che trovi.
 
 REGOLE DI RISPOSTA:
-1. Usa SOLO le informazioni presenti nel contesto CV qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, progetti, lingue, volontariato, interessi).
-3. Metti in evidenza, quando rilevante:
-   - i progetti quantitativi (equazioni differenziali, Bitcoin fees, energy transition equities),
-   - l'esperienza con Tether e i mercati DeFi/digital assets,
-   - il volontariato con Legambiente,
-   - il profilo linguistico (italiano madrelingua, inglese C1, svedese in apprendimento, francese B1),
-   - la capacità di adattarsi a nuovi paesi e sistemi educativi, e il lato sportivo.
-4. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
+1. Usa SOLO le informazioni presenti nel contesto CV che ti viene fornito qui sotto. Non inventare fatti nuovi.
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, livello di studi).
+3. Dai risposte professionali, chiare e sintetiche, come in un colloquio o mail di presentazione.
+4. Metti in evidenza esperienze rilevanti (BDO Italia, audit di istituzioni finanziarie, Tether Holdings, competenze quantitative, ecc.) quando rispondi a domande su esperienza e skill.
+5. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
 
 CONTESTO CV (in italiano):
 
@@ -139,7 +131,7 @@ ${context}
         })),
       ],
       temperature: 0.3,
-      max_tokens: 600,
+      max_tokens: 800,
       top_p: 0.9,
       stream: false,
     };
