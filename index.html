@@ -52,7 +52,7 @@
       .header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
       }
 
@@ -60,6 +60,7 @@
         display: flex;
         flex-direction: column;
         gap: 4px;
+        flex: 1;
       }
 
       .title {
@@ -77,26 +78,6 @@
         display: flex;
         gap: 10px;
         align-items: center;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 999px;
-        padding: 4px 10px;
-        background: rgba(15, 118, 188, 0.14);
-        border: 1px solid rgba(56, 189, 248, 0.45);
-        font-size: 11px;
-        color: #e0f2fe;
-      }
-
-      .pill-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: #22c55e;
-        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
       }
 
       select {
@@ -118,6 +99,7 @@
         font-size: 12px;
         cursor: pointer;
         transition: background 0.15s ease, transform 0.05s ease;
+        white-space: nowrap;
       }
 
       .reset-btn:hover {
@@ -273,21 +255,36 @@
       }
 
       @media (max-width: 640px) {
-        .shell {
-          padding: 16px 14px 14px;
+        body {
+          padding: 12px;
         }
 
-        .chat {
-          height: 360px;
+        .shell {
+          padding: 14px 12px 12px;
+          border-radius: 14px;
+          gap: 10px;
+        }
+
+        .header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
         }
 
         .title {
-          font-size: 18px;
+          font-size: 19px;
+        }
+
+        .subtitle {
+          font-size: 12px;
         }
 
         .controls {
-          flex-wrap: wrap;
           justify-content: flex-end;
+        }
+
+        .chat {
+          height: 420px;
         }
 
         .msg {
@@ -318,10 +315,6 @@
           </div>
         </div>
         <div class="controls">
-          <div class="pill">
-            <span class="pill-dot"></span>
-            <span id="model-label">Llama 3.3 Groq</span>
-          </div>
           <select id="language-select">
             <option value="it">Italiano</option>
             <option value="en" selected>English</option>
