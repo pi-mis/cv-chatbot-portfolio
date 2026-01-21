@@ -91,7 +91,9 @@ export default async function handler(req, res) {
     const groqApiKey = process.env.GROQ_API_KEY;
 
     if (!groqApiKey) {
-      return res.status(500).json({ error: 'Missing GROQ_API_KEY configuration' });
+      return res
+        .status(500)
+        .json({ error: 'Missing GROQ_API_KEY configuration' });
     }
 
     const systemPrompt = `
@@ -113,7 +115,7 @@ STILE DI RISPOSTA:
 
 REGOLE DI RISPOSTA:
 1. Usa SOLO le informazioni presenti nel contesto CV qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, progetti, lingue, interessi).
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, progetti, lingue, interessi) e costruisci una risposta deduttiva ma credibile.
 3. Metti in evidenza, quando rilevante:
    - i progetti quantitativi (modelli con equazioni differenziali, analisi econometrica sulle Bitcoin fees, studio su Global Energy Transition Equities),
    - l'esperienza con Tether e i mercati DeFi/digital assets,
