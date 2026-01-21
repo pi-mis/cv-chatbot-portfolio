@@ -60,10 +60,31 @@ export default async function handler(req, res) {
 
     scoredChunks.sort((a, b) => b.score - a.score);
 
-    // Chunk rilevanti o fallback
-    let relevantChunks = scoredChunks.filter(c => c.score > 0).slice(0, 6);
+    // 1) chunk rilevanti per keyword
+    let relevantChunks = scoredChunks.filter(c => c.score > 0).slice(0, 5);
+
+    // 2) fallback se nessun match
     if (relevantChunks.length === 0) {
-      relevantChunks = scoredChunks.slice(0, 8);
+      relevantChunks = scoredChunks.slice(0, 5);
+    }
+
+    // 3) aggiungi SEMPRE profilo (id 1) e formazione (id 2 e 3) se non già presenti
+    const alwaysIncludeIds = [1, 2, 3];
+    const existingIds = new Set(relevantChunks.map(c => c.id));
+    alwaysIncludeIds.forEach(id => {
+      const already = existingIds.has(id);
+      if (!already) {
+        const found = cvContent.find(c => c.id === id);
+        if (found) {
+          relevantChunks.push(found);
+          existingIds.add(id);
+        }
+      }
+    });
+
+    // 4) limita a massimo 8 chunk
+    if (relevantChunks.length > 8) {
+      relevantChunks = relevantChunks.slice(0, 8);
     }
 
     const context = relevantChunks
@@ -88,15 +109,15 @@ LINGUA:
 - Rispondi SEMPRE in ${langNames[detectedLang]} perché l'utente sta scrivendo in ${langNames[detectedLang]}.
 
 CONTESTO CV:
-- Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
-- Tutte le informazioni necessarie sulle sue ESPERIENZE e COMPETENZE sono presenti qui sotto. Non dire mai che il CV non menziona esperienze o ruoli: leggi attentamente i blocchi e usa ciò che trovi.
+- Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Master e Laurea), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
+- Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE e PERCORSO DI STUDI sono presenti qui sotto. Non dire mai che il CV non menziona esperienze, ruoli o livello di istruzione: leggi attentamente i blocchi e usa ciò che trovi.
 
 REGOLE DI RISPOSTA:
 1. Usa SOLO le informazioni presenti nel contesto CV che ti viene fornito qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (es. tipo di ruoli, competenze, corsi).
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (es. tipo di ruoli, competenze, corsi, livello di studi).
 3. Dai risposte professionali, chiare e sintetiche, come in un colloquio o mail di presentazione.
 4. Metti in evidenza esperienze rilevanti (BDO Italia, audit di istituzioni finanziarie, Tether Holdings, competenze quantitative, ecc.) quando rispondi a domande su esperienza e skill.
-5. Non ripetere frasi come "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
+5. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
 
 CONTESTO CV (in italiano):
 ${context}
