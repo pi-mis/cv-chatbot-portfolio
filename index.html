@@ -363,7 +363,7 @@
           hint: 'Invio ↵',
           resetConfirm: 'Vuoi davvero resettare la conversazione?',
           metaTips:
-            'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche, dei progetti accademici o di come lavoro.',
+            'Suggerimenti: chiedi dei miei progetti quantitativi, dell’esperienza con Tether, delle Bitcoin fees, della transizione energetica, del volontariato o delle lingue che parlo.',
           disclaimer:
             'Risposte generate con AI. Possono contenere imprecisioni.',
         },
@@ -375,7 +375,7 @@
           hint: 'Enter ↵',
           resetConfirm: 'Do you really want to reset the conversation?',
           metaTips:
-            'Tips: ask about banking experience, technical skills, academic projects, or how I work.',
+            'Tips: ask about my quantitative projects, Tether experience, Bitcoin fee research, energy transition equities, volunteering, or the languages I speak.',
           disclaimer:
             'AI-generated answers. They may contain inaccuracies.',
         },
@@ -387,7 +387,7 @@
           hint: 'Enter ↵',
           resetConfirm: 'Vill du verkligen återställa konversationen?',
           metaTips:
-            'Tips: fråga om bankerfarenhet, tekniska färdigheter, akademiska projekt eller hur jag arbetar.',
+            'Tips: fråga om mina kvantitativa projekt, Tether-erfarenhet, Bitcoin-avgifter, energiomställningsaktier, volontärarbete eller vilka språk jag talar.',
           disclaimer:
             'Svar genereras med AI och kan innehålla fel.',
         },
@@ -413,44 +413,44 @@
         const baseSets = {
           it: [
             [
-              'Qual è la tua esperienza in Banking & Finance?',
-              'Quali progetti quantitativi hai sviluppato?',
+              'Puoi spiegare il progetto sulle Bitcoin transaction fees?',
+              'Raccontami del modello di domanda e offerta con equazioni differenziali.',
             ],
             [
-              'Che competenze tecniche utilizzi più spesso?',
-              'In che modo il tuo Master ti ha preparato al lavoro?',
+              'Come hai analizzato le società dell’energy transition?',
+              'Qual è stato l’aspetto più complesso dell’audit di Tether?',
             ],
             [
-              'Raccontami della tua esperienza in audit.',
-              'Hai lavorato anche con criptovalute o fintech?',
+              'In che modo il volontariato con Legambiente ti ha arricchito?',
+              'Come usi le lingue (IT, EN, SV, FR) nella tua vita accademica e lavorativa?',
             ],
           ],
           en: [
             [
-              'What is your experience in Banking & Finance?',
-              'Which quantitative projects have you worked on?',
+              'Can you explain your project on Bitcoin transaction fees?',
+              'Tell me about the supply–demand models with differential equations.',
             ],
             [
-              'What technical skills do you use most often?',
-              'How did your Master prepare you for your career?',
+              'How did you analyze companies in the global energy transition?',
+              'What was the most challenging part of auditing Tether?',
             ],
             [
-              'Tell me about your audit experience.',
-              'Have you worked with cryptocurrencies or fintech?',
+              'How did your volunteering with Legambiente shape you?',
+              'How do you use your languages (IT, EN, SV, FR) in study and work?',
             ],
           ],
           sv: [
             [
-              'Vad har du för erfarenhet inom Banking & Finance?',
-              'Vilka kvantitativa projekt har du gjort?',
+              'Kan du förklara projektet om Bitcoin-transaktionsavgifter?',
+              'Berätta om utbuds- och efterfrågemodellerna med differentialekvationer.',
             ],
             [
-              'Vilka tekniska färdigheter använder du oftast?',
-              'Hur har din master förberett dig för jobbet?',
+              'Hur analyserade du bolag inom energiomställningen?',
+              'Vad var svårast i revisionen av Tether?',
             ],
             [
-              'Berätta om din revisionserfarenhet.',
-              'Har du arbetat med kryptovalutor eller fintech?',
+              'Hur har volontärarbetet med Legambiente påverkat dig?',
+              'Hur använder du dina språk (IT, EN, SV, FR) i studier och arbete?',
             ],
           ],
         };
@@ -462,34 +462,41 @@
         const text = (lastBotMessage || '').toLowerCase();
         let followUp;
 
-        if (text.includes('tether') || text.includes('crypto')) {
+        if (text.includes('bitcoin') || text.includes('fee')) {
           followUp =
             lang === 'it'
-              ? 'Puoi approfondire la tua esperienza in Tether o nel mondo cripto?'
+              ? 'Che impatto pratico potrebbero avere le tue analisi sulle Bitcoin fees per utenti o aziende?'
               : lang === 'sv'
-              ? 'Kan du utveckla din erfarenhet på Tether eller inom krypto?'
-              : 'Can you elaborate on your experience at Tether or in crypto?';
-        } else if (text.includes('bdo') || text.includes('audit')) {
+              ? 'Vilken praktisk nytta kan dina analyser av Bitcoin-avgifter ha för användare eller företag?'
+              : 'What practical impact could your Bitcoin fee analysis have for users or businesses?';
+        } else if (text.includes('energy') || text.includes('transition')) {
           followUp =
             lang === 'it'
-              ? "Qual è stato il progetto di audit più sfidante?"
+              ? 'Quali tipi di aziende vedi meglio posizionate nella transizione energetica?'
               : lang === 'sv'
-              ? 'Vilket var ditt mest utmanande revisionsuppdrag?'
-              : 'What was your most challenging audit engagement?';
-        } else if (text.includes('master') || text.includes('university')) {
+              ? 'Vilka typer av bolag ser du som bäst positionerade i energiomställningen?'
+              : 'Which types of companies do you see best positioned in the energy transition?';
+        } else if (text.includes('volont') || text.includes('legambiente')) {
           followUp =
             lang === 'it'
-              ? 'Quali corsi del Master ti sono stati più utili?'
+              ? 'Che ruolo ti piacerebbe avere in futuri progetti di impatto sociale?'
               : lang === 'sv'
-              ? 'Vilka masterkurser har varit mest användbara för dig?'
-              : 'Which Master courses have been most useful for you?';
+              ? 'Vilken roll skulle du vilja ha i framtida sociala projekt?'
+              : 'What role would you like to have in future social-impact projects?';
+        } else if (text.includes('lingu') || text.includes('language')) {
+          followUp =
+            lang === 'it'
+              ? 'Come pensi che il mix di lingue ti aiuti in un team internazionale?'
+              : lang === 'sv'
+              ? 'Hur hjälper din språkmix dig i internationella team?'
+              : 'How do you think your language mix helps you in international teams?';
         } else {
           followUp =
             lang === 'it'
-              ? 'In che tipo di ruolo ti vedi nei prossimi anni?'
+              ? 'Qual è la sfida personale che ti ha fatto crescere di più?'
               : lang === 'sv'
-              ? 'Vilken typ av roll ser du dig själv i de kommande åren?'
-              : 'What kind of role do you see yourself in over the next few years?';
+              ? 'Vilken personlig utmaning har fått dig att växa mest?'
+              : 'What personal challenge has helped you grow the most?';
         }
 
         suggestionIndex += 1;
