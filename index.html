@@ -208,11 +208,17 @@
           filter 0.1s ease;
       }
 
-      .send-btn:hover {
+      .send-btn[disabled] {
+        opacity: 0.7;
+        cursor: default;
+        box-shadow: none;
+      }
+
+      .send-btn:hover:not([disabled]) {
         filter: brightness(1.05);
       }
 
-      .send-btn:active {
+      .send-btn:active:not([disabled]) {
         transform: translateY(1px);
         box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
       }
@@ -399,6 +405,7 @@
       // per suggerimenti dinamici
       let lastBotMessage = '';
       let suggestionIndex = 0;
+      let isLoading = false;
 
       function applyLanguage() {
         const t = uiText[currentLang];
@@ -417,8 +424,8 @@
               'Raccontami del modello di domanda e offerta con equazioni differenziali.',
             ],
             [
-              'Come hai analizzato le società dell’energy transition?',
-              'Qual è stato l’aspetto più complesso dell’audit di Tether?',
+              "Come hai analizzato le società dell'energy transition?",
+              "Qual è stato l'aspetto più complesso dell’audit di Tether?",
             ],
             [
               'In che modo il volontariato con Legambiente ti ha arricchito?',
@@ -545,10 +552,17 @@
       }
 
       async function send() {
+        if (isLoading) return;
+
         const text = inputEl.value.trim();
         if (!text) return;
 
+        isLoading = true;
         inputEl.value = '';
+
+        const t = uiText[currentLang];
+        sendBtn.disabled = true;
+        sendBtn.textContent = '...';
 
         messages.push({ role: 'user', content: text });
         render();
@@ -578,6 +592,10 @@
           messages.push(assistantMsg);
           lastBotMessage = assistantMsg.content || '';
           render();
+        } finally {
+          isLoading = false;
+          sendBtn.disabled = false;
+          sendBtn.textContent = uiText[currentLang].send;
         }
       }
 
