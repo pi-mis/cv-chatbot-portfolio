@@ -1,4 +1,4 @@
-import cvContent from '../cv-content.json' assert { type: 'json' };
+import cvContent from '../cv-content.json';
 
 export const config = {
   maxDuration: 30,
