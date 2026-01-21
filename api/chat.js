@@ -1,4 +1,5 @@
 import cvContent from '../cv-content.json';
+import { detect } from 'efficient-language-detector-js';
 
 export const maxDuration = 30;
 
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing messages' });
     }
 
-    // Ultimo messaggio dell'utente
+    // Ultimo messaggio dell'utente (per RAG)
     const userMsg = messages[messages.length - 1].content.toLowerCase();
 
     // Termini chiave (parole > 3 caratteri)
@@ -48,18 +49,17 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
     }
 
+    // Prima chiamata: risponde usando il contesto del CV
     const body = {
       model: 'llama-3.3-70b-versatile',
       messages: [
         {
           role: 'system',
           content:
-            'Sei un assistente che risponde a domande sul CV di Pietro Mischi. ' +
-            'Usa SOLO le informazioni fornite nel contesto del CV (in italiano). ' +
-            'La risposta deve essere nella STESSA lingua dell’ultima domanda dell’utente ' +
-            '(se l’utente scrive in inglese, rispondi in inglese; se scrive in svedese, rispondi in svedese; ecc.). ' +
-            'Non dire che non hai informazioni se nel contesto ci sono dettagli rilevanti: ' +
-            'in quel caso usa il contesto per dare la migliore risposta possibile.'
+            'Rispondi SEMPRE nella stessa lingua dell’ULTIMO messaggio dell’utente. ' +
+            'Se il messaggio è in inglese, rispondi in inglese; se è in italiano, rispondi in italiano; ' +
+            'se è in svedese, rispondi in svedese. ' +
+            'Sei un assistente che risponde a domande sul CV di Pietro Mischi usando SOLO il contesto fornito (in italiano).'
         },
         {
           role: 'system',
@@ -92,7 +92,53 @@ export default async function handler(req, res) {
     }
 
     const json = await response.json();
-    const answer = json.choices?.[0]?.message?.content || '';
+    let answer = json.choices?.[0]?.message?.content || '';
+
+    // Rilevamento lingua utente vs risposta
+    const userText = messages[messages.length - 1].content;
+    const userDetection = detect(userText);
+    const answerDetection = detect(answer);
+
+    const userLang = userDetection && userDetection.language;
+    const ansLang = answerDetection && answerDetection.language;
+
+    // Se le lingue non coincidono, chiedi una riscrittura nella lingua dell’utente
+    if (userLang && ansLang && userLang !== ansLang) {
+      const fixBody = {
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content:
+              `Riscrivi il seguente testo nella lingua con codice ISO 639-1 "${userLang}" ` +
+              '(mantieni il significato invariato).'
+          },
+          { role: 'user', content: answer }
+        ],
+        stream: false,
+        temperature: 0
+      };
+
+      const fixResp = await fetch(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqApiKey}`
+          },
+          body: JSON.stringify(fixBody)
+        }
+      );
+
+      if (fixResp.ok) {
+        const fixJson = await fixResp.json();
+        const fixed = fixJson.choices?.[0]?.message?.content;
+        if (fixed) {
+          answer = fixed;
+        }
+      }
+    }
 
     return res.status(200).json({ answer });
   } catch (err) {
