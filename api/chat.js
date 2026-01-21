@@ -1,11 +1,11 @@
-import cvContent from '../cv-content.json' assert { type: 'json' };
+import cvContent from '../cv-content.json';
 
 export const config = {
   maxDuration: 30,
 };
 
 export default async function handler(req, res) {
-  // CORS base
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -25,7 +25,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid messages format' });
     }
 
-    // Lingua dal selettore
     const langNames = {
       it: 'italiano',
       en: 'inglese',
@@ -33,17 +32,13 @@ export default async function handler(req, res) {
     };
 
     const detectedLang = langNames[language] ? language : 'en';
-
-    // Ultimo messaggio utente
     const userMessage = messages[messages.length - 1]?.content || '';
     const userMessageLower = userMessage.toLowerCase();
 
-    // Keyword dal messaggio
     const keywords = userMessageLower
       .split(/\W+/)
       .filter((w) => w.length > 3);
 
-    // Scoring dei chunk del CV
     const scoredChunks = cvContent.map((chunk) => {
       const chunkText = `${chunk.title} ${chunk.text}`.toLowerCase();
       let score = 0;
@@ -56,15 +51,12 @@ export default async function handler(req, res) {
 
     scoredChunks.sort((a, b) => b.score - a.score);
 
-    // 1) chunk rilevanti per keyword
     let relevantChunks = scoredChunks.filter((c) => c.score > 0).slice(0, 5);
 
-    // 2) fallback se nessun match
     if (relevantChunks.length === 0) {
       relevantChunks = scoredChunks.slice(0, 5);
     }
 
-    // 3) aggiungi SEMPRE profilo (1) + formazione (2,3)
     const alwaysIncludeIds = [1, 2, 3];
     const existingIds = new Set(relevantChunks.map((c) => c.id));
 
@@ -78,7 +70,6 @@ export default async function handler(req, res) {
       }
     });
 
-    // 4) limita a massimo 8 chunk
     if (relevantChunks.length > 8) {
       relevantChunks = relevantChunks.slice(0, 8);
     }
@@ -91,51 +82,39 @@ export default async function handler(req, res) {
     const groqApiKey = process.env.GROQ_API_KEY;
 
     if (!groqApiKey) {
-      return res
-        .status(500)
-        .json({ error: 'Missing GROQ_API_KEY configuration' });
+      console.error('GROQ_API_KEY not found in environment');
+      return res.status(500).json({ error: 'Missing API configuration' });
     }
 
-    const systemPrompt = `
-Sei un assistente AI che risponde a domande su Pietro Mischi, usando esclusivamente il suo CV esteso e le informazioni aggiuntive.
+    const systemPrompt = `Sei un assistente AI che risponde a domande su Pietro Mischi, usando esclusivamente il suo CV esteso e le informazioni aggiuntive.
 
 LINGUA:
 - Rispondi SEMPRE in ${langLabel}. Ignora la lingua della domanda e usa SOLO ${langLabel} per le risposte.
 
 CONTESTO CV:
 - Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Stockholm University e Università Cattolica), le competenze tecniche e finanziarie, i progetti avanzati (differential equations supply-demand models, analisi sulle Bitcoin transaction fees, energy transition equities), le lingue, le attività di volontariato, gli interessi personali (sport, letture, musica classica) e i dettagli personali di Pietro.
-- Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE, PROGETTI, LINGUE e PERCORSO DI VITA sono presenti qui sotto. Leggi attentamente i blocchi e usa ciò che trovi.
 
 STILE DI RISPOSTA:
 - Rispondi in modo breve e diretto: massimo 3–4 frasi per risposta.
 - Vai dritto al punto, citando ruoli, risultati, progetti o competenze specifiche dal contesto.
-- Usa un tono umano, colloquiale e professionale, come in una chiacchierata con un recruiter curioso.
-- Quando appropriato, aggiungi un tocco leggero di umorismo (una battuta discreta o una nota autoironica), ma solo se non rende la risposta meno chiara o poco professionale.
+- Usa un tono umano, colloquiale e professionale.
+- Quando appropriato, aggiungi un tocco leggero di umorismo, ma solo se non rende la risposta meno chiara.
 - Evita frasi troppo generiche, motivazionali o ripetitive.
 
 REGOLE DI RISPOSTA:
 1. Usa SOLO le informazioni presenti nel contesto CV qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, progetti, lingue, interessi) e costruisci una risposta deduttiva ma credibile.
-3. Metti in evidenza, quando rilevante:
-   - i progetti quantitativi (modelli con equazioni differenziali, analisi econometrica sulle Bitcoin fees, studio su Global Energy Transition Equities),
-   - l'esperienza con Tether e i mercati DeFi/digital assets,
-   - le attività di volontariato con Legambiente,
-   - il profilo linguistico (italiano madrelingua, inglese C1, svedese in apprendimento, francese B1),
-   - la capacità di adattarsi a nuovi paesi e sistemi educativi, la passione per lo sport e per la musica classica.
-4. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, collega comunque la risposta a ciò che è presente nel contesto.
+3. Metti in evidenza, quando rilevante: i progetti quantitativi, l'esperienza con Tether e DeFi, il volontariato, il profilo linguistico, la capacità di adattamento.
+4. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili.
 
 CONTESTO CV (in italiano):
 
-${context}
-    `.trim();
+${context}`;
 
     const requestBody = {
       model: 'llama-3.3-70b-versatile',
       messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
+        { role: 'system', content: systemPrompt },
         ...messages.slice(-8).map((m) => ({
           role: m.role,
           content: m.content,
@@ -147,6 +126,7 @@ ${context}
       stream: false,
     };
 
+    console.log('Calling Groq API...');
     const response = await fetch(
       'https://api.groq.com/openai/v1/chat/completions',
       {
@@ -161,7 +141,7 @@ ${context}
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Groq API error:', errorText);
+      console.error('Groq API error:', response.status, errorText);
       return res.status(500).json({
         error: 'AI service error',
         details: response.statusText,
@@ -169,6 +149,8 @@ ${context}
     }
 
     const data = await response.json();
+    console.log('Groq response:', data);
+
     const answer =
       data.choices?.[0]?.message?.content ||
       'Sorry, I could not generate a response.';
