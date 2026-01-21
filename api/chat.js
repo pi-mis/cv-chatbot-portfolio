@@ -1,4 +1,10 @@
-import cvContent from '../cv-content.json';
+git add api/chat.js
+git commit -m "Fix JSON import with 'with { type: \"json\" }'"
+git push origin main
+git add api/chat.js
+git commit -m "Fix JSON import with 'with { type: \"json\" }'"
+git push origin main
+import cvContent from '../cv-content.json' with { type: 'json' };
 
 export const config = {
   maxDuration: 30,
