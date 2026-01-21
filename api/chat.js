@@ -1,3 +1,5 @@
+// api/chat.js (o /api/chat/route.js se usi Next 13+ app router)
+// Assicurati che il path verso cv-content.json sia corretto rispetto alla struttura del progetto
 import cvContent from '../cv-content.json';
 
 export const config = {
@@ -91,7 +93,9 @@ export default async function handler(req, res) {
     const groqApiKey = process.env.GROQ_API_KEY;
 
     if (!groqApiKey) {
-      return res.status(500).json({ error: 'Missing GROQ_API_KEY configuration' });
+      return res
+        .status(500)
+        .json({ error: 'Missing GROQ_API_KEY configuration' });
     }
 
     const systemPrompt = `
@@ -164,7 +168,7 @@ ${context}
     const data = await response.json();
     const answer =
       data.choices?.[0]?.message?.content ||
-      'Sorry, I could not generate a response.';
+      'Mi dispiace, non sono riuscito a generare una risposta.';
 
     return res.status(200).json({
       answer,
