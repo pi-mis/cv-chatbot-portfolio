@@ -19,19 +19,35 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Missing messages' });
     }
 
+    // Ultimo messaggio dell'utente
     const userMsg = messages[messages.length - 1].content.toLowerCase();
-    const terms = userMsg.split(/\s+/).filter(w => w.length > 3);
 
-    const chunks = cvContent.filter(c =>
-      terms.some(t =>
-        c.text.toLowerCase().includes(t) ||
-        c.title.toLowerCase().includes(t)
-      )
-    ).slice(0, 4);
+    // Termini chiave (parole > 3 caratteri)
+    const terms = userMsg
+      .split(/\W+/)
+      .filter(w => w.length > 3);
 
-    const context = chunks.length
-      ? chunks.map(c => `${c.title}: ${c.text}`).join('\n\n')
-      : 'Nessun chunk specifico trovato, rispondi in base al CV generale.';
+    // RAG keyword-based con scoring semplice
+    const scored = cvContent.map(c => {
+      const text = (c.title + ' ' + c.text).toLowerCase();
+      let score = 0;
+      for (const t of terms) {
+        if (text.includes(t)) score += 1;
+      }
+      return { ...c, score };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+
+    let chunks = scored.filter(c => c.score > 0).slice(0, 4);
+    if (!chunks.length) {
+      // Se nessun match, usa comunque i primi blocchi del CV
+      chunks = scored.slice(0, 6);
+    }
+
+    const context = chunks
+      .map(c => `${c.title}: ${c.text}`)
+      .join('\n\n');
 
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
@@ -47,26 +63,36 @@ export default async function handler(req, res) {
           role: 'system',
           content:
             'Sei un assistente che risponde a domande sul CV di Pietro Mischi. ' +
-            'Usa solo le informazioni fornite nel contesto. ' + systemLang
+            'Usa SOLO le informazioni fornite nel contesto del CV (in italiano). ' +
+            systemLang +
+            ' Se la domanda è in un\'altra lingua, traduci la risposta nella lingua indicata. ' +
+            'Non dire mai che non hai informazioni se nel contesto ci sono dettagli rilevanti: ' +
+            'in quel caso usa il contesto per dare la migliore risposta possibile.'
         },
         {
           role: 'system',
-          content: `Contesto CV:\n${context}`
+          content:
+            `Contesto CV (in italiano):\n${context}\n\n` +
+            'Se qualcosa non è menzionato nel contesto, puoi dirlo esplicitamente, ' +
+            'ma cerca sempre di riassumere e collegare le informazioni disponibili.'
         },
         ...messages.slice(-10)
       ],
       stream: false,
-      temperature: 0.4
+      temperature: 0.3
     };
 
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${groqApiKey}`
-      },
-      body: JSON.stringify(body)
-    });
+    const response = await fetch(
+      'https://api.groq.com/openai/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${groqApiKey}`
+        },
+        body: JSON.stringify(body)
+      }
+    );
 
     if (!response.ok) {
       const text = await response.text();
