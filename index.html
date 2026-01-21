@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Pietro's AI Twin</title>
@@ -253,54 +253,6 @@
         opacity: 0.8;
         text-align: right;
       }
-
-      @media (max-width: 640px) {
-        body {
-          padding: 12px;
-        }
-
-        .shell {
-          padding: 14px 12px 12px;
-          border-radius: 14px;
-          gap: 10px;
-        }
-
-        .header {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 8px;
-        }
-
-        .title {
-          font-size: 19px;
-        }
-
-        .subtitle {
-          font-size: 12px;
-        }
-
-        .controls {
-          justify-content: flex-end;
-        }
-
-        .chat {
-          height: 420px;
-        }
-
-        .msg {
-          max-width: 92%;
-        }
-
-        .input-shell input {
-          font-size: 13px;
-          padding-right: 70px;
-        }
-
-        .send-btn {
-          padding: 8px 13px;
-          font-size: 12px;
-        }
-      }
     </style>
   </head>
   <body>
@@ -352,53 +304,49 @@
       const suggestionsEl = document.getElementById('suggestions');
       const disclaimerEl = document.getElementById('disclaimer');
 
-      const STORAGE_KEY = 'cv-chat-messages-v2';
+      const STORAGE_KEY = 'cv-chat-messages';
 
       const uiText = {
         it: {
           subtitle:
-            'Chiedimi qualcosa sul mio percorso, sui progetti o sui miei obiettivi di carriera: questa chat AI è un progetto personale che ho creato per andare oltre il CV e offrire un modo diverso per conoscermi.',
-          placeholder: 'Chiedi qualcosa sul mio AI Twin...',
+            'Chiedimi qualcosa sul mio percorso, sulle esperienze o sui miei obiettivi di carriera – questa chat AI è un progetto personale per andare oltre il CV.',
+          placeholder: 'Chiedi qualcosa sul mio CV...',
           send: 'Invia',
           hint: 'Invio ↵',
           resetConfirm: 'Vuoi davvero resettare la conversazione?',
           metaTips:
-            'Suggerimenti: chiedi dei miei progetti quantitativi, dell’esperienza con Tether, delle Bitcoin fees, della transizione energetica, del volontariato o delle lingue che parlo.',
+            'Suggerimenti: chiedi delle esperienze in BDO, del Master a Stoccolma, o dei progetti accademici.',
           disclaimer:
-            'Risposte generate con AI. Possono contenere imprecisioni.',
+            'Risposte generate con AI. Potrebbero contenere imprecisioni.',
         },
         en: {
           subtitle:
-            'Ask anything about my background, projects, or career plans – this AI chat is a personal project I built to go beyond my CV and create a new way to get to know me.',
-          placeholder: "Ask something to my AI Twin…",
+            'Ask anything about my background, projects, or career plans – this AI chat is a personal project I built to go beyond my CV.',
+          placeholder: 'Ask something about my profile...',
           send: 'Send',
           hint: 'Enter ↵',
           resetConfirm: 'Do you really want to reset the conversation?',
           metaTips:
-            'Tips: ask about my quantitative projects, Tether experience, Bitcoin fee research, energy transition equities, volunteering, or the languages I speak.',
+            'Tips: ask about my BDO experience, my Master in Stockholm, or academic projects.',
           disclaimer:
             'AI-generated answers. They may contain inaccuracies.',
         },
         sv: {
           subtitle:
-            'Fråga vad som helst om min bakgrund, projekt eller karriärplaner – den här AI-chatten är ett personligt projekt jag byggt för att gå bortom CV:t och skapa ett nytt sätt att lära känna mig.',
-          placeholder: 'Fråga något till min AI Twin…',
+            'Fråga vad som helst om min bakgrund, mina erfarenheter eller karriärplaner – den här AI-chatten är ett personligt projekt utöver mitt CV.',
+          placeholder: 'Fråga något om min profil...',
           send: 'Skicka',
           hint: 'Enter ↵',
           resetConfirm: 'Vill du verkligen återställa konversationen?',
           metaTips:
-            'Tips: fråga om mina kvantitativa projekt, Tether-erfarenhet, Bitcoin-avgifter, energiomställningsaktier, volontärarbete eller vilka språk jag talar.',
+            'Tips: fråga om min erfarenhet på BDO, min master i Stockholm eller akademiska projekt.',
           disclaimer:
-            'Svar genereras med AI och kan innehålla fel.',
+            'Svar genereras av AI och kan innehålla fel.',
         },
       };
 
       let currentLang = langSelect.value;
       let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-      // per suggerimenti dinamici
-      let lastBotMessage = '';
-      let suggestionIndex = 0;
 
       function applyLanguage() {
         const t = uiText[currentLang];
@@ -407,115 +355,6 @@
         sendBtn.textContent = t.send;
         hintLabel.textContent = t.hint;
         disclaimerEl.textContent = t.disclaimer;
-      }
-
-      function getSuggestionsForLang(lang) {
-        const baseSets = {
-          it: [
-            [
-              'Puoi spiegare il progetto sulle Bitcoin transaction fees?',
-              'Raccontami del modello di domanda e offerta con equazioni differenziali.',
-            ],
-            [
-              'Come hai analizzato le società dell’energy transition?',
-              'Qual è stato l’aspetto più complesso dell’audit di Tether?',
-            ],
-            [
-              'In che modo il volontariato con Legambiente ti ha arricchito?',
-              'Come usi le lingue (IT, EN, SV, FR) nella tua vita accademica e lavorativa?',
-            ],
-          ],
-          en: [
-            [
-              'Can you explain your project on Bitcoin transaction fees?',
-              'Tell me about the supply–demand models with differential equations.',
-            ],
-            [
-              'How did you analyze companies in the global energy transition?',
-              'What was the most challenging part of auditing Tether?',
-            ],
-            [
-              'How did your volunteering with Legambiente shape you?',
-              'How do you use your languages (IT, EN, SV, FR) in study and work?',
-            ],
-          ],
-          sv: [
-            [
-              'Kan du förklara projektet om Bitcoin-transaktionsavgifter?',
-              'Berätta om utbuds- och efterfrågemodellerna med differentialekvationer.',
-            ],
-            [
-              'Hur analyserade du bolag inom energiomställningen?',
-              'Vad var svårast i revisionen av Tether?',
-            ],
-            [
-              'Hur har volontärarbetet med Legambiente påverkat dig?',
-              'Hur använder du dina språk (IT, EN, SV, FR) i studier och arbete?',
-            ],
-          ],
-        };
-
-        const sets = baseSets[lang] || baseSets.en;
-        const pair = sets[suggestionIndex % sets.length];
-
-        // terza domanda: follow‑up legato all’ultima risposta
-        const text = (lastBotMessage || '').toLowerCase();
-        let followUp;
-
-        if (text.includes('bitcoin') || text.includes('fee')) {
-          followUp =
-            lang === 'it'
-              ? 'Che impatto pratico potrebbero avere le tue analisi sulle Bitcoin fees per utenti o aziende?'
-              : lang === 'sv'
-              ? 'Vilken praktisk nytta kan dina analyser av Bitcoin-avgifter ha för användare eller företag?'
-              : 'What practical impact could your Bitcoin fee analysis have for users or businesses?';
-        } else if (text.includes('energy') || text.includes('transition')) {
-          followUp =
-            lang === 'it'
-              ? 'Quali tipi di aziende vedi meglio posizionate nella transizione energetica?'
-              : lang === 'sv'
-              ? 'Vilka typer av bolag ser du som bäst positionerade i energiomställningen?'
-              : 'Which types of companies do you see best positioned in the energy transition?';
-        } else if (text.includes('volont') || text.includes('legambiente')) {
-          followUp =
-            lang === 'it'
-              ? 'Che ruolo ti piacerebbe avere in futuri progetti di impatto sociale?'
-              : lang === 'sv'
-              ? 'Vilken roll skulle du vilja ha i framtida sociala projekt?'
-              : 'What role would you like to have in future social-impact projects?';
-        } else if (text.includes('lingu') || text.includes('language')) {
-          followUp =
-            lang === 'it'
-              ? 'Come pensi che il mix di lingue ti aiuti in un team internazionale?'
-              : lang === 'sv'
-              ? 'Hur hjälper din språkmix dig i internationella team?'
-              : 'How do you think your language mix helps you in international teams?';
-        } else {
-          followUp =
-            lang === 'it'
-              ? 'Qual è la sfida personale che ti ha fatto crescere di più?'
-              : lang === 'sv'
-              ? 'Vilken personlig utmaning har fått dig att växa mest?'
-              : 'What personal challenge has helped you grow the most?';
-        }
-
-        suggestionIndex += 1;
-        return [...pair, followUp];
-      }
-
-      function renderSuggestions() {
-        suggestionsEl.innerHTML = '';
-        const list = getSuggestionsForLang(currentLang);
-        list.forEach((text) => {
-          const btn = document.createElement('button');
-          btn.className = 'suggestion-btn';
-          btn.textContent = text;
-          btn.onclick = () => {
-            inputEl.value = text;
-            send();
-          };
-          suggestionsEl.appendChild(btn);
-        });
       }
 
       function render() {
@@ -540,8 +379,6 @@
           STORAGE_KEY,
           JSON.stringify(messages.slice(-30))
         );
-
-        renderSuggestions();
       }
 
       async function send() {
@@ -564,11 +401,10 @@
 
           const assistantMsg = {
             role: 'assistant',
-            content: data.answer || 'No response from model.',
+            content: data.answer || 'Sorry, no response from model.',
           };
 
           messages.push(assistantMsg);
-          lastBotMessage = assistantMsg.content || '';
           render();
         } catch (err) {
           const assistantMsg = {
@@ -576,7 +412,6 @@
             content: 'Error: connection failed.',
           };
           messages.push(assistantMsg);
-          lastBotMessage = assistantMsg.content || '';
           render();
         }
       }
@@ -594,8 +429,6 @@
         const t = uiText[currentLang];
         if (!confirm(t.resetConfirm)) return;
         messages = [];
-        lastBotMessage = '';
-        suggestionIndex = 0;
         localStorage.removeItem(STORAGE_KEY);
         render();
       };
