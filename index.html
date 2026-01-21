@@ -400,6 +400,10 @@
       let currentLang = langSelect.value;
       let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
+      // per suggerimenti dinamici
+      let lastBotMessage = '';
+      let suggestionIndex = 0;
+
       function applyLanguage() {
         const t = uiText[currentLang];
         subtitleEl.textContent = t.subtitle;
@@ -410,26 +414,90 @@
       }
 
       function getSuggestionsForLang(lang) {
-        if (lang === 'it') {
-          return [
-            'Qual è la tua esperienza in Banking & Finance?',
-            'Quali progetti quantitativi hai sviluppato?',
-            'Raccontami della tua esperienza in audit.',
-          ];
+        const baseSets = {
+          it: [
+            [
+              'Qual è la tua esperienza in Banking & Finance?',
+              'Quali progetti quantitativi hai sviluppato?',
+            ],
+            [
+              'Che competenze tecniche utilizzi più spesso?',
+              'In che modo il tuo Master ti ha preparato al lavoro?',
+            ],
+            [
+              'Raccontami della tua esperienza in audit.',
+              'Hai lavorato anche con criptovalute o fintech?',
+            ],
+          ],
+          en: [
+            [
+              'What is your experience in Banking & Finance?',
+              'Which quantitative projects have you worked on?',
+            ],
+            [
+              'What technical skills do you use most often?',
+              'How did your Master prepare you for your career?',
+            ],
+            [
+              'Tell me about your audit experience.',
+              'Have you worked with cryptocurrencies or fintech?',
+            ],
+          ],
+          sv: [
+            [
+              'Vad har du för erfarenhet inom Banking & Finance?',
+              'Vilka kvantitativa projekt har du gjort?',
+            ],
+            [
+              'Vilka tekniska färdigheter använder du oftast?',
+              'Hur har din master förberett dig för jobbet?',
+            ],
+            [
+              'Berätta om din revisionserfarenhet.',
+              'Har du arbetat med kryptovalutor eller fintech?',
+            ],
+          ],
+        };
+
+        const sets = baseSets[lang] || baseSets.en;
+        const pair = sets[suggestionIndex % sets.length];
+
+        // terza domanda: follow‑up legato all’ultima risposta
+        const text = (lastBotMessage || '').toLowerCase();
+        let followUp;
+
+        if (text.includes('tether') || text.includes('crypto')) {
+          followUp =
+            lang === 'it'
+              ? 'Puoi approfondire la tua esperienza in Tether o nel mondo cripto?'
+              : lang === 'sv'
+              ? 'Kan du utveckla din erfarenhet på Tether eller inom krypto?'
+              : 'Can you elaborate on your experience at Tether or in crypto?';
+        } else if (text.includes('bdo') || text.includes('audit')) {
+          followUp =
+            lang === 'it'
+              ? "Qual è stato il progetto di audit più sfidante?"
+              : lang === 'sv'
+              ? 'Vilket var ditt mest utmanande revisionsuppdrag?'
+              : 'What was your most challenging audit engagement?';
+        } else if (text.includes('master') || text.includes('university')) {
+          followUp =
+            lang === 'it'
+              ? 'Quali corsi del Master ti sono stati più utili?'
+              : lang === 'sv'
+              ? 'Vilka masterkurser har varit mest användbara för dig?'
+              : 'Which Master courses have been most useful for you?';
+        } else {
+          followUp =
+            lang === 'it'
+              ? 'In che tipo di ruolo ti vedi nei prossimi anni?'
+              : lang === 'sv'
+              ? 'Vilken typ av roll ser du dig själv i de kommande åren?'
+              : 'What kind of role do you see yourself in over the next few years?';
         }
-        if (lang === 'sv') {
-          return [
-            'Vad har du för erfarenhet inom Banking & Finance?',
-            'Vilka kvantitativa projekt har du gjort?',
-            'Berätta om din revisionserfarenhet.',
-          ];
-        }
-        // en default
-        return [
-          'What is your experience in Banking & Finance?',
-          'Which quantitative projects have you worked on?',
-          'Tell me about your audit experience.',
-        ];
+
+        suggestionIndex += 1;
+        return [...pair, followUp];
       }
 
       function renderSuggestions() {
@@ -497,6 +565,7 @@
           };
 
           messages.push(assistantMsg);
+          lastBotMessage = assistantMsg.content || '';
           render();
         } catch (err) {
           const assistantMsg = {
@@ -504,6 +573,7 @@
             content: 'Error: connection failed.',
           };
           messages.push(assistantMsg);
+          lastBotMessage = assistantMsg.content || '';
           render();
         }
       }
@@ -521,6 +591,8 @@
         const t = uiText[currentLang];
         if (!confirm(t.resetConfirm)) return;
         messages = [];
+        lastBotMessage = '';
+        suggestionIndex = 0;
         localStorage.removeItem(STORAGE_KEY);
         render();
       };
