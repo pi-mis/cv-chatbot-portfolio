@@ -282,24 +282,21 @@
         placeholder: 'Chiedi qualcosa sul mio CV...',
         send: 'Invia',
         hint: 'Invio ↵',
-        resetConfirm: 'Vuoi davvero resettare la conversazione?',
-        systemLang: 'Rispondi in italiano.'
+        resetConfirm: 'Vuoi davvero resettare la conversazione?'
       },
       en: {
         subtitle: 'Ask me anything about my Banking & Finance background.',
         placeholder: 'Ask something about my CV…',
         send: 'Send',
         hint: 'Enter ↵',
-        resetConfirm: 'Do you really want to reset the conversation?',
-        systemLang: 'Answer in English.'
+        resetConfirm: 'Do you really want to reset the conversation?'
       },
       sv: {
         subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
         placeholder: 'Fråga något om mitt CV…',
         send: 'Skicka',
         hint: 'Enter ↵',
-        resetConfirm: 'Vill du verkligen återställa konversationen?',
-        systemLang: 'Svara på svenska.'
+        resetConfirm: 'Vill du verkligen återställa konversationen?'
       }
     };
 
@@ -352,19 +349,19 @@
           body: JSON.stringify({ messages, language: currentLang })
         });
 
-        const reader = res.body.getReader();
-        let assistantMsg = { role: 'assistant', content: '' };
+        const data = await res.json();
+        const assistantMsg = {
+          role: 'assistant',
+          content: data.answer || '[Nessuna risposta dal modello]'
+        };
         messages.push(assistantMsg);
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          const chunk = new TextDecoder().decode(value);
-          assistantMsg.content += chunk;
-          render();
-        }
+        render();
       } catch (err) {
-        assistantMsg.content += '\n[Error: connection failed]';
+        const assistantMsg = {
+          role: 'assistant',
+          content: '[Error: connection failed]'
+        };
+        messages.push(assistantMsg);
         render();
       }
     }
