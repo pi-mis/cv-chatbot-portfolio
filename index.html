@@ -2,635 +2,394 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>Pietro Mischi – AI CV Assistant</title>
+  <title>CV Chatbot – Pietro Mischi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Interactive AI-powered CV chatbot for Pietro Mischi - Banking & Finance professional" />
   <style>
     :root {
-      --bg: #0a0e1a;
-      --card: #0f1419;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --accent-soft: #1e40af;
-      --text: #f8fafc;
-      --text-soft: #94a3b8;
-      --text-muted: #64748b;
-      --border: #1e293b;
-      --success: #10b981;
-      --danger: #ef4444;
-      --user-msg-bg: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-      --bot-msg-bg: #1e293b;
+      --bg: #0f172a;
+      --card: #0b1220;
+      --accent: #38bdf8;
+      --accent-soft: #0ea5e9;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --border: #1f2937;
+      --danger: #f97373;
     }
 
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: linear-gradient(135deg, #0a0e1a 0%, #1e1b4b 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
+      padding: 24px;
     }
 
-    body::before {
-      content: '';
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-      top: -300px;
-      right: -300px;
-      pointer-events: none;
-    }
-
-    body::after {
-      content: '';
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-      bottom: -250px;
-      left: -250px;
-      pointer-events: none;
-    }
-
-    .container {
+    .shell {
       width: 100%;
-      max-width: 900px;
-      background: rgba(15, 20, 25, 0.85);
-      border-radius: 24px;
+      max-width: 880px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 18px;
       box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.5),
-        inset 0 0 0 1px rgba(148, 163, 184, 0.1);
-      padding: 28px;
-      backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(148, 163, 184, 0.1);
+        0 18px 45px rgba(15, 23, 42, 0.8),
+        inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+      padding: 20px 22px 18px;
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(148, 163, 184, 0.12);
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      position: relative;
-      z-index: 1;
+      gap: 14px;
     }
 
     .header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      gap: 16px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid var(--border);
+      align-items: center;
+      gap: 12px;
     }
 
-    .title-section {
-      flex: 1;
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .title {
-      font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 6px;
+      font-size: 22px;
+      font-weight: 650;
+      letter-spacing: 0.02em;
     }
 
     .subtitle {
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-soft);
-      line-height: 1.5;
     }
 
     .controls {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
-    .status-badge {
+    .pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       border-radius: 999px;
-      padding: 6px 14px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      font-size: 12px;
-      font-weight: 500;
-      color: #6ee7b7;
-      letter-spacing: 0.02em;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--success);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .model-info {
-      font-size: 11px;
-      color: var(--text-muted);
       padding: 4px 10px;
-      background: rgba(30, 41, 59, 0.6);
-      border-radius: 6px;
-      border: 1px solid rgba(148, 163, 184, 0.1);
+      background: rgba(15, 118, 188, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      font-size: 11px;
+      color: #e0f2fe;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
     }
 
     select {
-      border-radius: 8px;
+      border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(30, 41, 59, 0.8);
+      background: #020617;
       color: var(--text);
-      padding: 6px 12px;
-      font-size: 13px;
-      font-weight: 500;
+      padding: 5px 10px;
+      font-size: 12px;
       outline: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    select:hover {
-      background: rgba(30, 41, 59, 1);
-      border-color: var(--accent);
-    }
-
-    select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .reset-btn {
-      border-radius: 8px;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      background: rgba(127, 29, 29, 0.3);
-      color: #fca5a5;
-      padding: 6px 14px;
-      font-size: 13px;
-      font-weight: 500;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 113, 113, 0.6);
+      background: rgba(127, 29, 29, 0.4);
+      color: #fee2e2;
+      padding: 5px 12px;
+      font-size: 12px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: background 0.15s ease, transform 0.05s ease;
     }
 
-    .reset-btn:hover { 
-      background: rgba(185, 28, 28, 0.5); 
-      border-color: rgba(239, 68, 68, 0.5);
-    }
+    .reset-btn:hover { background: rgba(185, 28, 28, 0.7); }
+    .reset-btn:active { transform: scale(0.97); }
 
-    .reset-btn:active { 
-      transform: scale(0.98); 
-    }
-
-    .chat-window {
-      border-radius: 16px;
+    .chat {
+      border-radius: 14px;
       border: 1px solid var(--border);
-      background: rgba(10, 14, 26, 0.5);
-      padding: 20px;
-      height: 480px;
+      background: radial-gradient(circle at top left, #020617 0, #020617 55%);
+      padding: 12px 12px 10px;
+      height: 430px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      font-size: 14.5px;
-      line-height: 1.6;
-      scroll-behavior: smooth;
+      gap: 8px;
+      font-size: 14px;
     }
 
-    .chat-window::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .chat-window::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .chat-window::-webkit-scrollbar-thumb {
-      background: rgba(148, 163, 184, 0.3);
-      border-radius: 999px;
-    }
-
-    .chat-window::-webkit-scrollbar-thumb:hover {
-      background: rgba(148, 163, 184, 0.5);
-    }
-
-    .message {
-      max-width: 75%;
-      padding: 12px 16px;
-      border-radius: 12px;
+    .msg {
+      max-width: 80%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      line-height: 1.4;
       word-wrap: break-word;
       white-space: pre-wrap;
-      animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .message.user {
+    .msg.user {
       margin-left: auto;
-      background: var(--user-msg-bg);
+      background: linear-gradient(to right, #1d4ed8, #0ea5e9);
       color: white;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+      border-bottom-right-radius: 2px;
     }
 
-    .message.assistant {
-      background: var(--bot-msg-bg);
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      border-bottom-left-radius: 4px;
-      color: var(--text);
+    .msg.bot {
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-bottom-left-radius: 2px;
     }
 
-    .message.system {
+    .msg.meta {
       align-self: center;
-      max-width: 90%;
-      padding: 10px 16px;
-      border-radius: 8px;
-      background: rgba(30, 41, 59, 0.4);
+      max-width: 100%;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
       color: var(--text-soft);
-      font-size: 13px;
-      border: 1px dashed rgba(148, 163, 184, 0.2);
-      text-align: center;
+      font-size: 11px;
+      border: 1px dashed rgba(148, 163, 184, 0.4);
     }
 
-    .input-area {
+    .input-row {
       display: flex;
-      gap: 12px;
-      align-items: flex-end;
+      gap: 10px;
+      align-items: center;
+      margin-top: 2px;
     }
 
-    .input-wrapper {
+    .input-shell {
       flex: 1;
       position: relative;
     }
 
-    #user-input {
+    #input {
       width: 100%;
-      padding: 14px 100px 14px 16px;
-      border-radius: 12px;
+      padding: 10px 12px;
+      padding-right: 84px;
+      border-radius: 999px;
       border: 1px solid var(--border);
-      background: rgba(30, 41, 59, 0.6);
+      background: rgba(15, 23, 42, 0.95);
       color: var(--text);
-      font-size: 14.5px;
-      font-family: inherit;
+      font-size: 14px;
       outline: none;
-      transition: all 0.2s ease;
-      resize: none;
-      min-height: 52px;
-      max-height: 120px;
     }
 
-    #user-input::placeholder { 
-      color: var(--text-muted); 
-    }
+    #input::placeholder { color: #6b7280; }
 
-    #user-input:focus {
-      background: rgba(30, 41, 59, 0.9);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-
-    .input-hint {
+    .hint {
       position: absolute;
-      right: 16px;
+      right: 14px;
       top: 50%;
       transform: translateY(-50%);
       font-size: 11px;
-      color: var(--text-muted);
-      background: rgba(10, 14, 26, 0.8);
-      padding: 4px 8px;
-      border-radius: 4px;
-      border: 1px solid rgba(148, 163, 184, 0.1);
-      pointer-events: none;
+      color: var(--text-soft);
     }
 
-    .send-button {
-      padding: 14px 24px;
-      border-radius: 12px;
+    .send-btn {
+      padding: 9px 16px;
+      border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-soft) 100%);
-      color: white;
+      background: linear-gradient(to right, var(--accent-soft), #22c55e);
+      color: #0b1120;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
-      transition: all 0.2s ease;
-      min-height: 52px;
+      box-shadow: 0 10px 22px rgba(8, 47, 73, 0.6);
+      transition: transform 0.06s ease, box-shadow 0.1s ease, filter 0.1s ease;
     }
 
-    .send-button:hover { 
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+    .send-btn:hover { filter: brightness(1.05); }
+    .send-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
     }
 
-    .send-button:active {
-      transform: translateY(0);
-    }
-
-    .send-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 12px 16px;
-      background: var(--bot-msg-bg);
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      border-radius: 12px;
-      border-bottom-left-radius: 4px;
-      max-width: 75px;
-    }
-
-    .typing-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-soft);
-      animation: typing 1.4s infinite;
-    }
-
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes typing {
-      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-      30% { opacity: 1; transform: translateY(-8px); }
-    }
-
-    @media (max-width: 768px) {
-      .container { 
-        padding: 20px; 
-        border-radius: 16px;
-      }
-      
-      .chat-window { 
-        height: 400px; 
-        padding: 16px;
-      }
-      
-      .title { 
-        font-size: 22px; 
-      }
-      
-      .controls { 
-        width: 100%;
-        justify-content: space-between;
-      }
-      
-      .message { 
-        max-width: 85%; 
-      }
-      
-      #user-input { 
-        font-size: 14px; 
-        padding-right: 90px;
-      }
-      
-      .send-button { 
-        padding: 12px 18px; 
-        font-size: 13px; 
-      }
-
-      .header {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .controls {
-        justify-content: flex-start;
-      }
+    @media (max-width: 640px) {
+      .shell { padding: 16px 14px 14px; }
+      .chat { height: 360px; }
+      .title { font-size: 18px; }
+      .controls { flex-wrap: wrap; justify-content: flex-end; }
+      .msg { max-width: 92%; }
+      #input { font-size: 13px; padding-right: 70px; }
+      .send-btn { padding: 8px 13px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="shell">
     <div class="header">
-      <div class="title-section">
-        <h1 class="title">Pietro Mischi – AI CV Assistant</h1>
-        <p class="subtitle" id="subtitle">
-          Ask me anything about my Banking & Finance background, skills, and experience.
-        </p>
+      <div class="title-block">
+        <div class="title">CV Chatbot – Pietro Mischi</div>
+        <div class="subtitle" id="subtitle">
+          Ask anything about my Banking &amp; Finance background.
+        </div>
       </div>
       <div class="controls">
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          <span>AI Ready</span>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span id="model-label">Llama 3.3 · Groq</span>
         </div>
-        <div class="model-info">Llama 3.3 70B</div>
-        <select id="language-select" aria-label="Select language">
-          <option value="en">🇬🇧 English</option>
-          <option value="it">🇮🇹 Italiano</option>
-          <option value="sv">🇸🇪 Svenska</option>
+        <select id="language-select">
+          <option value="it">Italiano</option>
+          <option value="en" selected>English</option>
+          <option value="sv">Svenska</option>
         </select>
-        <button class="reset-btn" id="reset-btn">Reset</button>
+        <button class="reset-btn" id="reset-btn">Reset chat</button>
       </div>
     </div>
 
-    <div id="chat" class="chat-window" role="log" aria-live="polite"></div>
+    <div id="chat" class="chat"></div>
 
-    <div class="input-area">
-      <div class="input-wrapper">
-        <textarea 
-          id="user-input" 
-          rows="1"
-          autocomplete="off"
-          aria-label="Message input"
-        ></textarea>
-        <div class="input-hint" id="hint-label">Enter ↵</div>
+    <div class="input-row">
+      <div class="input-shell">
+        <input id="input" autocomplete="off" />
+        <div class="hint" id="hint-label">Enter ↵</div>
       </div>
-      <button id="send-btn" class="send-button">Send</button>
+      <button id="send-btn" class="send-btn">Send</button>
     </div>
   </div>
 
   <script>
     const chatEl = document.getElementById('chat');
-    const inputEl = document.getElementById('user-input');
+    const inputEl = document.getElementById('input');
     const sendBtn = document.getElementById('send-btn');
     const resetBtn = document.getElementById('reset-btn');
     const langSelect = document.getElementById('language-select');
     const subtitleEl = document.getElementById('subtitle');
     const hintLabel = document.getElementById('hint-label');
 
-    const STORAGE_KEY = 'pietro_cv_chat_v3';
+    const STORAGE_KEY = 'cv_chat_messages_v2';
 
-    const translations = {
-      en: {
-        subtitle: 'Ask me anything about my Banking & Finance background, skills, and experience.',
-        placeholder: 'Ask about my experience, skills, or projects...',
-        send: 'Send',
-        hint: 'Enter ↵',
-        resetConfirm: 'Reset conversation? This will clear all messages.',
-        systemMsg: '💡 Try asking: "Tell me about your banking experience" or "What technical skills do you have?"',
-        errorMsg: '⚠️ Connection error. Please try again.',
-        thinking: 'Thinking...'
-      },
+    const uiText = {
       it: {
-        subtitle: 'Chiedimi qualsiasi cosa sul mio background in Banking & Finance, competenze ed esperienze.',
-        placeholder: 'Chiedi delle mie esperienze, competenze o progetti...',
+        subtitle: 'Chiedimi qualsiasi cosa sul mio percorso in Banking & Finance.',
+        placeholder: 'Chiedi qualcosa sul mio CV...',
         send: 'Invia',
         hint: 'Invio ↵',
-        resetConfirm: 'Resettare la conversazione? Tutti i messaggi verranno cancellati.',
-        systemMsg: '💡 Prova a chiedere: "Parlami della tua esperienza bancaria" o "Quali competenze tecniche hai?"',
-        errorMsg: '⚠️ Errore di connessione. Riprova.',
-        thinking: 'Sto pensando...'
+        resetConfirm: 'Vuoi davvero resettare la conversazione?'
+      },
+      en: {
+        subtitle: 'Ask me anything about my Banking & Finance background.',
+        placeholder: 'Ask something about my CV…',
+        send: 'Send',
+        hint: 'Enter ↵',
+        resetConfirm: 'Do you really want to reset the conversation?'
       },
       sv: {
-        subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance, kompetenser och erfarenheter.',
-        placeholder: 'Fråga om mina erfarenheter, kompetenser eller projekt...',
+        subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
+        placeholder: 'Fråga något om mitt CV…',
         send: 'Skicka',
         hint: 'Enter ↵',
-        resetConfirm: 'Återställa konversationen? Alla meddelanden raderas.',
-        systemMsg: '💡 Försök fråga: "Berätta om din bankerfarenhet" eller "Vilka tekniska färdigheter har du?"',
-        errorMsg: '⚠️ Anslutningsfel. Försök igen.',
-        thinking: 'Tänker...'
+        resetConfirm: 'Vill du verkligen återställa konversationen?'
       }
     };
 
     let currentLang = langSelect.value;
     let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    let isProcessing = false;
 
-    function t(key) {
-      return translations[currentLang][key];
+    function applyLanguage() {
+      const t = uiText[currentLang];
+      subtitleEl.textContent = t.subtitle;
+      inputEl.placeholder = t.placeholder;
+      sendBtn.textContent = t.send;
+      hintLabel.textContent = t.hint;
     }
 
-    function updateUI() {
-      subtitleEl.textContent = t('subtitle');
-      inputEl.placeholder = t('placeholder');
-      sendBtn.textContent = t('send');
-      hintLabel.textContent = t('hint');
-    }
-
-    function renderMessages() {
+    function render() {
       chatEl.innerHTML = '';
-      
       if (!messages.length) {
-        const sys = document.createElement('div');
-        sys.className = 'message system';
-        sys.textContent = t('systemMsg');
-        chatEl.appendChild(sys);
+        const meta = document.createElement('div');
+        meta.className = 'msg meta';
+        meta.textContent = currentLang === 'it'
+          ? 'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.'
+          : currentLang === 'sv'
+          ? 'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.'
+          : 'Tips: ask about banking experience, technical skills or academic projects.';
+        chatEl.appendChild(meta);
       } else {
-        messages.forEach(msg => {
+        for (const m of messages) {
           const div = document.createElement('div');
-          div.className = `message ${msg.role}`;
-          div.textContent = msg.content;
+          div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
+          div.textContent = m.content;
           chatEl.appendChild(div);
-        });
+        }
       }
-      
       chatEl.scrollTop = chatEl.scrollHeight;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
     }
 
-    function showTypingIndicator() {
-      const typing = document.createElement('div');
-      typing.className = 'typing-indicator';
-      typing.id = 'typing-indicator';
-      typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-      chatEl.appendChild(typing);
-      chatEl.scrollTop = chatEl.scrollHeight;
-    }
-
-    function removeTypingIndicator() {
-      const typing = document.getElementById('typing-indicator');
-      if (typing) typing.remove();
-    }
-
-    async function sendMessage() {
+    async function send() {
       const text = inputEl.value.trim();
-      if (!text || isProcessing) return;
-
-      isProcessing = true;
-      sendBtn.disabled = true;
+      if (!text) return;
       inputEl.value = '';
-      inputEl.style.height = 'auto';
 
       messages.push({ role: 'user', content: text });
-      renderMessages();
-      showTypingIndicator();
+      render();
 
       try {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages })
+          body: JSON.stringify({ messages, language: currentLang })
         });
 
-        removeTypingIndicator();
-
-        if (!res.ok) throw new Error('API error');
-
         const data = await res.json();
-        const reply = data.answer || t('errorMsg');
-        
-        messages.push({ role: 'assistant', content: reply });
-        renderMessages();
+        const assistantMsg = {
+          role: 'assistant',
+          content: data.answer || '[No response from model]'
+        };
+        messages.push(assistantMsg);
+        render();
       } catch (err) {
-        removeTypingIndicator();
-        messages.push({ role: 'assistant', content: t('errorMsg') });
-        renderMessages();
-        console.error('Error:', err);
-      } finally {
-        isProcessing = false;
-        sendBtn.disabled = false;
-        inputEl.focus();
+        const assistantMsg = {
+          role: 'assistant',
+          content: '[Error: connection failed]'
+        };
+        messages.push(assistantMsg);
+        render();
       }
     }
 
-    // Auto-resize textarea
-    inputEl.addEventListener('input', () => {
-      inputEl.style.height = 'auto';
-      inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px';
-    });
-
-    sendBtn.onclick = sendMessage;
-
+    sendBtn.onclick = send;
     inputEl.addEventListener('keydown', e => {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
-        sendMessage();
+        send();
       }
     });
 
     resetBtn.onclick = () => {
-      if (!confirm(t('resetConfirm'))) return;
+      const t = uiText[currentLang];
+      if (!confirm(t.resetConfirm)) return;
       messages = [];
       localStorage.removeItem(STORAGE_KEY);
-      renderMessages();
+      render();
     };
 
     langSelect.onchange = () => {
       currentLang = langSelect.value;
-      updateUI();
-      renderMessages();
+      applyLanguage();
+      render();
     };
 
-    updateUI();
-    renderMessages();
-    inputEl.focus();
+    applyLanguage();
+    render();
   </script>
 </body>
 </html>

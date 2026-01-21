@@ -19,28 +19,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { messages } = req.body || {};
+    const { messages, language = 'en' } = req.body || {};
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Invalid messages format' });
     }
 
+    // Lingua dal selettore
+    const langNames = {
+      it: 'italiano',
+      en: 'inglese',
+      sv: 'svedese',
+    };
+    const detectedLang = langNames[language] ? language : 'en';
+
     // Ultimo messaggio utente
     const userMessage = messages[messages.length - 1]?.content || '';
     const userMessageLower = userMessage.toLowerCase();
-
-    // Rilevamento lingua molto semplice (per output)
-    let detectedLang = 'en';
-    const italianPatterns = [
-      /\b(ciao|salve|buongiorno|buonasera|grazie|prego|come|cosa|dove|quando|perché|chi|quale|esperienza|competenze|progetti|università|laurea|master|bancaria|finanziaria)\b/i,
-    ];
-    const swedishPatterns = [
-      /\b(hej|tack|vad|hur|var|när|varför|vem|erfarenhet|kompetens|projekt|universitet|banking|finans)\b/i,
-    ];
-    if (italianPatterns.some(p => p.test(userMessage))) {
-      detectedLang = 'it';
-    } else if (swedishPatterns.some(p => p.test(userMessage))) {
-      detectedLang = 'sv';
-    }
 
     // Keyword dal messaggio
     const keywords = userMessageLower
@@ -68,12 +62,11 @@ export default async function handler(req, res) {
       relevantChunks = scoredChunks.slice(0, 5);
     }
 
-    // 3) aggiungi SEMPRE profilo (id 1) e formazione (id 2 e 3) se non già presenti
+    // 3) aggiungi SEMPRE profilo (1) + formazione (2,3)
     const alwaysIncludeIds = [1, 2, 3];
     const existingIds = new Set(relevantChunks.map(c => c.id));
     alwaysIncludeIds.forEach(id => {
-      const already = existingIds.has(id);
-      if (!already) {
+      if (!existingIds.has(id)) {
         const found = cvContent.find(c => c.id === id);
         if (found) {
           relevantChunks.push(found);
@@ -91,11 +84,7 @@ export default async function handler(req, res) {
       .map(c => `### ${c.title}\n${c.text}`)
       .join('\n\n');
 
-    const langNames = {
-      it: 'italiano',
-      en: 'inglese',
-      sv: 'svedese',
-    };
+    const langLabel = langNames[detectedLang];
 
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
@@ -106,7 +95,7 @@ export default async function handler(req, res) {
 Sei un assistente AI che risponde a domande sul CV di Pietro Mischi.
 
 LINGUA:
-- Rispondi SEMPRE in ${langNames[detectedLang]} perché l'utente sta scrivendo in ${langNames[detectedLang]}.
+- Rispondi SEMPRE in ${langLabel}. Ignora la lingua della domanda e usa SOLO ${langLabel} per le risposte.
 
 CONTESTO CV:
 - Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Master e Laurea), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
@@ -114,7 +103,7 @@ CONTESTO CV:
 
 REGOLE DI RISPOSTA:
 1. Usa SOLO le informazioni presenti nel contesto CV che ti viene fornito qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (es. tipo di ruoli, competenze, corsi, livello di studi).
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, livello di studi).
 3. Dai risposte professionali, chiare e sintetiche, come in un colloquio o mail di presentazione.
 4. Metti in evidenza esperienze rilevanti (BDO Italia, audit di istituzioni finanziarie, Tether Holdings, competenze quantitative, ecc.) quando rispondi a domande su esperienza e skill.
 5. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
@@ -169,7 +158,7 @@ ${context}
 
     return res.status(200).json({
       answer,
-      detectedLang,
+      language: detectedLang,
     });
   } catch (error) {
     console.error('Handler error:', error);
