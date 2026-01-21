@@ -208,17 +208,11 @@
           filter 0.1s ease;
       }
 
-      .send-btn[disabled] {
-        opacity: 0.7;
-        cursor: default;
-        box-shadow: none;
-      }
-
-      .send-btn:hover:not([disabled]) {
+      .send-btn:hover {
         filter: brightness(1.05);
       }
 
-      .send-btn:active:not([disabled]) {
+      .send-btn:active {
         transform: translateY(1px);
         box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
       }
@@ -369,7 +363,7 @@
           hint: 'Invio ↵',
           resetConfirm: 'Vuoi davvero resettare la conversazione?',
           metaTips:
-            'Suggerimenti: chiedi dei miei progetti quantitativi, dell’esperienza con Tether, delle Bitcoin fees, della transizione energetica, del volontariato o delle lingue che parlo.',
+            'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche, dei progetti accademici o di come lavoro.',
           disclaimer:
             'Risposte generate con AI. Possono contenere imprecisioni.',
         },
@@ -381,7 +375,7 @@
           hint: 'Enter ↵',
           resetConfirm: 'Do you really want to reset the conversation?',
           metaTips:
-            'Tips: ask about my quantitative projects, Tether experience, Bitcoin fee research, energy transition equities, volunteering, or the languages I speak.',
+            'Tips: ask about banking experience, technical skills, academic projects, or how I work.',
           disclaimer:
             'AI-generated answers. They may contain inaccuracies.',
         },
@@ -393,7 +387,7 @@
           hint: 'Enter ↵',
           resetConfirm: 'Vill du verkligen återställa konversationen?',
           metaTips:
-            'Tips: fråga om mina kvantitativa projekt, Tether-erfarenhet, Bitcoin-avgifter, energiomställningsaktier, volontärarbete eller vilka språk jag talar.',
+            'Tips: fråga om bankerfarenhet, tekniska färdigheter, akademiska projekt eller hur jag arbetar.',
           disclaimer:
             'Svar genereras med AI och kan innehålla fel.',
         },
@@ -405,7 +399,6 @@
       // per suggerimenti dinamici
       let lastBotMessage = '';
       let suggestionIndex = 0;
-      let isLoading = false;
 
       function applyLanguage() {
         const t = uiText[currentLang];
@@ -420,44 +413,44 @@
         const baseSets = {
           it: [
             [
-              'Puoi spiegare il progetto sulle Bitcoin transaction fees?',
-              'Raccontami del modello di domanda e offerta con equazioni differenziali.',
+              'Qual è la tua esperienza in Banking & Finance?',
+              'Quali progetti quantitativi hai sviluppato?',
             ],
             [
-              "Come hai analizzato le società dell'energy transition?",
-              "Qual è stato l'aspetto più complesso dell’audit di Tether?",
+              'Che competenze tecniche utilizzi più spesso?',
+              'In che modo il tuo Master ti ha preparato al lavoro?',
             ],
             [
-              'In che modo il volontariato con Legambiente ti ha arricchito?',
-              'Come usi le lingue (IT, EN, SV, FR) nella tua vita accademica e lavorativa?',
+              'Raccontami della tua esperienza in audit.',
+              'Hai lavorato anche con criptovalute o fintech?',
             ],
           ],
           en: [
             [
-              'Can you explain your project on Bitcoin transaction fees?',
-              'Tell me about the supply–demand models with differential equations.',
+              'What is your experience in Banking & Finance?',
+              'Which quantitative projects have you worked on?',
             ],
             [
-              'How did you analyze companies in the global energy transition?',
-              'What was the most challenging part of auditing Tether?',
+              'What technical skills do you use most often?',
+              'How did your Master prepare you for your career?',
             ],
             [
-              'How did your volunteering with Legambiente shape you?',
-              'How do you use your languages (IT, EN, SV, FR) in study and work?',
+              'Tell me about your audit experience.',
+              'Have you worked with cryptocurrencies or fintech?',
             ],
           ],
           sv: [
             [
-              'Kan du förklara projektet om Bitcoin-transaktionsavgifter?',
-              'Berätta om utbuds- och efterfrågemodellerna med differentialekvationer.',
+              'Vad har du för erfarenhet inom Banking & Finance?',
+              'Vilka kvantitativa projekt har du gjort?',
             ],
             [
-              'Hur analyserade du bolag inom energiomställningen?',
-              'Vad var svårast i revisionen av Tether?',
+              'Vilka tekniska färdigheter använder du oftast?',
+              'Hur har din master förberett dig för jobbet?',
             ],
             [
-              'Hur har volontärarbetet med Legambiente påverkat dig?',
-              'Hur använder du dina språk (IT, EN, SV, FR) i studier och arbete?',
+              'Berätta om din revisionserfarenhet.',
+              'Har du arbetat med kryptovalutor eller fintech?',
             ],
           ],
         };
@@ -469,41 +462,34 @@
         const text = (lastBotMessage || '').toLowerCase();
         let followUp;
 
-        if (text.includes('bitcoin') || text.includes('fee')) {
+        if (text.includes('tether') || text.includes('crypto')) {
           followUp =
             lang === 'it'
-              ? 'Che impatto pratico potrebbero avere le tue analisi sulle Bitcoin fees per utenti o aziende?'
+              ? 'Puoi approfondire la tua esperienza in Tether o nel mondo cripto?'
               : lang === 'sv'
-              ? 'Vilken praktisk nytta kan dina analyser av Bitcoin-avgifter ha för användare eller företag?'
-              : 'What practical impact could your Bitcoin fee analysis have for users or businesses?';
-        } else if (text.includes('energy') || text.includes('transition')) {
+              ? 'Kan du utveckla din erfarenhet på Tether eller inom krypto?'
+              : 'Can you elaborate on your experience at Tether or in crypto?';
+        } else if (text.includes('bdo') || text.includes('audit')) {
           followUp =
             lang === 'it'
-              ? 'Quali tipi di aziende vedi meglio posizionate nella transizione energetica?'
+              ? "Qual è stato il progetto di audit più sfidante?"
               : lang === 'sv'
-              ? 'Vilka typer av bolag ser du som bäst positionerade i energiomställningen?'
-              : 'Which types of companies do you see best positioned in the energy transition?';
-        } else if (text.includes('volont') || text.includes('legambiente')) {
+              ? 'Vilket var ditt mest utmanande revisionsuppdrag?'
+              : 'What was your most challenging audit engagement?';
+        } else if (text.includes('master') || text.includes('university')) {
           followUp =
             lang === 'it'
-              ? 'Che ruolo ti piacerebbe avere in futuri progetti di impatto sociale?'
+              ? 'Quali corsi del Master ti sono stati più utili?'
               : lang === 'sv'
-              ? 'Vilken roll skulle du vilja ha i framtida sociala projekt?'
-              : 'What role would you like to have in future social-impact projects?';
-        } else if (text.includes('lingu') || text.includes('language')) {
-          followUp =
-            lang === 'it'
-              ? 'Come pensi che il mix di lingue ti aiuti in un team internazionale?'
-              : lang === 'sv'
-              ? 'Hur hjälper din språkmix dig i internationella team?'
-              : 'How do you think your language mix helps you in international teams?';
+              ? 'Vilka masterkurser har varit mest användbara för dig?'
+              : 'Which Master courses have been most useful for you?';
         } else {
           followUp =
             lang === 'it'
-              ? 'Qual è la sfida personale che ti ha fatto crescere di più?'
+              ? 'In che tipo di ruolo ti vedi nei prossimi anni?'
               : lang === 'sv'
-              ? 'Vilken personlig utmaning har fått dig att växa mest?'
-              : 'What personal challenge has helped you grow the most?';
+              ? 'Vilken typ av roll ser du dig själv i de kommande åren?'
+              : 'What kind of role do you see yourself in over the next few years?';
         }
 
         suggestionIndex += 1;
@@ -552,17 +538,10 @@
       }
 
       async function send() {
-        if (isLoading) return;
-
         const text = inputEl.value.trim();
         if (!text) return;
 
-        isLoading = true;
         inputEl.value = '';
-
-        const t = uiText[currentLang];
-        sendBtn.disabled = true;
-        sendBtn.textContent = '...';
 
         messages.push({ role: 'user', content: text });
         render();
@@ -592,10 +571,6 @@
           messages.push(assistantMsg);
           lastBotMessage = assistantMsg.content || '';
           render();
-        } finally {
-          isLoading = false;
-          sendBtn.disabled = false;
-          sendBtn.textContent = uiText[currentLang].send;
         }
       }
 
