@@ -1,490 +1,538 @@
 <!DOCTYPE html>
 <html lang="it">
-<head>
-  <meta charset="UTF-8" />
-  <title>CV Chatbot – Pietro Mischi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #0b1220;
-      --accent: #38bdf8;
-      --accent-soft: #0ea5e9;
-      --text: #e5e7eb;
-      --text-soft: #9ca3af;
-      --border: #1f2937;
-      --danger: #f97373;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    .shell {
-      width: 100%;
-      max-width: 880px;
-      background: rgba(15, 23, 42, 0.96);
-      border-radius: 18px;
-      box-shadow:
-        0 18px 45px rgba(15, 23, 42, 0.8),
-        inset 0 0 0 1px rgba(148, 163, 184, 0.12);
-      padding: 20px 22px 18px;
-      backdrop-filter: blur(18px);
-      border: 1px solid rgba(148, 163, 184, 0.12);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .title {
-      font-size: 22px;
-      font-weight: 650;
-      letter-spacing: 0.02em;
-    }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--text-soft);
-    }
-
-    .controls {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      padding: 4px 10px;
-      background: rgba(15, 118, 188, 0.14);
-      border: 1px solid rgba(56, 189, 248, 0.45);
-      font-size: 11px;
-      color: #e0f2fe;
-    }
-
-    .pill-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
-    }
-
-    select {
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: #020617;
-      color: var(--text);
-      padding: 5px 10px;
-      font-size: 12px;
-      outline: none;
-    }
-
-    .reset-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(248, 113, 113, 0.6);
-      background: rgba(127, 29, 29, 0.4);
-      color: #fee2e2;
-      padding: 5px 12px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background 0.15s ease, transform 0.05s ease;
-    }
-
-    .reset-btn:hover { background: rgba(185, 28, 28, 0.7); }
-    .reset-btn:active { transform: scale(0.97); }
-
-    .chat {
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: radial-gradient(circle at top left, #020617 0, #020617 55%);
-      padding: 12px 12px 10px;
-      height: 360px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 14px;
-    }
-
-    .msg {
-      max-width: 80%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      line-height: 1.4;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-    }
-
-    .msg.user {
-      margin-left: auto;
-      background: linear-gradient(to right, #1d4ed8, #0ea5e9);
-      color: white;
-      border-bottom-right-radius: 2px;
-    }
-
-    .msg.bot {
-      background: rgba(15, 23, 42, 0.98);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      border-bottom-left-radius: 2px;
-    }
-
-    .msg.meta {
-      align-self: center;
-      max-width: 100%;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-soft);
-      font-size: 11px;
-      border: 1px dashed rgba(148, 163, 184, 0.4);
-    }
-
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .suggestion-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-bottom: 2px;
-    }
-
-    .suggestion-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text);
-      font-size: 12px;
-      padding: 5px 10px;
-      cursor: pointer;
-      max-width: 100%;
-      text-align: left;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-    }
-
-    .suggestion-btn:hover {
-      border-color: var(--accent-soft);
-      color: #e0f2fe;
-    }
-
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-top: 4px;
-    }
-
-    .input-shell {
-      flex: 1;
-      position: relative;
-    }
-
-    #input {
-      width: 100%;
-      padding: 10px 12px;
-      padding-right: 84px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.95);
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-    }
-
-    #input::placeholder { color: #6b7280; }
-
-    .hint {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .send-btn {
-      padding: 9px 16px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(to right, var(--accent-soft), #22c55e);
-      color: #0b1120;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      white-space: nowrap;
-      box-shadow: 0 10px 22px rgba(8, 47, 73, 0.6);
-      transition: transform 0.06s ease, box-shadow 0.1s ease, filter 0.1s ease;
-    }
-
-    .send-btn:hover { filter: brightness(1.05); }
-    .send-btn:active {
-      transform: translateY(1px);
-      box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
-    }
-
-    @media (max-width: 640px) {
-      .shell { padding: 16px 14px 14px; }
-      .chat { height: 320px; }
-      .title { font-size: 18px; }
-      .controls { flex-wrap: wrap; justify-content: flex-end; }
-      .msg { max-width: 92%; }
-      #input { font-size: 13px; padding-right: 70px; }
-      .send-btn { padding: 8px 13px; font-size: 12px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="shell">
-    <div class="header">
-      <div class="title-block">
-        <div class="title">CV Chatbot – Pietro Mischi</div>
-        <div class="subtitle" id="subtitle">
-          Ask anything about my Banking &amp; Finance background.
-        </div>
-      </div>
-      <div class="controls">
-        <div class="pill">
-          <span class="pill-dot"></span>
-          <span id="model-label">Llama 3.3 · Groq</span>
-        </div>
-        <select id="language-select">
-          <option value="it">Italiano</option>
-          <option value="en" selected>English</option>
-          <option value="sv">Svenska</option>
-        </select>
-        <button class="reset-btn" id="reset-btn">Reset chat</button>
-      </div>
-    </div>
-
-    <div id="chat" class="chat"></div>
-
-    <div>
-      <div class="suggestion-label" id="suggestion-label"></div>
-      <div id="suggestions" class="suggestions"></div>
-    </div>
-
-    <div class="input-row">
-      <div class="input-shell">
-        <input id="input" autocomplete="off" />
-        <div class="hint" id="hint-label">Enter ↵</div>
-      </div>
-      <button id="send-btn" class="send-btn">Send</button>
-    </div>
-  </div>
-
-  <script>
-    const chatEl = document.getElementById('chat');
-    const inputEl = document.getElementById('input');
-    const sendBtn = document.getElementById('send-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const langSelect = document.getElementById('language-select');
-    const subtitleEl = document.getElementById('subtitle');
-    const hintLabel = document.getElementById('hint-label');
-    const suggestionsEl = document.getElementById('suggestions');
-    const suggestionLabelEl = document.getElementById('suggestion-label');
-
-    const STORAGE_KEY = 'cv_chat_messages_v2';
-
-    const uiText = {
-      it: {
-        subtitle: 'Chiedimi qualsiasi cosa sul mio percorso in Banking & Finance.',
-        placeholder: 'Chiedi qualcosa sul mio CV...',
-        send: 'Invia',
-        hint: 'Invio ↵',
-        resetConfirm: 'Vuoi davvero resettare la conversazione?',
-        suggestionsLabel: 'Suggerimenti di domanda:'
-      },
-      en: {
-        subtitle: 'Ask me anything about my Banking & Finance background.',
-        placeholder: 'Ask something about my CV…',
-        send: 'Send',
-        hint: 'Enter ↵',
-        resetConfirm: 'Do you really want to reset the conversation?',
-        suggestionsLabel: 'Suggested questions:'
-      },
-      sv: {
-        subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
-        placeholder: 'Fråga något om mitt CV…',
-        send: 'Skicka',
-        hint: 'Enter ↵',
-        resetConfirm: 'Vill du verkligen återställa konversationen?',
-        suggestionsLabel: 'Förslag på frågor:'
+  <head>
+    <meta charset="UTF-8" />
+    <title>CV Chatbot Pietro Mischi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0f172a;
+        --card: #0b1220;
+        --accent: #38bdf8;
+        --accent-soft: #0ea5e9;
+        --text: #e5e7eb;
+        --text-soft: #9ca3af;
+        --border: #1f2937;
+        --danger: #f97373;
       }
-    };
 
-    const defaultSuggestions = {
-      it: [
-        'Puoi riassumere la tua esperienza in audit presso BDO Italia?',
-        'Qual è il tuo livello più alto di istruzione?',
-        'Che competenze quantitative hai sviluppato?'
-      ],
-      en: [
-        'Can you summarise your audit experience at BDO Italia?',
-        'What is your highest level of education?',
-        'Which quantitative skills have you developed?'
-      ],
-      sv: [
-        'Kan du sammanfatta din revisionserfarenhet på BDO Italia?',
-        'Vad är din högsta utbildningsnivå?',
-        'Vilka kvantitativa färdigheter har du utvecklat?'
-      ]
-    };
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    let currentLang = langSelect.value;
-    let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-    let currentSuggestions = defaultSuggestions[currentLang].slice(0, 3);
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          sans-serif;
+        background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
 
-    function applyLanguage() {
-      const t = uiText[currentLang];
-      subtitleEl.textContent = t.subtitle;
-      inputEl.placeholder = t.placeholder;
-      sendBtn.textContent = t.send;
-      hintLabel.textContent = t.hint;
-      suggestionLabelEl.textContent = t.suggestionsLabel;
-    }
+      .shell {
+        width: 100%;
+        max-width: 880px;
+        background: rgba(15, 23, 42, 0.96);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8),
+          inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+        padding: 20px 22px 18px;
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba(148, 163, 184, 0.12);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
 
-    function render() {
-      chatEl.innerHTML = '';
-      if (!messages.length) {
-        const meta = document.createElement('div');
-        meta.className = 'msg meta';
-        meta.textContent = currentLang === 'it'
-          ? 'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.'
-          : currentLang === 'sv'
-          ? 'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.'
-          : 'Tips: ask about banking experience, technical skills or academic projects.';
-        chatEl.appendChild(meta);
-      } else {
-        for (const m of messages) {
-          const div = document.createElement('div');
-          div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
-          div.textContent = m.content;
-          chatEl.appendChild(div);
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .title-block {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .title {
+        font-size: 22px;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+      }
+
+      .subtitle {
+        font-size: 13px;
+        color: var(--text-soft);
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 4px 10px;
+        background: rgba(15, 118, 188, 0.14);
+        border: 1px solid rgba(56, 189, 248, 0.45);
+        font-size: 11px;
+        color: #e0f2fe;
+      }
+
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+      }
+
+      select {
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #020617;
+        color: var(--text);
+        padding: 5px 10px;
+        font-size: 12px;
+        outline: none;
+      }
+
+      .reset-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(248, 113, 113, 0.6);
+        background: rgba(127, 29, 29, 0.4);
+        color: #fee2e2;
+        padding: 5px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background 0.15s ease, transform 0.05s ease;
+      }
+
+      .reset-btn:hover {
+        background: rgba(185, 28, 28, 0.7);
+      }
+
+      .reset-btn:active {
+        transform: scale(0.97);
+      }
+
+      .chat {
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: radial-gradient(circle at top left, #020617 0, #020617 55%);
+        padding: 12px 12px 10px;
+        height: 430px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 14px;
+      }
+
+      .msg {
+        max-width: 80%;
+        padding: 8px 10px;
+        border-radius: 10px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+      }
+
+      .msg.user {
+        margin-left: auto;
+        background: linear-gradient(to right, #1d4ed8, #0ea5e9);
+        color: #ffffff;
+        border-bottom-right-radius: 2px;
+      }
+
+      .msg.bot {
+        background: rgba(15, 23, 42, 0.98);
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        border-bottom-left-radius: 2px;
+      }
+
+      .msg.meta {
+        align-self: center;
+        max-width: 100%;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-soft);
+        font-size: 11px;
+        border: 1px dashed rgba(148, 163, 184, 0.4);
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-top: 2px;
+      }
+
+      .input-shell {
+        flex: 1;
+        position: relative;
+      }
+
+      .input-shell input {
+        width: 100%;
+        padding: 10px 12px;
+        padding-right: 84px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(15, 23, 42, 0.95);
+        color: var(--text);
+        font-size: 14px;
+        outline: none;
+      }
+
+      .input-shell input::placeholder {
+        color: #6b7280;
+      }
+
+      .hint {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 11px;
+        color: var(--text-soft);
+      }
+
+      .send-btn {
+        padding: 9px 16px;
+        border-radius: 999px;
+        border: none;
+        background: linear-gradient(to right, var(--accent-soft), #22c55e);
+        color: #0b1120;
+        font-weight: 600;
+        font-size: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 10px 22px rgba(8, 47, 73, 0.6);
+        transition: transform 0.06s ease, box-shadow 0.1s ease,
+          filter 0.1s ease;
+      }
+
+      .send-btn:hover {
+        filter: brightness(1.05);
+      }
+
+      .send-btn:active {
+        transform: translateY(1px);
+        box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
+      }
+
+      .suggestions-row {
+        margin-top: 6px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .suggestion-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.55);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-soft);
+        font-size: 12px;
+        padding: 6px 10px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.12s ease, color 0.12s ease,
+          transform 0.04s ease;
+      }
+
+      .suggestion-btn:hover {
+        background: rgba(56, 189, 248, 0.18);
+        color: var(--text);
+      }
+
+      .suggestion-btn:active {
+        transform: translateY(1px);
+      }
+
+      .disclaimer {
+        margin-top: 6px;
+        font-size: 10px;
+        color: var(--text-soft);
+        opacity: 0.8;
+        text-align: right;
+      }
+
+      @media (max-width: 640px) {
+        .shell {
+          padding: 16px 14px 14px;
+        }
+
+        .chat {
+          height: 360px;
+        }
+
+        .title {
+          font-size: 18px;
+        }
+
+        .controls {
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+
+        .msg {
+          max-width: 92%;
+        }
+
+        .input-shell input {
+          font-size: 13px;
+          padding-right: 70px;
+        }
+
+        .send-btn {
+          padding: 8px 13px;
+          font-size: 12px;
         }
       }
-      chatEl.scrollTop = chatEl.scrollHeight;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
-    }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="header">
+        <div class="title-block">
+          <div class="title">CV Chatbot Pietro Mischi</div>
+          <div class="subtitle" id="subtitle">
+            Ask anything about my Banking &amp; Finance background.
+          </div>
+        </div>
+        <div class="controls">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span id="model-label">Llama 3.3 Groq</span>
+          </div>
+          <select id="language-select">
+            <option value="it">Italiano</option>
+            <option value="en" selected>English</option>
+            <option value="sv">Svenska</option>
+          </select>
+          <button class="reset-btn" id="reset-btn">Reset chat</button>
+        </div>
+      </div>
 
-    function renderSuggestions() {
-      suggestionsEl.innerHTML = '';
-      if (!currentSuggestions || !currentSuggestions.length) return;
-      currentSuggestions.forEach(q => {
-        const btn = document.createElement('button');
-        btn.className = 'suggestion-btn';
-        btn.textContent = q;
-        btn.onclick = () => {
-          inputEl.value = q;
-          send();
-        };
-        suggestionsEl.appendChild(btn);
-      });
-    }
+      <div id="chat" class="chat"></div>
 
-    async function send() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      inputEl.value = '';
+      <div id="suggestions" class="suggestions-row"></div>
 
-      messages.push({ role: 'user', content: text });
-      render();
+      <div class="input-row">
+        <div class="input-shell">
+          <input id="input" autocomplete="off" />
+          <div class="hint" id="hint-label">Enter ↵</div>
+        </div>
+        <button id="send-btn" class="send-btn">Send</button>
+      </div>
 
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages, language: currentLang })
+      <div id="disclaimer" class="disclaimer">
+        AI-generated answers. They may contain inaccuracies.
+      </div>
+    </div>
+
+    <script>
+      const chatEl = document.getElementById('chat');
+      const inputEl = document.getElementById('input');
+      const sendBtn = document.getElementById('send-btn');
+      const resetBtn = document.getElementById('reset-btn');
+      const langSelect = document.getElementById('language-select');
+      const subtitleEl = document.getElementById('subtitle');
+      const hintLabel = document.getElementById('hint-label');
+      const suggestionsEl = document.getElementById('suggestions');
+      const disclaimerEl = document.getElementById('disclaimer');
+
+      const STORAGE_KEY = 'cv-chat-messages-v2';
+
+      const uiText = {
+        it: {
+          subtitle:
+            'Chiedimi qualsiasi cosa sul mio percorso in Banking & Finance.',
+          placeholder: 'Chiedi qualcosa sul mio CV...',
+          send: 'Invia',
+          hint: 'Invio ↵',
+          resetConfirm: 'Vuoi davvero resettare la conversazione?',
+          metaTips:
+            'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.',
+          disclaimer:
+            'Risposte generate con AI. Possono contenere imprecisioni.',
+        },
+        en: {
+          subtitle: 'Ask me anything about my Banking & Finance background.',
+          placeholder: 'Ask something about my CV…',
+          send: 'Send',
+          hint: 'Enter ↵',
+          resetConfirm: 'Do you really want to reset the conversation?',
+          metaTips:
+            'Tips: ask about banking experience, technical skills or academic projects.',
+          disclaimer:
+            'AI-generated answers. They may contain inaccuracies.',
+        },
+        sv: {
+          subtitle:
+            'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
+          placeholder: 'Fråga något om mitt CV…',
+          send: 'Skicka',
+          hint: 'Enter ↵',
+          resetConfirm: 'Vill du verkligen återställa konversationen?',
+          metaTips:
+            'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.',
+          disclaimer:
+            'Svar genereras med AI och kan innehålla fel.',
+        },
+      };
+
+      let currentLang = langSelect.value;
+      let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+
+      function applyLanguage() {
+        const t = uiText[currentLang];
+        subtitleEl.textContent = t.subtitle;
+        inputEl.placeholder = t.placeholder;
+        sendBtn.textContent = t.send;
+        hintLabel.textContent = t.hint;
+        disclaimerEl.textContent = t.disclaimer;
+      }
+
+      function getSuggestionsForLang(lang) {
+        if (lang === 'it') {
+          return [
+            'Qual è la tua esperienza in Banking & Finance?',
+            'Quali progetti quantitativi hai sviluppato?',
+            'Raccontami della tua esperienza in audit.',
+          ];
+        }
+        if (lang === 'sv') {
+          return [
+            'Vad har du för erfarenhet inom Banking & Finance?',
+            'Vilka kvantitativa projekt har du gjort?',
+            'Berätta om din revisionserfarenhet.',
+          ];
+        }
+        // en default
+        return [
+          'What is your experience in Banking & Finance?',
+          'Which quantitative projects have you worked on?',
+          'Tell me about your audit experience.',
+        ];
+      }
+
+      function renderSuggestions() {
+        suggestionsEl.innerHTML = '';
+        const list = getSuggestionsForLang(currentLang);
+        list.forEach((text) => {
+          const btn = document.createElement('button');
+          btn.className = 'suggestion-btn';
+          btn.textContent = text;
+          btn.onclick = () => {
+            inputEl.value = text;
+            send();
+          };
+          suggestionsEl.appendChild(btn);
         });
+      }
 
-        const data = await res.json();
-        const assistantMsg = {
-          role: 'assistant',
-          content: data.answer || '[No response from model]'
-        };
-        messages.push(assistantMsg);
+      function render() {
+        chatEl.innerHTML = '';
 
-        // aggiorna suggerimenti se arrivano dal backend
-        if (Array.isArray(data.suggestedQuestions) && data.suggestedQuestions.length) {
-          currentSuggestions = data.suggestedQuestions;
+        if (!messages.length) {
+          const meta = document.createElement('div');
+          meta.className = 'msg meta';
+          meta.textContent = uiText[currentLang].metaTips;
+          chatEl.appendChild(meta);
         } else {
-          currentSuggestions = defaultSuggestions[currentLang].slice(0, 3);
+          for (const m of messages) {
+            const div = document.createElement('div');
+            div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
+            div.textContent = m.content;
+            chatEl.appendChild(div);
+          }
         }
 
-        render();
+        chatEl.scrollTop = chatEl.scrollHeight;
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify(messages.slice(-30))
+        );
+
         renderSuggestions();
-      } catch (err) {
-        const assistantMsg = {
-          role: 'assistant',
-          content: '[Error: connection failed]'
-        };
-        messages.push(assistantMsg);
+      }
+
+      async function send() {
+        const text = inputEl.value.trim();
+        if (!text) return;
+
+        inputEl.value = '';
+
+        messages.push({ role: 'user', content: text });
         render();
+
+        try {
+          const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages, language: currentLang }),
+          });
+
+          const data = await res.json();
+
+          const assistantMsg = {
+            role: 'assistant',
+            content: data.answer || 'No response from model.',
+          };
+
+          messages.push(assistantMsg);
+          render();
+        } catch (err) {
+          const assistantMsg = {
+            role: 'assistant',
+            content: 'Error: connection failed.',
+          };
+          messages.push(assistantMsg);
+          render();
+        }
       }
-    }
 
-    sendBtn.onclick = send;
-    inputEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        send();
-      }
-    });
+      sendBtn.onclick = send;
 
-    resetBtn.onclick = () => {
-      const t = uiText[currentLang];
-      if (!confirm(t.resetConfirm)) return;
-      messages = [];
-      localStorage.removeItem(STORAGE_KEY);
-      currentSuggestions = defaultSuggestions[currentLang].slice(0, 3);
-      render();
-      renderSuggestions();
-    };
+      inputEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          send();
+        }
+      });
 
-    langSelect.onchange = () => {
-      currentLang = langSelect.value;
+      resetBtn.onclick = () => {
+        const t = uiText[currentLang];
+        if (!confirm(t.resetConfirm)) return;
+        messages = [];
+        localStorage.removeItem(STORAGE_KEY);
+        render();
+      };
+
+      langSelect.onchange = () => {
+        currentLang = langSelect.value;
+        applyLanguage();
+        render();
+      };
+
       applyLanguage();
-      // reset solo suggerimenti di default, non la chat
-      if (!messages.length) {
-        currentSuggestions = defaultSuggestions[currentLang].slice(0, 3);
-      }
-      renderSuggestions();
       render();
-    };
-
-    applyLanguage();
-    render();
-    renderSuggestions();
-  </script>
-</body>
+    </script>
+  </body>
 </html>
