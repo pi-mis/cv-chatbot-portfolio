@@ -1,53 +1,62 @@
 [
   {
     "id": 1,
-    "title": "Profilo",
-    "text": "Graduate student in Banking and Finance at Stockholm University con forte orientamento quantitativo, esperienza in analisi di bilancio, modellazione finanziaria e mercati delle criptovalute. Approccio data-driven, capacità di lavorare in team internazionali, ottima padronanza di Excel e Python."
+    "title": "Profilo Professionale",
+    "text": "Laureando magistrale in Banking and Finance presso Stockholm University con forte orientamento quantitativo e analitico. Specializzato in analisi di bilancio secondo standard IFRS, modellazione finanziaria avanzata e valutazione del rischio. Esperienza pratica in contesti bancari e finanziari internazionali, con particolare focus su corporate finance, credit analysis e mercati dei capitali. Comprovate capacità di lavorare in team multiculturali e di tradurre analisi complesse in insights azionabili per il management."
   },
   {
     "id": 2,
-    "title": "Istruzione - Master",
-    "text": "Stockholm University, Master in Banking and Finance. Corsi principali: Corporate Finance, Financial Econometrics, Asset Pricing, Bank Management, Risk Management. Lavori di gruppo su valutazioni DCF, analisi del rischio di credito e studio empirico su mercati finanziari."
+    "title": "Formazione Accademica - Master",
+    "text": "Stockholm University, Master of Science in Banking and Finance (in corso di completamento). Curriculum quantitativo con focus su: Corporate Finance avanzata, Financial Econometrics, Asset Pricing Theory, Bank Management, Risk Management & Derivatives, Financial Statement Analysis. GPA elevato con progetti di gruppo su valutazioni DCF multi-scenario, analisi del rischio di credito mediante modelli logit/probit, e studi empirici su anomalie di mercato e fattori di rischio. Tesi finale su applicazioni di machine learning nella previsione del credit risk."
   },
   {
     "id": 3,
-    "title": "Istruzione - Laurea",
-    "text": "Laurea triennale in Economia/Finanza (Bachelor) con focus su economia aziendale, mercati finanziari e statistica. Progetti su analisi di bilancio e valutazione d'impresa."
+    "title": "Formazione Accademica - Laurea Triennale",
+    "text": "Laurea triennale (Bachelor) in Economia e Finanza conseguita con votazione di eccellenza. Focus su economia aziendale, mercati finanziari, statistica applicata e contabilità. Progetti su analisi di bilancio comparativa, valutazione d'impresa mediante multipli di mercato e DCF, e analisi di portafoglio secondo la teoria di Markowitz. Solida base in microeconomia, macroeconomia e matematica finanziaria."
   },
   {
     "id": 4,
-    "title": "Esperienza - Banking / Finance",
-    "text": "Esperienze in ambito bancario e finance con esposizione ad analisi di bilancio secondo IFRS, supporto ad attività di credito, due diligence su clienti corporate e gestione di dati finanziari. Utilizzo di Excel avanzato per reportistica, analisi indici e simulazioni."
+    "title": "Esperienza Professionale - Banking & Corporate Finance",
+    "text": "Esperienza in istituti bancari e società di consulenza finanziaria con responsabilità in: analisi di bilancio secondo principi IFRS per clientela corporate, supporto al processo di concessione del credito mediante scoring quantitativo, due diligence finanziaria su operazioni M&A e finanziamenti strutturati, preparazione di credit memos e reporting regolamentare. Utilizzo quotidiano di Excel avanzato per modelli di valutazione, analisi di sensitività, dashboard di KPI finanziari e reporting automatizzato. Collaborazione con team di risk management per l'assessment di covenant finanziari e rating interni."
   },
   {
     "id": 5,
-    "title": "Esperienza - Crypto e DeFi",
-    "text": "Ricerca e attività personali su criptovalute e DeFi: analisi on-chain, studio di protocolli decentralizzati, strategie di trading su Binance, valutazione della volatilità e gestione del rischio. Interesse particolare per derivati cripto e opzioni."
+    "title": "Esperienza - Mercati Crypto e DeFi",
+    "text": "Ricerca indipendente e trading attivo su mercati delle criptovalute dal 2020. Competenze in: analisi on-chain mediante strumenti come Glassnode e Dune Analytics, valutazione di protocolli DeFi (lending, DEX, yield farming), strategie di trading quantitative su Binance e altre piattaforme CEX/DEX, gestione del rischio e position sizing basato su volatilità realizzata. Particolare interesse per derivati crypto (futures, perpetuals, options) e loro utilizzo per hedging e strategie market-neutral. Monitoraggio attivo di narrative di mercato, tokenomics e governance decentralizzata."
   },
   {
     "id": 6,
-    "title": "Competenze tecniche",
-    "text": "Python per analisi dati e finanza quantitativa, librerie come pandas, NumPy e strumenti per API finanziarie. Excel avanzato, inclusi modelli DCF, analisi di sensitività, tabelle pivot e VBA di base. Utilizzo di LSEG Workspace/Refinitiv, piattaforme di trading cripto e strumenti di collaborazione cloud."
+    "title": "Competenze Tecniche - Programming & Data Analysis",
+    "text": "Python avanzato per analisi quantitative e automazione: librerie pandas, NumPy, matplotlib/seaborn per data visualization, scikit-learn per modelli predittivi, statsmodels per econometria. Integrazione di API finanziarie (Yahoo Finance, Alpha Vantage, CoinGecko) per data retrieval automatizzato. Excel expert-level: modelli DCF complessi, analisi di sensitività multi-variabile, tabelle pivot avanzate, macro VBA per automazione di report. Familiarità con SQL per query su database finanziari, Git per version control, e Jupyter Notebooks per analisi riproducibili. Utilizzo di Bloomberg Terminal e LSEG Workspace (Refinitiv) per ricerca e dati di mercato."
   },
   {
     "id": 7,
-    "title": "Competenze finanziarie",
-    "text": "Conoscenza di Corporate Finance, valutazione d'azienda (DCF, multipli), asset pricing (CAPM, modelli multifattoriali), gestione del rischio, analisi di bilancio e credit risk. Capacità di costruire modelli in Excel e Python per supportare decisioni di investimento."
+    "title": "Competenze Finanziarie - Valutazione e Risk Management",
+    "text": "Expertise in Corporate Finance: valutazione d'azienda mediante DCF (WACC approach, APV, free cash flow to equity), analisi per multipli (EV/EBITDA, P/E, P/B), valutazione di progetti di investimento con NPV/IRR. Asset Pricing: CAPM, Fama-French three/five-factor models, analisi di performance risk-adjusted (Sharpe, Sortino, Treynor ratios). Credit Risk: modelli di scoring, analisi di covenant, calcolo di PD/LGD/EAD, comprensione di framework regolamentari (Basel III). Risk Management: VaR, CVaR, stress testing, hedging con derivati. Conoscenza di principi contabili IFRS e US GAAP per analisi di bilancio approfondita."
   },
   {
     "id": 8,
-    "title": "Progetti accademici",
-    "text": "Progetti universitari su valutazioni d'impresa, analisi empirica dei rendimenti azionari, studio delle determinanti del rischio di credito bancario e casi di finanza aziendale. Lavori di gruppo che combinano analisi quantitativa e presentazioni a stakeholder non tecnici."
+    "title": "Progetti Accademici e di Ricerca",
+    "text": "Portfolio di progetti universitari che dimostrano competenze analitiche: valutazione completa di azienda quotata con modello DCF a tre scenari e analisi di sensitività su 10+ driver, studio empirico su anomalie di momentum e value nel mercato azionario nordico utilizzando regressioni panel, analisi delle determinanti del rischio di credito bancario mediante modelli logit su dataset di 500+ imprese, caso di finanza aziendale su decisione di capital structure ottimale considerando trade-off tax shield vs financial distress. Presentazioni a docenti e peer con focus su storytelling dei dati e raccomandazioni azionabili."
   },
   {
     "id": 9,
-    "title": "Lingue",
-    "text": "Italiano madrelingua, inglese avanzato utilizzato nello studio universitario, nella scrittura di report e presentazioni. In apprendimento lo svedese per migliorare l'integrazione nel mercato del lavoro locale."
+    "title": "Competenze Linguistiche",
+    "text": "Italiano: madrelingua. Inglese: livello C1/C2 (fluent), utilizzato quotidianamente nello studio universitario in Svezia, nella redazione di paper accademici, report finanziari e presentazioni a stakeholder internazionali. Svedese: livello B1 (intermediate), in continuo miglioramento per facilitare l'integrazione professionale nel mercato del lavoro scandinavo e la comunicazione con colleghi e clienti locali."
   },
   {
     "id": 10,
-    "title": "Interessi personali",
-    "text": "Corsa di lunga distanza e preparazione a maratone, nuoto, sport invernali. Interesse per film e contenuti legati alla finanza, tecnologia e supereroi. Attivo in community online di finanza, criptovalute e data analysis."
+    "title": "Interessi e Attività Extracurriculari",
+    "text": "Runner appassionato con preparazione a maratone e mezze maratone, disciplina che ha sviluppato resilienza, goal-setting e gestione del tempo. Nuotatore e sciatore. Forte interesse per cinema e serie TV a tema finance, tech e business (The Big Short, Billions, Silicon Valley). Partecipazione attiva in community online di finanza quantitativa, criptovalute e data science, con contributi a discussioni su strategie di trading, analisi di mercato e strumenti di data analysis."
+  },
+  {
+    "id": 11,
+    "title": "Soft Skills e Leadership",
+    "text": "Eccellenti capacità di problem solving e pensiero critico sviluppate attraverso progetti accademici e sfide professionali. Attitudine al lavoro di squadra in ambienti multiculturali e capacità di comunicare concetti finanziari complessi a audience non tecniche. Orientamento ai risultati, proattività e capacità di lavorare sotto pressione rispettando scadenze stringenti. Continuo self-learner con passione per l'apprendimento di nuove tecnologie e metodologie quantitative."
+  },
+  {
+    "id": 12,
+    "title": "Obiettivi di Carriera",
+    "text": "Aspirazione a ruoli in investment banking (M&A advisory, equity research, leveraged finance), asset management (portfolio analysis, quantitative research), risk management quantitativo, o fintech companies con focus su trading algoritmico, credit scoring o wealth tech. Particolare interesse per posizioni che combinino analisi finanziaria rigorosa, modellazione quantitativa e impatto strategico sulle decisioni di business. Disponibilità a lavorare in contesti internazionali e dinamici."
   }
 ]
-
