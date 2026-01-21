@@ -30,8 +30,7 @@ export default async function handler(req, res) {
       en: 'inglese',
       sv: 'svedese',
     };
-    const lang = langNames[language] ? language : 'en';
-    const langLabel = langNames[lang];
+    const detectedLang = langNames[language] ? language : 'en';
 
     // Ultimo messaggio utente
     const userMessage = messages[messages.length - 1]?.content || '';
@@ -85,6 +84,8 @@ export default async function handler(req, res) {
       .map(c => `### ${c.title}\n${c.text}`)
       .join('\n\n');
 
+    const langLabel = langNames[detectedLang];
+
     const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
       return res.status(500).json({ error: 'Missing GROQ_API_KEY configuration' });
@@ -100,20 +101,12 @@ CONTESTO CV:
 - Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Master e Laurea), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
 - Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE e PERCORSO DI STUDI sono presenti qui sotto. Non dire mai che il CV non menziona esperienze, ruoli o livello di istruzione: leggi attentamente i blocchi e usa ciò che trovi.
 
-ISTRUZIONI SULLO STILE:
-1. Rispondi in modo diretto e specifico alla domanda, evitando descrizioni generiche del CV.
-2. Usa 2–5 frasi focalizzate sui dettagli più rilevanti (ruoli, responsabilità, risultati, strumenti, corsi chiave).
-3. Non copiare interi paragrafi del CV: sintetizza e collega le informazioni alla domanda.
-4. Metti in evidenza esperienze e risultati misurabili quando possibile (es. numero di clienti, grandezza del portafoglio, durata, livello di studi).
-
-DOMANDE SUGGERITE:
-Dopo la risposta principale, genera anche 2–3 domande successive che l'utente potrebbe voler fare, in ${langLabel}, nello stesso contesto del CV.
-- Le domande devono essere brevi e mirate (es. chiedere approfondimenti su skill, ruoli, progetti).
-- Restituisci le domande ESCLUSIVAMENTE in un array JSON sulla riga finale, nel formato:
-
-SUGGESTED_QUESTIONS_JSON: ["Domanda 1", "Domanda 2", "Domanda 3"]
-
-Non aggiungere testo dopo questa riga e non mettere commenti: solo l'array JSON dopo i due punti.
+REGOLE DI RISPOSTA:
+1. Usa SOLO le informazioni presenti nel contesto CV che ti viene fornito qui sotto. Non inventare fatti nuovi.
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, livello di studi).
+3. Dai risposte professionali, chiare e sintetiche, come in un colloquio o mail di presentazione.
+4. Metti in evidenza esperienze rilevanti (BDO Italia, audit di istituzioni finanziarie, Tether Holdings, competenze quantitative, ecc.) quando rispondi a domande su esperienza e skill.
+5. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
 
 CONTESTO CV (in italiano):
 ${context}
@@ -132,7 +125,7 @@ ${context}
         })),
       ],
       temperature: 0.3,
-      max_tokens: 900,
+      max_tokens: 800,
       top_p: 0.9,
       stream: false,
     };
@@ -159,33 +152,13 @@ ${context}
     }
 
     const data = await response.json();
-    const full = data.choices?.[0]?.message?.content || '';
-
-    // Separazione risposta / JSON domande suggerite
-    let answer = full;
-    let suggestedQuestions = [];
-
-    const marker = 'SUGGESTED_QUESTIONS_JSON:';
-    const idx = full.lastIndexOf(marker);
-    if (idx !== -1) {
-      answer = full.slice(0, idx).trim();
-      const jsonPart = full.slice(idx + marker.length).trim();
-      try {
-        const parsed = JSON.parse(jsonPart);
-        if (Array.isArray(parsed)) {
-          suggestedQuestions = parsed.filter(
-            q => typeof q === 'string' && q.trim().length > 0
-          );
-        }
-      } catch (e) {
-        console.error('Failed to parse suggested questions JSON:', e);
-      }
-    }
+    const answer =
+      data.choices?.[0]?.message?.content ||
+      'Sorry, I could not generate a response.';
 
     return res.status(200).json({
       answer,
-      language: lang,
-      suggestedQuestions,
+      language: detectedLang,
     });
   } catch (error) {
     console.error('Handler error:', error);
