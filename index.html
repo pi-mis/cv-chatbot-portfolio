@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pietro Mischi - CV Chatbot</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 700px; margin: 20px auto; }
+    #chat { border: 1px solid #ddd; padding: 10px; height: 400px; overflow-y: auto; margin-bottom: 10px; }
+    .msg-user { background: #e0f2ff; padding: 6px 8px; margin: 4px 0; border-radius: 6px; }
+    .msg-assistant { background: #f1f5f9; padding: 6px 8px; margin: 4px 0; border-radius: 6px; }
+    #input-row { display: flex; gap: 6px; }
+    #input { flex: 1; padding: 8px; }
+    button { padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h1>CV Chatbot – Pietro Mischi</h1>
+  <div id="chat"></div>
+  <div id="input-row">
+    <input id="input" placeholder="Chiedi qualcosa sul mio CV..." />
+    <button id="send-btn">Invia</button>
+  </div>
+
+  <script>
+    const chatEl = document.getElementById('chat');
+    const inputEl = document.getElementById('input');
+    const sendBtn = document.getElementById('send-btn');
+
+    let messages = JSON.parse(localStorage.getItem('cv_chat_messages') || '[]');
+
+    function render() {
+      chatEl.innerHTML = messages.map(m => `
+        <div class="${m.role === 'user' ? 'msg-user' : 'msg-assistant'}">
+          <strong>${m.role === 'user' ? 'Tu' : 'Bot'}:</strong> ${m.content}
+        </div>
+      `).join('');
+      chatEl.scrollTop = chatEl.scrollHeight;
+      localStorage.setItem('cv_chat_messages', JSON.stringify(messages.slice(-20)));
+    }
+
+    async function send() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      inputEl.value = '';
+      messages.push({ role: 'user', content: text });
+      render();
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages })
+      });
+
+      const reader = res.body.getReader();
+      let assistantMsg = { role: 'assistant', content: '' };
+      messages.push(assistantMsg);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = new TextDecoder().decode(value);
+        assistantMsg.content += chunk;
+        render();
+      }
+    }
+
+    sendBtn.onclick = send;
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter') send();
+    });
+
+    render();
+  </script>
+</body>
+</html>

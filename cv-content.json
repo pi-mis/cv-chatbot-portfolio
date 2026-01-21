@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "title": "Profilo",
+    "text": "Graduate student in Banking and Finance at Stockholm University con forte orientamento quantitativo, esperienza in analisi di bilancio, modellazione finanziaria e mercati delle criptovalute. Approccio data-driven, capacità di lavorare in team internazionali, ottima padronanza di Excel e Python."
+  },
+  {
+    "id": 2,
+    "title": "Istruzione - Master",
+    "text": "Stockholm University, Master in Banking and Finance. Corsi principali: Corporate Finance, Financial Econometrics, Asset Pricing, Bank Management, Risk Management. Lavori di gruppo su valutazioni DCF, analisi del rischio di credito e studio empirico su mercati finanziari."
+  },
+  {
+    "id": 3,
+    "title": "Istruzione - Laurea",
+    "text": "Laurea triennale in Economia/Finanza (Bachelor) con focus su economia aziendale, mercati finanziari e statistica. Progetti su analisi di bilancio e valutazione d'impresa."
+  },
+  {
+    "id": 4,
+    "title": "Esperienza - Banking / Finance",
+    "text": "Esperienze in ambito bancario e finance con esposizione ad analisi di bilancio secondo IFRS, supporto ad attività di credito, due diligence su clienti corporate e gestione di dati finanziari. Utilizzo di Excel avanzato per reportistica, analisi indici e simulazioni."
+  },
+  {
+    "id": 5,
+    "title": "Esperienza - Crypto e DeFi",
+    "text": "Ricerca e attività personali su criptovalute e DeFi: analisi on-chain, studio di protocolli decentralizzati, strategie di trading su Binance, valutazione della volatilità e gestione del rischio. Interesse particolare per derivati cripto e opzioni."
+  },
+  {
+    "id": 6,
+    "title": "Competenze tecniche",
+    "text": "Python per analisi dati e finanza quantitativa, librerie come pandas, NumPy e strumenti per API finanziarie. Excel avanzato, inclusi modelli DCF, analisi di sensitività, tabelle pivot e VBA di base. Utilizzo di LSEG Workspace/Refinitiv, piattaforme di trading cripto e strumenti di collaborazione cloud."
+  },
+  {
+    "id": 7,
+    "title": "Competenze finanziarie",
+    "text": "Conoscenza di Corporate Finance, valutazione d'azienda (DCF, multipli), asset pricing (CAPM, modelli multifattoriali), gestione del rischio, analisi di bilancio e credit risk. Capacità di costruire modelli in Excel e Python per supportare decisioni di investimento."
+  },
+  {
+    "id": 8,
+    "title": "Progetti accademici",
+    "text": "Progetti universitari su valutazioni d'impresa, analisi empirica dei rendimenti azionari, studio delle determinanti del rischio di credito bancario e casi di finanza aziendale. Lavori di gruppo che combinano analisi quantitativa e presentazioni a stakeholder non tecnici."
+  },
+  {
+    "id": 9,
+    "title": "Lingue",
+    "text": "Italiano madrelingua, inglese avanzato utilizzato nello studio universitario, nella scrittura di report e presentazioni. In apprendimento lo svedese per migliorare l'integrazione nel mercato del lavoro locale."
+  },
+  {
+    "id": 10,
+    "title": "Interessi personali",
+    "text": "Corsa di lunga distanza e preparazione a maratone, nuoto, sport invernali. Interesse per film e contenuti legati alla finanza, tecnologia e supereroi. Attivo in community online di finanza, criptovalute e data analysis."
+  }
+]
+cv-chatbot-portfolio
