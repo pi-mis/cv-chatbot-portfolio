@@ -237,7 +237,7 @@
       <div class="title-block">
         <div class="title">CV Chatbot – Pietro Mischi</div>
         <div class="subtitle" id="subtitle">
-          Ask anything about my background in Banking &amp; Finance.
+          Ask anything about my Banking &amp; Finance background.
         </div>
       </div>
       <div class="controls">
@@ -346,7 +346,7 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages, language: currentLang })
+          body: JSON.stringify({ messages })
         });
 
         const data = await res.json();

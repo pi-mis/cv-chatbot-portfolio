@@ -2,19 +2,13 @@ import cvContent from '../cv-content.json';
 
 export const maxDuration = 30;
 
-const SYSTEM_LANG_MAP = {
-  it: 'Rispondi in italiano.',
-  en: 'Answer in English.',
-  sv: 'Svara på svenska.'
-};
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { messages, language = 'it' } = req.body || {};
+    const { messages } = req.body || {};
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Missing messages' });
     }
@@ -54,8 +48,6 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'Missing GROQ_API_KEY' });
     }
 
-    const systemLang = SYSTEM_LANG_MAP[language] || SYSTEM_LANG_MAP.it;
-
     const body = {
       model: 'llama-3.3-70b-versatile',
       messages: [
@@ -64,9 +56,9 @@ export default async function handler(req, res) {
           content:
             'Sei un assistente che risponde a domande sul CV di Pietro Mischi. ' +
             'Usa SOLO le informazioni fornite nel contesto del CV (in italiano). ' +
-            systemLang +
-            ' Se la domanda è in un\'altra lingua, traduci la risposta nella lingua indicata. ' +
-            'Non dire mai che non hai informazioni se nel contesto ci sono dettagli rilevanti: ' +
+            'La risposta deve essere nella STESSA lingua dell’ultima domanda dell’utente ' +
+            '(se l’utente scrive in inglese, rispondi in inglese; se scrive in svedese, rispondi in svedese; ecc.). ' +
+            'Non dire che non hai informazioni se nel contesto ci sono dettagli rilevanti: ' +
             'in quel caso usa il contesto per dare la migliore risposta possibile.'
         },
         {
