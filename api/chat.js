@@ -1,5 +1,3 @@
-// api/chat.js (o /api/chat/route.js se usi Next 13+ app router)
-// Assicurati che il path verso cv-content.json sia corretto rispetto alla struttura del progetto
 import cvContent from '../cv-content.json';
 
 export const config = {
@@ -22,7 +20,6 @@ export default async function handler(req, res) {
 
   try {
     const { messages, language = 'en' } = req.body || {};
-
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ error: 'Invalid messages format' });
     }
@@ -33,7 +30,6 @@ export default async function handler(req, res) {
       en: 'inglese',
       sv: 'svedese',
     };
-
     const detectedLang = langNames[language] ? language : 'en';
 
     // Ultimo messaggio utente
@@ -43,13 +39,13 @@ export default async function handler(req, res) {
     // Keyword dal messaggio
     const keywords = userMessageLower
       .split(/\W+/)
-      .filter((w) => w.length > 3);
+      .filter(w => w.length > 3);
 
     // Scoring dei chunk del CV
-    const scoredChunks = cvContent.map((chunk) => {
+    const scoredChunks = cvContent.map(chunk => {
       const chunkText = `${chunk.title} ${chunk.text}`.toLowerCase();
       let score = 0;
-      keywords.forEach((keyword) => {
+      keywords.forEach(keyword => {
         const count = (chunkText.match(new RegExp(keyword, 'g')) || []).length;
         score += count;
       });
@@ -59,7 +55,7 @@ export default async function handler(req, res) {
     scoredChunks.sort((a, b) => b.score - a.score);
 
     // 1) chunk rilevanti per keyword
-    let relevantChunks = scoredChunks.filter((c) => c.score > 0).slice(0, 5);
+    let relevantChunks = scoredChunks.filter(c => c.score > 0).slice(0, 5);
 
     // 2) fallback se nessun match
     if (relevantChunks.length === 0) {
@@ -68,11 +64,10 @@ export default async function handler(req, res) {
 
     // 3) aggiungi SEMPRE profilo (1) + formazione (2,3)
     const alwaysIncludeIds = [1, 2, 3];
-    const existingIds = new Set(relevantChunks.map((c) => c.id));
-
-    alwaysIncludeIds.forEach((id) => {
+    const existingIds = new Set(relevantChunks.map(c => c.id));
+    alwaysIncludeIds.forEach(id => {
       if (!existingIds.has(id)) {
-        const found = cvContent.find((c) => c.id === id);
+        const found = cvContent.find(c => c.id === id);
         if (found) {
           relevantChunks.push(found);
           existingIds.add(id);
@@ -86,16 +81,14 @@ export default async function handler(req, res) {
     }
 
     const context = relevantChunks
-      .map((c) => `### ${c.title}\n${c.text}`)
+      .map(c => `### ${c.title}\n${c.text}`)
       .join('\n\n');
 
     const langLabel = langNames[detectedLang];
-    const groqApiKey = process.env.GROQ_API_KEY;
 
+    const groqApiKey = process.env.GROQ_API_KEY;
     if (!groqApiKey) {
-      return res
-        .status(500)
-        .json({ error: 'Missing GROQ_API_KEY configuration' });
+      return res.status(500).json({ error: 'Missing GROQ_API_KEY configuration' });
     }
 
     const systemPrompt = `
@@ -106,23 +99,16 @@ LINGUA:
 
 CONTESTO CV:
 - Il contesto qui sotto contiene il profilo, le ESPERIENZE LAVORATIVE (incluso BDO Italia e Tether Holdings), la formazione accademica (Master e Laurea), le competenze tecniche e finanziarie, i progetti accademici, le lingue, gli interessi e i dettagli personali di Pietro.
-- Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE e PERCORSO DI STUDI sono presenti qui sotto. Non dire mai che il CV non menziona esperienze, ruoli o livello di istruzione: leggi attentamente i blocchi e usa ciò che trovi.
-
-STILE DI RISPOSTA:
-- Dai risposte brevi, specifiche e concrete (massimo 4–6 frasi).
-- Evita frasi troppo generiche o motivazionali.
-- Cita sempre esperienze, ruoli, risultati o competenze precise dal contesto CV.
-- Quando possibile, fornisci esempi pratici (es. “Nel ruolo X ha fatto Y, ottenendo Z”).
+- Tutte le informazioni necessarie sulle sue ESPERIENZE, COMPETENZE e PERCORSO DI STUDI sono presenti qui sotto. Non dire mai che il CV non menziona esperienze, ruoli o livello di istruzione: leggi attentamente i blocchi e usa ciÃ² che trovi.
 
 REGOLE DI RISPOSTA:
 1. Usa SOLO le informazioni presenti nel contesto CV che ti viene fornito qui sotto. Non inventare fatti nuovi.
-2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciò che è presente nel contesto (ruoli, competenze, corsi, livello di studi).
+2. Se una domanda riguarda un dettaglio NON esplicitamente menzionato, dillo chiaramente ma collega comunque la risposta a ciÃ² che Ã¨ presente nel contesto (ruoli, competenze, corsi, livello di studi).
 3. Dai risposte professionali, chiare e sintetiche, come in un colloquio o mail di presentazione.
 4. Metti in evidenza esperienze rilevanti (BDO Italia, audit di istituzioni finanziarie, Tether Holdings, competenze quantitative, ecc.) quando rispondi a domande su esperienza e skill.
 5. Non usare formulazioni del tipo "il contesto non menziona..." se nel contesto ci sono informazioni collegabili alla domanda.
 
 CONTESTO CV (in italiano):
-
 ${context}
 `.trim();
 
@@ -133,7 +119,7 @@ ${context}
           role: 'system',
           content: systemPrompt,
         },
-        ...messages.slice(-8).map((m) => ({
+        ...messages.slice(-8).map(m => ({
           role: m.role,
           content: m.content,
         })),
@@ -168,7 +154,7 @@ ${context}
     const data = await response.json();
     const answer =
       data.choices?.[0]?.message?.content ||
-      'Mi dispiace, non sono riuscito a generare una risposta.';
+      'Sorry, I could not generate a response.';
 
     return res.status(200).json({
       answer,
