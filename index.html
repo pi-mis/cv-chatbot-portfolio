@@ -42,7 +42,7 @@
       border: 1px solid rgba(148, 163, 184, 0.12);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 10px;
     }
 
     .header {
@@ -124,7 +124,7 @@
       border: 1px solid var(--border);
       background: radial-gradient(circle at top left, #020617 0, #020617 55%);
       padding: 12px 12px 10px;
-      height: 430px;
+      height: 360px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -165,11 +165,44 @@
       border: 1px dashed rgba(148, 163, 184, 0.4);
     }
 
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .suggestion-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-bottom: 2px;
+    }
+
+    .suggestion-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text);
+      font-size: 12px;
+      padding: 5px 10px;
+      cursor: pointer;
+      max-width: 100%;
+      text-align: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .suggestion-btn:hover {
+      border-color: var(--accent-soft);
+      color: #e0f2fe;
+    }
+
     .input-row {
       display: flex;
       gap: 10px;
       align-items: center;
-      margin-top: 2px;
+      margin-top: 4px;
     }
 
     .input-shell {
@@ -222,7 +255,7 @@
 
     @media (max-width: 640px) {
       .shell { padding: 16px 14px 14px; }
-      .chat { height: 360px; }
+      .chat { height: 320px; }
       .title { font-size: 18px; }
       .controls { flex-wrap: wrap; justify-content: flex-end; }
       .msg { max-width: 92%; }
@@ -256,6 +289,11 @@
 
     <div id="chat" class="chat"></div>
 
+    <div>
+      <div class="suggestion-label" id="suggestion-label"></div>
+      <div id="suggestions" class="suggestions"></div>
+    </div>
+
     <div class="input-row">
       <div class="input-shell">
         <input id="input" autocomplete="off" />
@@ -273,6 +311,8 @@
     const langSelect = document.getElementById('language-select');
     const subtitleEl = document.getElementById('subtitle');
     const hintLabel = document.getElementById('hint-label');
+    const suggestionsEl = document.getElementById('suggestions');
+    const suggestionLabelEl = document.getElementById('suggestion-label');
 
     const STORAGE_KEY = 'cv_chat_messages_v2';
 
@@ -282,114 +322,33 @@
         placeholder: 'Chiedi qualcosa sul mio CV...',
         send: 'Invia',
         hint: 'Invio ↵',
-        resetConfirm: 'Vuoi davvero resettare la conversazione?'
+        resetConfirm: 'Vuoi davvero resettare la conversazione?',
+        suggestionsLabel: 'Suggerimenti di domanda:'
       },
       en: {
         subtitle: 'Ask me anything about my Banking & Finance background.',
         placeholder: 'Ask something about my CV…',
         send: 'Send',
         hint: 'Enter ↵',
-        resetConfirm: 'Do you really want to reset the conversation?'
+        resetConfirm: 'Do you really want to reset the conversation?',
+        suggestionsLabel: 'Suggested questions:'
       },
       sv: {
         subtitle: 'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
         placeholder: 'Fråga något om mitt CV…',
         send: 'Skicka',
         hint: 'Enter ↵',
-        resetConfirm: 'Vill du verkligen återställa konversationen?'
+        resetConfirm: 'Vill du verkligen återställa konversationen?',
+        suggestionsLabel: 'Förslag på frågor:'
       }
     };
 
-    let currentLang = langSelect.value;
-    let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-    function applyLanguage() {
-      const t = uiText[currentLang];
-      subtitleEl.textContent = t.subtitle;
-      inputEl.placeholder = t.placeholder;
-      sendBtn.textContent = t.send;
-      hintLabel.textContent = t.hint;
-    }
-
-    function render() {
-      chatEl.innerHTML = '';
-      if (!messages.length) {
-        const meta = document.createElement('div');
-        meta.className = 'msg meta';
-        meta.textContent = currentLang === 'it'
-          ? 'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.'
-          : currentLang === 'sv'
-          ? 'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.'
-          : 'Tips: ask about banking experience, technical skills or academic projects.';
-        chatEl.appendChild(meta);
-      } else {
-        for (const m of messages) {
-          const div = document.createElement('div');
-          div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
-          div.textContent = m.content;
-          chatEl.appendChild(div);
-        }
-      }
-      chatEl.scrollTop = chatEl.scrollHeight;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-30)));
-    }
-
-    async function send() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      inputEl.value = '';
-
-      messages.push({ role: 'user', content: text });
-      render();
-
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages, language: currentLang })
-        });
-
-        const data = await res.json();
-        const assistantMsg = {
-          role: 'assistant',
-          content: data.answer || '[No response from model]'
-        };
-        messages.push(assistantMsg);
-        render();
-      } catch (err) {
-        const assistantMsg = {
-          role: 'assistant',
-          content: '[Error: connection failed]'
-        };
-        messages.push(assistantMsg);
-        render();
-      }
-    }
-
-    sendBtn.onclick = send;
-    inputEl.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        send();
-      }
-    });
-
-    resetBtn.onclick = () => {
-      const t = uiText[currentLang];
-      if (!confirm(t.resetConfirm)) return;
-      messages = [];
-      localStorage.removeItem(STORAGE_KEY);
-      render();
-    };
-
-    langSelect.onchange = () => {
-      currentLang = langSelect.value;
-      applyLanguage();
-      render();
-    };
-
-    applyLanguage();
-    render();
-  </script>
-</body>
-</html>
+    const defaultSuggestions = {
+      it: [
+        'Puoi riassumere la tua esperienza in audit presso BDO Italia?',
+        'Qual è il tuo livello più alto di istruzione?',
+        'Che competenze quantitative hai sviluppato?'
+      ],
+      en: [
+        'Can you summarise your audit experience at BDO Italia?',
+        '
