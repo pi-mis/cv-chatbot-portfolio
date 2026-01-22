@@ -115,17 +115,15 @@ LINGUA:
 - Rispondi SEMPRE in ${langLabel}. Ignora la lingua della domanda e usa SOLO ${langLabel} per le risposte.
 
 CONTESTO CV:
-- Il contesto contiene profilo, esperienze lavorative (BDO Italia, Tether, ecc.), formazione, competenze, lingue, progetti, volontariato e interessi, in italiano, inglese e svedese.
+- Il contesto contiene profilo, esperienze, formazione, competenze, lingue, progetti, volontariato e interessi.
 
 STILE DI RISPOSTA:
 - Risposte molto brevi e dirette: massimo 2–3 frasi.
-- Vai dritto al punto, senza frasi motivazionali.
-- Cita ruoli, risultati o progetti specifici solo se servono a rispondere meglio.
+- Vai dritto al punto.
 
 REGOLE DI RISPOSTA:
 1. Usa principalmente le informazioni presenti nel contesto CV e non inventare fatti in contrasto con esso.
-2. Se la domanda è formulata in modo diverso dal testo del CV o in un'altra lingua, collega la domanda alla sezione più vicina (es. lingue, formazione, esperienze) e dai comunque una risposta sintetica.
-3. Mantieni un tono professionale ma naturale, come in un breve scambio con un recruiter.
+2. Collega sempre la risposta a sezioni rilevanti del CV.
 
 CONTESTO CV:
 
@@ -133,7 +131,7 @@ ${context}
     `.trim();
 
     const requestBody = {
-      model: 'llama-3.3-70b-versatile', // modello principale
+      model: 'llama-3.1-8b-instant', // modello alternativo più leggero
       messages: [
         {
           role: 'system',
@@ -145,7 +143,7 @@ ${context}
         })),
       ],
       temperature: 0.3,
-      max_tokens: 250,
+      max_tokens: 200,
       top_p: 0.9,
       stream: false,
     };
@@ -164,7 +162,7 @@ ${context}
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('Groq API error (v1):', errorText);
+      console.error('Groq API error (v2):', errorText);
       return res.status(500).json({
         error: 'AI service error',
         details: response.statusText,
@@ -181,7 +179,7 @@ ${context}
       language: detectedLang,
     });
   } catch (error) {
-    console.error('Handler error (v1):', error);
+    console.error('Handler error (v2):', error);
     return res.status(500).json({
       error: 'Internal server error',
       message: error.message,
