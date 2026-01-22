@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vercel dev",
-    "start": "vercel dev",
+    "dev": "vercel dev --listen 3000",
+    "start": "vercel dev --listen 3000",
     "build": "echo \"No build step\""
   },
   "dependencies": {
