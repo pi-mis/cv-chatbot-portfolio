@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>CV Chatbot Pietro Mischi</title>
+    <title>Pietro's AI Twin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
       :root {
@@ -31,7 +31,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 24px;
+        padding: 16px;
       }
 
       .shell {
@@ -41,29 +41,32 @@
         border-radius: 18px;
         box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8),
           inset 0 0 0 1px rgba(148, 163, 184, 0.12);
-        padding: 20px 22px 18px;
+        padding: 18px 18px 16px;
         backdrop-filter: blur(18px);
         border: 1px solid rgba(148, 163, 184, 0.12);
         display: flex;
         flex-direction: column;
-        gap: 14px;
+        gap: 12px;
       }
 
       .header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         gap: 12px;
+        flex-wrap: wrap;
       }
 
       .title-block {
         display: flex;
         flex-direction: column;
         gap: 4px;
+        flex: 1;
+        min-width: 0;
       }
 
       .title {
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 650;
         letter-spacing: 0.02em;
       }
@@ -75,28 +78,10 @@
 
       .controls {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        border-radius: 999px;
-        padding: 4px 10px;
-        background: rgba(15, 118, 188, 0.14);
-        border: 1px solid rgba(56, 189, 248, 0.45);
-        font-size: 11px;
-        color: #e0f2fe;
-      }
-
-      .pill-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: #22c55e;
-        box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
 
       select {
@@ -118,6 +103,7 @@
         font-size: 12px;
         cursor: pointer;
         transition: background 0.15s ease, transform 0.05s ease;
+        white-space: nowrap;
       }
 
       .reset-btn:hover {
@@ -132,8 +118,9 @@
         border-radius: 14px;
         border: 1px solid var(--border);
         background: radial-gradient(circle at top left, #020617 0, #020617 55%);
-        padding: 12px 12px 10px;
-        height: 430px;
+        padding: 10px 10px 8px;
+        height: 420px;
+        max-height: calc(100vh - 220px);
         overflow-y: auto;
         display: flex;
         flex-direction: column;
@@ -176,19 +163,21 @@
 
       .input-row {
         display: flex;
-        gap: 10px;
+        gap: 8px;
         align-items: center;
-        margin-top: 2px;
+        margin-top: 4px;
+        flex-wrap: nowrap;
       }
 
       .input-shell {
         flex: 1;
         position: relative;
+        min-width: 0;
       }
 
       .input-shell input {
         width: 100%;
-        padding: 10px 12px;
+        padding: 9px 12px;
         padding-right: 84px;
         border-radius: 999px;
         border: 1px solid var(--border);
@@ -212,7 +201,7 @@
       }
 
       .send-btn {
-        padding: 9px 16px;
+        padding: 8px 14px;
         border-radius: 999px;
         border: none;
         background: linear-gradient(to right, var(--accent-soft), #22c55e);
@@ -273,35 +262,30 @@
       }
 
       @media (max-width: 640px) {
-        .shell {
-          padding: 16px 14px 14px;
-        }
-
-        .chat {
-          height: 360px;
-        }
-
         .title {
           font-size: 18px;
         }
 
-        .controls {
-          flex-wrap: wrap;
-          justify-content: flex-end;
+        .subtitle {
+          font-size: 12px;
+        }
+
+        .shell {
+          padding: 14px 12px;
+          border-radius: 14px;
+        }
+
+        .chat {
+          height: 360px;
+          max-height: calc(100vh - 210px);
         }
 
         .msg {
-          max-width: 92%;
+          max-width: 90%;
         }
 
-        .input-shell input {
-          font-size: 13px;
-          padding-right: 70px;
-        }
-
-        .send-btn {
-          padding: 8px 13px;
-          font-size: 12px;
+        .controls {
+          justify-content: flex-start;
         }
       }
     </style>
@@ -310,16 +294,14 @@
     <div class="shell">
       <div class="header">
         <div class="title-block">
-          <div class="title">CV Chatbot Pietro Mischi</div>
+          <div class="title">Pietro's AI Twin</div>
           <div class="subtitle" id="subtitle">
-            Ask anything about my Banking &amp; Finance background.
+            Ask me anything about my background. This AI chatbot is a personal
+            project I built to go beyond a static CV and let you explore details
+            about me that usually stay hidden on paper.
           </div>
         </div>
         <div class="controls">
-          <div class="pill">
-            <span class="pill-dot"></span>
-            <span id="model-label">Llama 3.3 Groq</span>
-          </div>
           <select id="language-select">
             <option value="it">Italiano</option>
             <option value="en" selected>English</option>
@@ -357,43 +339,44 @@
       const suggestionsEl = document.getElementById('suggestions');
       const disclaimerEl = document.getElementById('disclaimer');
 
-      const STORAGE_KEY = 'cv-chat-messages-v2';
+      const STORAGE_KEY = 'cv-chat-messages';
 
       const uiText = {
         it: {
           subtitle:
-            'Chiedimi qualsiasi cosa sul mio percorso in Banking & Finance.',
-          placeholder: 'Chiedi qualcosa sul mio CV...',
+            'Chiedimi qualcosa sul mio percorso. Questo chatbot AI è un progetto personale che ho creato per andare oltre un CV statico e far emergere dettagli di me che normalmente non si vedono sulla carta.',
+          placeholder: 'Chiedi qualcosa sul mio profilo...',
           send: 'Invia',
           hint: 'Invio ↵',
           resetConfirm: 'Vuoi davvero resettare la conversazione?',
           metaTips:
-            'Suggerimenti: chiedi delle mie esperienze di banking, delle competenze tecniche o dei progetti accademici.',
+            'Suggerimenti: chiedi delle esperienze in BDO, del Master a Stoccolma, o dei progetti accademici.',
           disclaimer:
-            'Risposte generate con AI. Possono contenere imprecisioni.',
+            'Risposte generate con AI. Potrebbero contenere imprecisioni.',
         },
         en: {
-          subtitle: 'Ask me anything about my Banking & Finance background.',
-          placeholder: 'Ask something about my CV…',
+          subtitle:
+            'Ask me anything about my background. This AI chatbot is a personal project I built to go beyond a static CV and surface details about me that usually stay hidden on paper.',
+          placeholder: 'Ask something about my profile...',
           send: 'Send',
           hint: 'Enter ↵',
           resetConfirm: 'Do you really want to reset the conversation?',
           metaTips:
-            'Tips: ask about banking experience, technical skills or academic projects.',
+            'Tips: ask about my BDO experience, my Master in Stockholm, or academic projects.',
           disclaimer:
             'AI-generated answers. They may contain inaccuracies.',
         },
         sv: {
           subtitle:
-            'Fråga mig vad som helst om min bakgrund inom Banking & Finance.',
-          placeholder: 'Fråga något om mitt CV…',
+            'Fråga vad som helst om min bakgrund. Den här AI-chatten är ett personligt projekt för att gå bortom ett statiskt CV och lyfta fram detaljer om mig som vanligtvis inte syns på papper.',
+          placeholder: 'Fråga något om min profil...',
           send: 'Skicka',
           hint: 'Enter ↵',
           resetConfirm: 'Vill du verkligen återställa konversationen?',
           metaTips:
-            'Tips: fråga om min bankerfarenhet, tekniska färdigheter eller akademiska projekt.',
+            'Tips: fråga om min erfarenhet på BDO, min master i Stockholm eller akademiska projekt.',
           disclaimer:
-            'Svar genereras med AI och kan innehålla fel.',
+            'Svar genereras av AI och kan innehålla fel.',
         },
       };
 
@@ -407,44 +390,6 @@
         sendBtn.textContent = t.send;
         hintLabel.textContent = t.hint;
         disclaimerEl.textContent = t.disclaimer;
-      }
-
-      function getSuggestionsForLang(lang) {
-        if (lang === 'it') {
-          return [
-            'Qual è la tua esperienza in Banking & Finance?',
-            'Quali progetti quantitativi hai sviluppato?',
-            'Raccontami della tua esperienza in audit.',
-          ];
-        }
-        if (lang === 'sv') {
-          return [
-            'Vad har du för erfarenhet inom Banking & Finance?',
-            'Vilka kvantitativa projekt har du gjort?',
-            'Berätta om din revisionserfarenhet.',
-          ];
-        }
-        // en default
-        return [
-          'What is your experience in Banking & Finance?',
-          'Which quantitative projects have you worked on?',
-          'Tell me about your audit experience.',
-        ];
-      }
-
-      function renderSuggestions() {
-        suggestionsEl.innerHTML = '';
-        const list = getSuggestionsForLang(currentLang);
-        list.forEach((text) => {
-          const btn = document.createElement('button');
-          btn.className = 'suggestion-btn';
-          btn.textContent = text;
-          btn.onclick = () => {
-            inputEl.value = text;
-            send();
-          };
-          suggestionsEl.appendChild(btn);
-        });
       }
 
       function render() {
@@ -469,8 +414,6 @@
           STORAGE_KEY,
           JSON.stringify(messages.slice(-30))
         );
-
-        renderSuggestions();
       }
 
       async function send() {
@@ -493,7 +436,7 @@
 
           const assistantMsg = {
             role: 'assistant',
-            content: data.answer || 'No response from model.',
+            content: data.answer || 'Sorry, no response from model.',
           };
 
           messages.push(assistantMsg);
