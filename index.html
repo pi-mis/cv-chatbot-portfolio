@@ -380,6 +380,24 @@
         },
       };
 
+      const suggestionsByLang = {
+        it: [
+          'Raccontami qualcosa sulla tua esperienza in BDO.',
+          'Perché hai scelto il Master a Stoccolma?',
+          'Quali sono i tuoi principali interessi in ambito Banking & Finance?',
+        ],
+        en: [
+          'Tell me about your experience at BDO.',
+          'Why did you choose the Master in Stockholm?',
+          'What are your main interests in Banking & Finance?',
+        ],
+        sv: [
+          'Berätta om din erfarenhet på BDO.',
+          'Varför valde du din master i Stockholm?',
+          'Vilka är dina huvudintressen inom Banking & Finance?',
+        ],
+      };
+
       let currentLang = langSelect.value;
       let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 
@@ -408,6 +426,20 @@
             chatEl.appendChild(div);
           }
         }
+
+        // suggerimenti (domande di esempio)
+        suggestionsEl.innerHTML = '';
+        const sugList = suggestionsByLang[currentLang] || [];
+        sugList.forEach((q) => {
+          const btn = document.createElement('button');
+          btn.className = 'suggestion-btn';
+          btn.textContent = q;
+          btn.onclick = () => {
+            inputEl.value = q;
+            send();
+          };
+          suggestionsEl.appendChild(btn);
+        });
 
         chatEl.scrollTop = chatEl.scrollHeight;
         localStorage.setItem(
