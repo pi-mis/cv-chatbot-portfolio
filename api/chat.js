@@ -43,31 +43,41 @@ export default async function handler(req, res) {
       .split(/\W+/)
       .filter((w) => w.length > 3);
 
-    // Scoring dei chunk del CV
+    // Costruisci testo combinato per lo scoring (tutte le lingue)
     const scoredChunks = cvContent.map((chunk) => {
-      const chunkText = `${chunk.title} ${chunk.text}`.toLowerCase();
+      const combinedText = [
+        chunk.title,
+        chunk.text_it,
+        chunk.text_en,
+        chunk.text_sv,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
       let score = 0;
       keywords.forEach((keyword) => {
-        const count = (chunkText.match(new RegExp(keyword, 'g')) || []).length;
+        const count =
+          (combinedText.match(new RegExp(keyword, 'g')) || []).length;
         score += count;
       });
+
       return { ...chunk, score };
     });
 
     scoredChunks.sort((a, b) => b.score - a.score);
 
     // 1) chunk rilevanti per keyword
-    let relevantChunks = scoredChunks.filter((c) => c.score > 0).slice(0, 5);
+    let relevantChunks = scoredChunks.filter((c) => c.score > 0).slice(0, 6);
 
     // 2) fallback se nessun match
     if (relevantChunks.length === 0) {
-      relevantChunks = scoredChunks.slice(0, 5);
+      relevantChunks = scoredChunks.slice(0, 6);
     }
 
-    // 3) aggiungi SEMPRE profilo (1) + formazione (2,3)
-    const alwaysIncludeIds = [1, 2, 3];
+    // 3) assicurati di includere sempre profilo + formazione + lingue
+    const alwaysIncludeIds = [1, 2, 3, 5];
     const existingIds = new Set(relevantChunks.map((c) => c.id));
-
     alwaysIncludeIds.forEach((id) => {
       if (!existingIds.has(id)) {
         const found = cvContent.find((c) => c.id === id);
@@ -83,8 +93,19 @@ export default async function handler(req, res) {
       relevantChunks = relevantChunks.slice(0, 8);
     }
 
+    // scegli il campo lingua da usare per il context principale
+    const langFieldMap = {
+      it: 'text_it',
+      en: 'text_en',
+      sv: 'text_sv',
+    };
+    const langField = langFieldMap[detectedLang] || 'text_en';
+
     const context = relevantChunks
-      .map((c) => `### ${c.title}\n${c.text}`)
+      .map((c) => {
+        const mainText = c[langField] || c.text_en || c.text_it || '';
+        return `### ${c.title}\n${mainText}`;
+      })
       .join('\n\n');
 
     const langLabel = langNames[detectedLang];
@@ -103,7 +124,7 @@ LINGUA:
 - Rispondi SEMPRE in ${langLabel}. Ignora la lingua della domanda e usa SOLO ${langLabel} per le risposte.
 
 CONTESTO CV:
-- Il contesto contiene profilo, esperienze lavorative (BDO Italia, Tether, ecc.), formazione, competenze, progetti, lingue e interessi.
+- Il contesto contiene profilo, esperienze lavorative (BDO Italia, Tether, ecc.), formazione, competenze, lingue e interessi, in italiano, inglese e svedese.
 
 STILE DI RISPOSTA:
 - Risposte molto brevi e dirette: massimo 2–3 frasi.
@@ -111,11 +132,11 @@ STILE DI RISPOSTA:
 - Cita ruoli, risultati o progetti specifici solo se servono a rispondere meglio.
 
 REGOLE DI RISPOSTA:
-1. Usa SOLO le informazioni presenti nel contesto CV. Non inventare fatti nuovi.
-2. Se un dettaglio non è esplicito, dillo in modo sintetico e collega la risposta a ciò che è presente (ruoli, competenze, corsi, progetti).
+1. Usa principalmente le informazioni presenti nel contesto CV e non inventare fatti in contrasto con esso.
+2. Se la domanda è formulata in modo diverso dal testo del CV o in un'altra lingua, collega la domanda alla sezione più vicina (es. lingue, formazione, esperienze) e dai comunque una risposta sintetica.
 3. Mantieni un tono professionale ma naturale, come in un breve scambio con un recruiter.
 
-CONTESTO CV (in italiano):
+CONTESTO CV:
 
 ${context}
     `.trim();
@@ -133,7 +154,7 @@ ${context}
         })),
       ],
       temperature: 0.3,
-      max_tokens: 250, // meno token, risposte più corte
+      max_tokens: 250,
       top_p: 0.9,
       stream: false,
     };
