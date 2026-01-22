@@ -2,32 +2,32 @@
   {
     "id": 1,
     "title": "Profilo Professionale",
-    "text": "Graduate student in Banking and Finance presso Stockholm University con solida formazione macro-quantitativa e forte interesse per le dinamiche finanziarie globali. Spinto dalla sfida di analizzare flussi complessi di capitale, liquidità e rischio. Formazione accademica in economia e metodi quantitativi, combinata con esperienza pratica in audit e compliance presso BDO Italia, inclusi progetti che coinvolgono istituzioni finanziarie sia nei settori tradizionali che degli asset digitali (Tether Holdings - $143 miliardi di portfolio). Abituato al cambiamento e a contesti internazionali: trasferimento dall'Italia alla Svezia per il Master, con adattamento a un nuovo sistema universitario e culturale. Capacità comprovate di navigare la regolamentazione, interpretare dati finanziari e supportare il decision-making in ambienti in rapida evoluzione."
+    "text": "Graduate student in Banking and Finance presso Stockholm University con solida formazione macro-quantitativa e forte interesse per le dinamiche finanziarie globali. Spinto dalla sfida di analizzare flussi complessi di capitale, liquidità e rischio. Formazione accademica in economia e metodi quantitativi, combinata con esperienza pratica in audit e compliance presso BDO Italia, inclusi progetti che coinvolgono istituzioni finanziarie sia nei settori tradizionali che degli asset digitali (Tether Holdings - $143 miliardi di portfolio). Capacità comprovate di navigare la regolamentazione, interpretare dati finanziari e supportare il decision-making in ambienti in rapida evoluzione."
   },
   {
     "id": 2,
     "title": "Formazione Accademica - Master",
-    "text": "Stockholm University, MSc in Banking and Finance (2025-2027, in corso), Stoccolma, Svezia. Master con forte focus analitico e quantitativo su modellazione finanziaria, econometria e risk analytics. Corsi principali: Asset Pricing, Derivatives, Fixed Income, Credit Risk Assessment, Market Risk Management, Financial Econometrics, Corporate Finance avanzata. Progetti su valutazioni DCF multi-scenario, analisi empirica di anomalie di mercato, modelli di credit scoring e gestione del rischio mediante derivati. La didattica interamente in inglese ha rafforzato l'uso professionale della lingua in contesti internazionali."
+    "text": "Stockholm University, MSc in Banking and Finance (2025-2027, in corso). Master con forte focus analitico e quantitativo su modellazione finanziaria, econometria e risk analytics. Corsi principali: Asset Pricing, Derivatives, Fixed Income, Credit Risk Assessment, Market Risk Management, Financial Econometrics, Corporate Finance avanzata. Progetti su valutazioni DCF multi-scenario, analisi empirica di anomalie di mercato, modelli di credit scoring e gestione del rischio mediante derivati."
   },
   {
     "id": 3,
     "title": "Formazione Accademica - Laurea Triennale",
-    "text": "Catholic University of the Sacred Heart, Milano - BSc in Economics, Organizations and Markets (2021-2025), voto finale 99/110. Main track in Quantitative Methods for Economic Sciences. Tesi: \"Fintech Revolution: The Use of Digital Technology in Finance\" con analisi di pagamenti digitali, lending platforms, robo-advisory e applicazioni blockchain. Corsi rilevanti: Econometrics, Mathematics for Financial Applications, Corporate Finance, Development Economics. Solida base in microeconomia, macroeconomia, statistica applicata e metodi quantitativi per l'analisi economica e finanziaria."
+    "text": "Catholic University of the Sacred Heart, Milano - BSc in Economics, Organizations and Markets (2021-2025), voto finale 99/110. Main track in Quantitative Methods for Economic Sciences. Tesi: 'Fintech Revolution: The Use of Digital Technology in Finance'. Corsi rilevanti: Econometrics, Mathematics for Financial Applications, Corporate Finance, Development Economics. Solida base in microeconomia, macroeconomia, statistica applicata e metodi quantitativi per l'analisi economica e finanziaria."
   },
   {
     "id": 4,
     "title": "Esperienza Professionale - BDO Italia Audit & Assurance",
-    "text": "BDO Italia S.p.A., Milano (giugno 2024 - maggio 2025, 11 mesi). Progressione di ruolo: Junior Assistant Auditor (settembre-dicembre 2024), Assistant Auditor & Assurance Financial Services (dicembre 2024 - giugno 2025), Expert Assistant Auditor Financial Services (giugno 2025). Ha assistito team di audit nella revisione di bilanci e documentazione regolamentare per oltre 20 istituzioni finanziarie tra banche, fondi di investimento e compagnie assicurative. Ha collaborato su attività di asset monitoring con focus su analisi di non-performing loans (NPLs). Membro del core audit team per Tether Holdings, contribuendo all'assurance di un portfolio da $143 miliardi, inclusi $118 miliardi in asset liquidi, la più grande riserva finanziaria nel settore globale degli asset digitali. Direttamente coinvolto nelle procedure di audit per Q1 e Q2 2025, supportando testing, documentazione e attività di risk assessment."
+    "text": "BDO Italia S.p.A., Milano (giugno 2024 - maggio 2025, 11 mesi). Progressione di ruolo: Junior Assistant Auditor (settembre-dicembre 2024), Assistant Auditor & Assurance Financial Services (dicembre 2024 - giugno 2025), Expert Assistant Auditor Financial Services (giugno 2025). Ha assistito team di audit nella revisione di bilanci e documentazione regolamentare per oltre 20 istituzioni finanziarie tra banche, fondi di investimento e compagnie assicurative. Collaborato su attività di asset monitoring con focus su analisi di non-performing loans (NPLs). Membro del core audit team per Tether Holdings, contribuendo all'assurance di un portfolio da $143 miliardi, inclusi $118 miliardi in asset liquidi, la più grande riserva finanziaria nel settore globale degli asset digitali. Direttamente coinvolto nelle procedure di audit per Q1 e Q2 2025, supportando testing, documentazione e attività di risk assessment."
   },
   {
     "id": 5,
-    "title": "Esperienze Professionali e Lavori Part-time",
-    "text": "ZERO Milano (student work), Milano (2020-2024, 4 anni e 9 mesi). Ruoli in delivery, shift management e customer service. Responsabile dell'organizzazione dei turni, gestione operativa delle consegne e relazione diretta con i clienti. Questa esperienza ha rafforzato capacità di gestione del tempo, problem solving operativo e comunicazione in contesti dinamici ad alto contatto con il pubblico."
+    "title": "Esperienza - Mercati DeFi e Asset Digitali",
+    "text": "Forte interesse personale e ricerca attiva su mercati delle criptovalute e DeFi, alimentato dall'esperienza professionale con Tether Holdings. Competenze in analisi on-chain, valutazione di protocolli decentralizzati, comprensione delle dinamiche di stablecoin e asset digitali, monitoraggio di liquidità e riserve. Particolare interesse per l'intersezione tra finanza tradizionale e digital assets, regolamentazione crypto, e l'evoluzione degli strumenti finanziari nel settore blockchain."
   },
   {
     "id": 6,
     "title": "Competenze Tecniche - Tools & Programming",
-    "text": "Microsoft Office avanzato con particolare expertise in Excel per modellazione finanziaria, analisi di bilanci e reportistica. Bloomberg Terminal certified (Bloomberg BMC certification 2022) per ricerca di mercato, analisi di dati finanziari e pricing. Conoscenza base di Python e R per analisi quantitative, data processing e modellizzazione econometrica. Familiarità con strumenti di audit e compliance, analisi di documentazione regolamentare (IFRS, reporting bancario), e assessment di controlli interni in istituzioni finanziarie."
+    "text": "Microsoft Office avanzato con particolare expertise in Excel per modellazione finanziaria, analisi di bilanci e reportistica. Bloomberg Terminal certified (Bloomberg BMC certification 2022) per ricerca di mercato, analisi di dati finanziari e pricing. Conoscenza base di Python e R per analisi quantitative e data processing. Familiarità con strumenti di audit e compliance, analisi di documentazione regolamentare (IFRS, reporting bancario), e assessment di controlli interni in istituzioni finanziarie."
   },
   {
     "id": 7,
@@ -36,46 +36,31 @@
   },
   {
     "id": 8,
-    "title": "Progetti Avanzati - Modelli di Mercato e Bitcoin Fees",
-    "text": "Supply and Demand Models with Differential Equations (Università Cattolica del Sacro Cuore, gennaio 2024). Lavoro di gruppo (team di 4) su tre modelli economici progressivi per analizzare variazioni del prezzo di equilibrio con funzioni di domanda e offerta variabili: modello lineare standard, modello con domanda quadratica basato su equazioni differenziali di tipo Riccati e Behavioral Market Model che incorpora la dinamica del comportamento di acquirenti e venditori con derivate del prezzo nelle funzioni di domanda/offerta. Tutta l'implementazione è stata programmata in R, risolvendo sistemi di equazioni differenziali e traducendo teoria economica astratta in modelli quantitativi applicati.\n\nTemporal Clustering and Predictive Patterns in Bitcoin Transaction Fees (luglio 2025 – in corso). Analisi econometrica avanzata delle fee di transazione Bitcoin su 70 giorni di dati di rete per identificare pattern temporali e capacità predittive. Risultati chiave: forte clustering di volatilità con autocorrelazioni settimanali superiori al 96%, R² del 35% nei modelli previsivi e accuratezza direzionale del 74,6%, variazioni sistematiche delle fee con differenze fino al 79% a livello orario e 67% settimanale. Utilizzo di modelli GARCH, analisi a cambiamento di regime, long memory estimation e valutazione di strategie di timing con potenziali risparmi di costo del 23-43%. Il progetto è in espansione con dataset multi-year e sviluppo di sistemi di monitoraggio real time."
+    "title": "Progetti Accademici e di Ricerca",
+    "text": "Tesi triennale su 'Fintech Revolution: The Use of Digital Technology in Finance' che analizza l'impatto delle tecnologie digitali sul settore finanziario, inclusi pagamenti digitali, lending platforms, robo-advisory e blockchain applications. Progetti universitari su econometria applicata, modellazione finanziaria quantitativa, analisi di serie storiche finanziarie, valutazioni d'impresa e studio di dinamiche macroeconomiche. Portfolio di lavori che dimostrano capacità analitiche, rigore quantitativo e abilità di sintesi di fenomeni economico-finanziari complessi."
   },
   {
     "id": 9,
-    "title": "Progetto - Global Energy Transition Equities",
-    "text": "Global Energy Transition Equities: Investment Analysis & Portfolio Strategy. Studio fondamentale e quantitativo su società energetiche quotate esposte alla transizione energetica globale. Il lavoro integra il World Energy Outlook 2025 (IEA) con ricerche proprietarie di consulenti e analisti equity per identificare i segmenti del sistema energetico che attrarranno più capitale e genereranno cash flow sostenibili. Combina top-down scenario analysis (scenari CPS, STEPS, NZE dell'IEA) con bottom-up equity research su singole aziende, valutate per crescita dei ricavi, margini EBITDA, ROE, leva, intensità di capex e qualità della generazione di cassa. Il risultato è un framework di allocazione che bilancia esposizione alla crescita e protezione al ribasso tramite diversificazione e sizing disciplinato delle posizioni."
+    "title": "Competenze Linguistiche",
+    "text": "Italiano: madrelingua. Inglese: livello C1 (advanced), certificato IELTS con Overall Band Score 7.5 (2024), utilizzato quotidianamente nello studio universitario a Stoccolma, in contesti professionali internazionali presso BDO per progetti con clienti globali come Tether Holdings, nella redazione di documentazione audit e comunicazione con team internazionali. Svedese: livello base, in continuo miglioramento per integrazione nel mercato del lavoro scandinavo. Francese: livello B1 (basic)."
   },
   {
     "id": 10,
-    "title": "Esperienza - Mercati DeFi e Asset Digitali",
-    "text": "Forte interesse personale e ricerca attiva su mercati delle criptovalute e DeFi, alimentato dall'esperienza professionale con Tether Holdings. Competenze in analisi on-chain, valutazione di protocolli decentralizzati, comprensione delle dinamiche di stablecoin e asset digitali, monitoraggio di liquidità e riserve. Particolare interesse per l'intersezione tra finanza tradizionale e digital assets, regolamentazione crypto, e l'evoluzione degli strumenti finanziari nel settore blockchain."
-  },
-  {
-    "id": 11,
-    "title": "Volontariato e Impatto Sociale",
-    "text": "Environmental & Community Volunteer, Legambiente (luglio 2025). Partecipazione a un progetto di ristrutturazione scolastica, con attività di tinteggiatura e riqualificazione di spazi in un istituto che accoglie studenti provenienti da contesti difficili. Lavoro di squadra per creare un ambiente di apprendimento più accogliente per giovani vulnerabili, rafforzando sensibilità sociale, capacità di collaborazione e orientamento all'impatto concreto sul territorio."
-  },
-  {
-    "id": 12,
-    "title": "Competenze Linguistiche",
-    "text": "Italiano: madrelingua.\nInglese: livello C1 (advanced), certificato IELTS 7.5 (2024), utilizzato quotidianamente nello studio a Stoccolma e in contesti professionali internazionali (audit di Tether Holdings e istituzioni finanziarie globali).\nSvedese: livello base in rapido sviluppo, con corsi universitari extracurriculari e uso attivo per integrarsi nel contesto accademico e lavorativo scandinavo.\nFrancese: livello B1 (principiante avanzato) dopo diversi anni di studio scolastico, con capacità di lettura e conversazione di base."
-  },
-  {
-    "id": 13,
-    "title": "Soft Skills, Sport e Interessi Personali",
-    "text": "Sportivo e abituato a cercare nuove sfide: background in sport come basket e attività di endurance, con mentalità orientata alla disciplina e al miglioramento continuo. Il cambiamento non è visto come un ostacolo ma come una leva di crescita: cambiare paese, lingua e sistema universitario passando da Milano a Stoccolma ha ampliato il bagaglio culturale e professionale. Appassionato di musica classica, spesso utilizzata come sottofondo per studio e analisi. Letture recenti: \"Arcadia\" di Tom Stoppard, \"Gödel, Escher, Bach\" di Douglas Hofstadter e \"The (Mis)Behaviour of Markets\" di Benoît Mandelbrot, che riflettono un interesse per l'intreccio tra matematica, sistemi complessi e mercati finanziari."
-  },
-  {
-    "id": 14,
     "title": "Certificazioni e Corsi",
     "text": "IELTS - British Council (2024): Overall Band Score 7.5, CEFR Level C1. Bloomberg Market Concepts (BMC) Certification (2022): certificazione ufficiale Bloomberg Terminal che attesta competenze in analisi di mercati finanziari, economic indicators, currencies, fixed income ed equity markets. UniCredit StartUp Your Life (2019): training course su imprenditorialità e business planning. FIN Lifeguard License - International Life Saving Federation (2020)."
   },
   {
-    "id": 15,
-    "title": "Obiettivi di Carriera",
-    "text": "Aspirazione a ruoli in investment banking (M&A advisory, leveraged finance), asset management (quantitative research, portfolio analysis), risk management quantitativo, financial advisory o fintech companies all'intersezione tra finanza tradizionale e digital assets. Interesse per posizioni che combinino rigore quantitativo, analisi macro-finanziaria e comprensione di framework regolamentari in evoluzione. Disponibilità a lavorare in ambienti internazionali e dinamici."
+    "id": 11,
+    "title": "Soft Skills e Attitudini Professionali",
+    "text": "Eccellenti capacità analitiche e di problem solving sviluppate attraverso audit di istituzioni finanziarie complesse e progetti quantitativi. Attenzione ai dettagli e rigore metodologico, essenziali nel lavoro di assurance e compliance. Capacità di lavorare sotto pressione rispettando scadenze stringenti in contesti audit. Attitudine al lavoro in team multidisciplinari e internazionali, dimostrata in BDO con colleghi senior e clienti globali. Forte etica del lavoro, proattività e continuous learning mindset. Curiosità intellettuale verso innovazioni finanziarie e nuove tecnologie applicate alla finanza."
   },
   {
-    "id": 16,
+    "id": 12,
+    "title": "Obiettivi di Carriera e Interessi",
+    "text": "Aspirazione a ruoli in investment banking (M&A advisory, leveraged finance), asset management (quantitative research, portfolio analysis), risk management quantitativo, financial advisory, o fintech companies all'intersezione tra finanza tradizionale e digital assets. Particolare interesse per posizioni che combinino rigore quantitativo, analisi macro-finanziaria e comprensione di framework regolamentari in evoluzione. Disponibilità a lavorare in ambienti internazionali e dinamici. Interessi personali: sport (basketball player), DeFi e crypto markets, macroeconomia globale, analisi geopolitica dei mercati finanziari."
+  },
+  {
+    "id": 13,
     "title": "Informazioni Personali e Contatti",
     "text": "Nome completo: Pietro Mischi. Data e luogo di nascita: 21 aprile 2002, Milano, Italia. Nazionalità: Italiana. Residenza attuale: Körsbärsvägen 4B, 114 23 Stockholm, Svezia. Formazione pre-universitaria: Liceo Scientifico Gerolamo Cardano, Milano (2016-2021), diploma con voto 97/100. Email: pietro.mischi@yahoo.it. Telefono: +39 348 289 0994. LinkedIn: Pietro Mischi. Disponibile per opportunità professionali in Scandinavia e a livello internazionale."
   }

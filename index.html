@@ -37,7 +37,7 @@
       .shell {
         width: 100%;
         max-width: 880px;
-        background: rgba(15, 23, 42, 0.96);
+        background: radial-gradient(circle at top left, #020617 0, #020617 60%);
         border-radius: 18px;
         box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8),
           inset 0 0 0 1px rgba(148, 163, 184, 0.12);
@@ -63,6 +63,23 @@
         gap: 4px;
         flex: 1;
         min-width: 0;
+        max-width: 420px;
+      }
+
+      .title-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 999px;
+        object-fit: cover;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
+        flex-shrink: 0;
       }
 
       .title {
@@ -74,6 +91,8 @@
       .subtitle {
         font-size: 13px;
         color: var(--text-soft);
+        line-height: 1.4;
+        margin-top: 2px;
       }
 
       .controls {
@@ -139,8 +158,8 @@
 
       .msg.user {
         margin-left: auto;
-        background: linear-gradient(to right, #1d4ed8, #0ea5e9);
-        color: #ffffff;
+        background: linear-gradient(to right, #22c55e, #0ea5e9);
+        color: #0b1120;
         border-bottom-right-radius: 2px;
       }
 
@@ -262,6 +281,11 @@
       }
 
       @media (max-width: 640px) {
+        .shell {
+          padding: 14px 12px;
+          border-radius: 14px;
+        }
+
         .title {
           font-size: 18px;
         }
@@ -270,9 +294,9 @@
           font-size: 12px;
         }
 
-        .shell {
-          padding: 14px 12px;
-          border-radius: 14px;
+        .avatar {
+          width: 36px;
+          height: 36px;
         }
 
         .chat {
@@ -287,6 +311,15 @@
         .controls {
           justify-content: flex-start;
         }
+
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .title-block {
+          max-width: 100%;
+        }
       }
     </style>
   </head>
@@ -294,11 +327,20 @@
     <div class="shell">
       <div class="header">
         <div class="title-block">
-          <div class="title">Pietro's AI Twin</div>
-          <div class="subtitle" id="subtitle">
-            Ask me anything about my background. This AI chatbot is a personal
-            project I built to go beyond a static CV and let you explore details
-            about me that usually stay hidden on paper.
+          <div class="title-row">
+            <img
+              src="/pietro-avatar.jpg"
+              alt="Pietro Mischi"
+              class="avatar"
+            />
+            <div>
+              <div class="title">Pietro's AI Twin</div>
+              <div class="subtitle" id="subtitle">
+                Ask me anything about my background. This AI chatbot is a
+                personal project I built in 2026 to go beyond a static CV and
+                surface details about me that usually stay hidden on paper.
+              </div>
+            </div>
           </div>
         </div>
         <div class="controls">
@@ -344,7 +386,7 @@
       const uiText = {
         it: {
           subtitle:
-            'Chiedimi qualcosa sul mio percorso. Questo chatbot AI è un progetto personale che ho creato per andare oltre un CV statico e far emergere dettagli di me che normalmente non si vedono sulla carta.',
+            'Chiedimi qualcosa sul mio percorso. Questo chatbot AI è un progetto personale che ho creato nel 2026 per andare oltre un CV statico e far emergere dettagli di me che normalmente non si vedono sulla carta.',
           placeholder: 'Chiedi qualcosa sul mio profilo...',
           send: 'Invia',
           hint: 'Invio ↵',
@@ -356,7 +398,7 @@
         },
         en: {
           subtitle:
-            'Ask me anything about my background. This AI chatbot is a personal project I built to go beyond a static CV and surface details about me that usually stay hidden on paper.',
+            'Ask me anything about my background. This AI chatbot is a personal project I built in 2026 to go beyond a static CV and surface details about me that usually stay hidden on paper.',
           placeholder: 'Ask something about my profile...',
           send: 'Send',
           hint: 'Enter ↵',
@@ -368,7 +410,7 @@
         },
         sv: {
           subtitle:
-            'Fråga vad som helst om min bakgrund. Den här AI-chatten är ett personligt projekt för att gå bortom ett statiskt CV och lyfta fram detaljer om mig som vanligtvis inte syns på papper.',
+            'Fråga vad som helst om min bakgrund. Den här AI-chatten är ett personligt projekt från 2026 för att gå bortom ett statiskt CV och lyfta fram detaljer om mig som vanligtvis inte syns på papper.',
           placeholder: 'Fråga något om min profil...',
           send: 'Skicka',
           hint: 'Enter ↵',
