@@ -132,53 +132,89 @@ CONTESTO CV:
 ${context}
     `.trim();
 
-    const requestBody = {
-      model: 'llama-3.3-70b-versatile', // modello principale
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        ...messages.slice(-8).map((m) => ({
-          role: m.role,
-          content: m.content,
-        })),
-      ],
-      temperature: 0.3,
-      max_tokens: 250,
-      top_p: 0.9,
-      stream: false,
-    };
+    // Modello: GPT-OSS 120B (pesi aperti, licenza Apache 2.0, disponibile sul free tier Groq).
+    // I vecchi modelli Llama sono stati rimossi: Groq li ha spenti il 16/08/2026.
+    // Override senza toccare il codice: env var GROQ_MODEL su Vercel.
+    const models = [
+      process.env.GROQ_MODEL,
+      'openai/gpt-oss-120b', // principale
+      'openai/gpt-oss-20b', // fallback più leggero
+    ].filter(Boolean);
 
-    const response = await fetch(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${groqApiKey}`,
-        },
-        body: JSON.stringify(requestBody),
+    let lastError = null;
+
+    for (const model of models) {
+      const requestBody = {
+        model,
+        messages: [
+          {
+            role: 'system',
+            content: systemPrompt,
+          },
+          ...messages.slice(-8).map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        ],
+        temperature: 0.3,
+        // max_completion_tokens include anche i token di reasoning dei modelli gpt-oss,
+        // quindi serve un budget più alto dei vecchi 250 di max_tokens.
+        max_completion_tokens: 800,
+        top_p: 0.9,
+        stream: false,
+      };
+
+      // Riduco al minimo il reasoning: qui serve una risposta breve, non una catena di pensiero.
+      if (model.startsWith('openai/gpt-oss')) {
+        requestBody.reasoning_effort = 'low';
+        requestBody.include_reasoning = false;
+      } else if (model.startsWith('qwen/')) {
+        requestBody.reasoning_effort = 'none';
       }
-    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Groq API error (v1):', errorText);
-      return res.status(500).json({
-        error: 'AI service error',
-        details: response.statusText,
+      const response = await fetch(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${groqApiKey}`,
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`Groq API error (v1, ${model}):`, errorText);
+        lastError = {
+          status: response.status,
+          model,
+          body: errorText.slice(0, 300),
+        };
+        // 400/404 = modello dismesso o non abilitato sull'account: provo il successivo.
+        if (response.status === 400 || response.status === 404) continue;
+        break;
+      }
+
+      const data = await response.json();
+      const answer = data.choices?.[0]?.message?.content?.trim();
+
+      if (!answer) {
+        lastError = { status: 200, model, body: 'empty content' };
+        continue;
+      }
+
+      return res.status(200).json({
+        answer,
+        language: detectedLang,
+        model,
       });
     }
 
-    const data = await response.json();
-    const answer =
-      data.choices?.[0]?.message?.content ||
-      'Sorry, I could not generate a response.';
-
-    return res.status(200).json({
-      answer,
-      language: detectedLang,
+    return res.status(502).json({
+      error: 'AI service error',
+      details: lastError,
     });
   } catch (error) {
     console.error('Handler error (v1):', error);
