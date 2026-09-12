@@ -506,16 +506,31 @@
             body: JSON.stringify({ messages, language: currentLang }),
           });
 
-          const data = await res.json();
+          const data = await res.json().catch(() => ({}));
+
+          if (!res.ok || !data.answer) {
+            // Mostro il vero errore invece di un messaggio generico:
+            // senza questo un modello dismesso sembra un problema di rete.
+            console.error('Chat API error', res.status, data);
+            const detail =
+              data?.details?.body || data?.error || `HTTP ${res.status}`;
+            messages.push({
+              role: 'assistant',
+              content: `Error: ${detail}`,
+            });
+            render();
+            return;
+          }
 
           const assistantMsg = {
             role: 'assistant',
-            content: data.answer || 'Sorry, no response from model.',
+            content: data.answer,
           };
 
           messages.push(assistantMsg);
           render();
         } catch (err) {
+          console.error('Chat fetch failed', err);
           const assistantMsg = {
             role: 'assistant',
             content: 'Error: connection failed.',
