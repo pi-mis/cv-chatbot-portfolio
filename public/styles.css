@@ -41,7 +41,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+html { scroll-behavior: smooth; scroll-padding-top: 112px; }
 body {
   margin: 0;
   background: var(--bg);
@@ -344,7 +344,8 @@ footer { padding: 28px 0 40px; color: var(--ink-soft); font-size: 14px; border-t
 /* ================= Interattività aggiunta ================= */
 
 /* ---------- Nastro dei ticker ---------- */
-.ticker { border-bottom: 1px solid var(--line); background: var(--surface-2); overflow: hidden; position: relative; }
+/* Resta bloccata sotto la barra in alto, come una riga bloccata in Excel */
+.ticker { border-bottom: 1px solid var(--line); background: var(--surface-2); overflow: hidden; position: sticky; top: 60px; z-index: 19; }
 .ticker-track { display: flex; width: max-content; animation: tape 70s linear infinite; }
 .ticker:hover .ticker-track, .ticker-track.hold { animation-play-state: paused; }
 .ticker-group { display: flex; }
