@@ -2,569 +2,319 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Pietro's AI Twin</title>
+    <title>Pietro Mischi – AI twin and portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      :root {
-        --bg: #0f172a;
-        --card: #0b1220;
-        --accent: #38bdf8;
-        --accent-soft: #0ea5e9;
-        --text: #e5e7eb;
-        --text-soft: #9ca3af;
-        --border: #1f2937;
-        --danger: #f97373;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-          sans-serif;
-        background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
-        color: var(--text);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-      }
-
-      .shell {
-        width: 100%;
-        max-width: 880px;
-        background: radial-gradient(circle at top left, #020617 0, #020617 60%);
-        border-radius: 18px;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.8),
-          inset 0 0 0 1px rgba(148, 163, 184, 0.12);
-        padding: 18px 18px 16px;
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(148, 163, 184, 0.12);
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .title-block {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        flex: 1;
-        min-width: 0;
-        max-width: 420px;
-      }
-
-      .title-row {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .avatar {
-        width: 42px;
-        height: 42px;
-        border-radius: 999px;
-        object-fit: cover;
-        border: 1px solid rgba(148, 163, 184, 0.7);
-        box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
-        flex-shrink: 0;
-      }
-
-      .title {
-        font-size: 20px;
-        font-weight: 650;
-        letter-spacing: 0.02em;
-      }
-
-      .subtitle {
-        font-size: 13px;
-        color: var(--text-soft);
-        line-height: 1.4;
-        margin-top: 2px;
-      }
-
-      .controls {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-      }
-
-      select {
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: #020617;
-        color: var(--text);
-        padding: 5px 10px;
-        font-size: 12px;
-        outline: none;
-      }
-
-      .reset-btn {
-        border-radius: 999px;
-        border: 1px solid rgba(248, 113, 113, 0.6);
-        background: rgba(127, 29, 29, 0.4);
-        color: #fee2e2;
-        padding: 5px 12px;
-        font-size: 12px;
-        cursor: pointer;
-        transition: background 0.15s ease, transform 0.05s ease;
-        white-space: nowrap;
-      }
-
-      .reset-btn:hover {
-        background: rgba(185, 28, 28, 0.7);
-      }
-
-      .reset-btn:active {
-        transform: scale(0.97);
-      }
-
-      .chat {
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        background: radial-gradient(circle at top left, #020617 0, #020617 55%);
-        padding: 10px 10px 8px;
-        height: 420px;
-        max-height: calc(100vh - 220px);
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        font-size: 14px;
-      }
-
-      .msg {
-        max-width: 80%;
-        padding: 8px 10px;
-        border-radius: 10px;
-        line-height: 1.4;
-        word-wrap: break-word;
-        white-space: pre-wrap;
-      }
-
-      .msg.user {
-        margin-left: auto;
-        background: linear-gradient(to right, #22c55e, #0ea5e9);
-        color: #0b1120;
-        border-bottom-right-radius: 2px;
-      }
-
-      .msg.bot {
-        background: rgba(15, 23, 42, 0.98);
-        border: 1px solid rgba(148, 163, 184, 0.35);
-        border-bottom-left-radius: 2px;
-      }
-
-      .msg.meta {
-        align-self: center;
-        max-width: 100%;
-        padding: 4px 8px;
-        border-radius: 999px;
-        background: rgba(15, 23, 42, 0.9);
-        color: var(--text-soft);
-        font-size: 11px;
-        border: 1px dashed rgba(148, 163, 184, 0.4);
-      }
-
-      .input-row {
-        display: flex;
-        gap: 8px;
-        align-items: center;
-        margin-top: 4px;
-        flex-wrap: nowrap;
-      }
-
-      .input-shell {
-        flex: 1;
-        position: relative;
-        min-width: 0;
-      }
-
-      .input-shell input {
-        width: 100%;
-        padding: 9px 12px;
-        padding-right: 84px;
-        border-radius: 999px;
-        border: 1px solid var(--border);
-        background: rgba(15, 23, 42, 0.95);
-        color: var(--text);
-        font-size: 14px;
-        outline: none;
-      }
-
-      .input-shell input::placeholder {
-        color: #6b7280;
-      }
-
-      .hint {
-        position: absolute;
-        right: 14px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 11px;
-        color: var(--text-soft);
-      }
-
-      .send-btn {
-        padding: 8px 14px;
-        border-radius: 999px;
-        border: none;
-        background: linear-gradient(to right, var(--accent-soft), #22c55e);
-        color: #0b1120;
-        font-weight: 600;
-        font-size: 13px;
-        cursor: pointer;
-        white-space: nowrap;
-        box-shadow: 0 10px 22px rgba(8, 47, 73, 0.6);
-        transition: transform 0.06s ease, box-shadow 0.1s ease,
-          filter 0.1s ease;
-      }
-
-      .send-btn:hover {
-        filter: brightness(1.05);
-      }
-
-      .send-btn:active {
-        transform: translateY(1px);
-        box-shadow: 0 4px 12px rgba(8, 47, 73, 0.6);
-      }
-
-      .suggestions-row {
-        margin-top: 6px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-      }
-
-      .suggestion-btn {
-        border-radius: 999px;
-        border: 1px solid rgba(148, 163, 184, 0.55);
-        background: rgba(15, 23, 42, 0.9);
-        color: var(--text-soft);
-        font-size: 12px;
-        padding: 6px 10px;
-        cursor: pointer;
-        white-space: nowrap;
-        transition: background 0.12s ease, color 0.12s ease,
-          transform 0.04s ease;
-      }
-
-      .suggestion-btn:hover {
-        background: rgba(56, 189, 248, 0.18);
-        color: var(--text);
-      }
-
-      .suggestion-btn:active {
-        transform: translateY(1px);
-      }
-
-      .disclaimer {
-        margin-top: 6px;
-        font-size: 10px;
-        color: var(--text-soft);
-        opacity: 0.8;
-        text-align: right;
-      }
-
-      @media (max-width: 640px) {
-        .shell {
-          padding: 14px 12px;
-          border-radius: 14px;
-        }
-
-        .title {
-          font-size: 18px;
-        }
-
-        .subtitle {
-          font-size: 12px;
-        }
-
-        .avatar {
-          width: 36px;
-          height: 36px;
-        }
-
-        .chat {
-          height: 360px;
-          max-height: calc(100vh - 210px);
-        }
-
-        .msg {
-          max-width: 90%;
-        }
-
-        .controls {
-          justify-content: flex-start;
-        }
-
-        .header {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .title-block {
-          max-width: 100%;
-        }
-      }
-    </style>
+    <meta name="description" content="Pietro Mischi: MSc Banking & Finance at Stockholm University. Ask my AI twin, explore my projects and play two trading games." />
+    <meta property="og:title" content="Pietro Mischi – AI twin and portfolio" />
+    <meta property="og:description" content="Finance student in Stockholm who builds the models he studies." />
+    <meta property="og:image" content="/pietro-avatar.jpg" />
+    <link rel="icon" href="/pietro-avatar.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="shell">
-      <div class="header">
-        <div class="title-block">
-          <div class="title-row">
-            <img
-              src="/pietro-avatar.jpg"
-              alt="Pietro Mischi"
-              class="avatar"
-            />
-            <div>
-              <div class="title">Pietro's AI Twin</div>
-              <div class="subtitle" id="subtitle">
-                Ask me anything about my background. This AI chatbot is a
-                personal project I built in 2026 to go beyond a static CV and
-                surface details about me that usually stay hidden on paper.
+    <header class="topbar">
+      <div class="wrap">
+        <a class="wordmark" href="#top">Pietro Mischi</a>
+        <nav class="nav" aria-label="Sections">
+          <a href="#twin" data-i18n="nav.chat">AI twin</a>
+          <a href="#journey" data-i18n="nav.journey">Journey</a>
+          <a href="#projects" data-i18n="nav.projects">Projects</a>
+          <a href="#game" data-i18n="nav.game">Game</a>
+          <a href="#life" data-i18n="nav.life">Off the desk</a>
+          <a href="#contact" data-i18n="nav.contact">Contact</a>
+        </nav>
+        <button type="button" class="kbar-btn" id="kbarBtn" aria-haspopup="dialog"><span data-i18n="palette.open"></span><kbd id="kbarKey">Ctrl K</kbd></button>
+        <div class="lang" role="group" aria-label="Language">
+          <button type="button" data-lang="it">IT</button>
+          <button type="button" data-lang="en">EN</button>
+          <button type="button" data-lang="sv">SV</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="ticker" id="ticker">
+      <p class="visually-hidden" data-i18n="ticker.label"></p>
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="wrap">
+          <div>
+            <h1 class="hero-name"><span>Pietro</span><span>Mischi</span></h1>
+            <p class="hero-lead" data-i18n="hero.lead"></p>
+            <p class="hero-sub" data-i18n="hero.sub"></p>
+            <div class="hero-cta">
+              <a class="btn" href="#twin" data-i18n="hero.ctaChat"></a>
+              <a class="btn ghost" href="#game" data-i18n="hero.ctaGame"></a>
+            </div>
+          </div>
+
+          <div class="curve-panel">
+            <div class="curve-head">
+              <h2 data-i18n="hero.curveTitle"></h2>
+              <div class="presets">
+                <button type="button" data-preset="calm" data-i18n="hero.presetCalm"></button>
+                <button type="button" data-preset="stress" data-i18n="hero.presetStress"></button>
+                <button type="button" data-preset="hump" data-i18n="hero.presetHump"></button>
               </div>
+            </div>
+            <div class="curve-canvas-wrap">
+              <canvas id="curve" aria-label="Nelson-Siegel implied volatility curve"></canvas>
+              <div class="curve-tip" id="curveTip"></div>
+            </div>
+            <div class="sliders">
+              <div class="slider"><label for="b0"><span data-i18n="hero.level"></span><output id="b0v"></output></label><input id="b0" type="range" min="10" max="35" step="0.5" value="21" /></div>
+              <div class="slider"><label for="b1"><span data-i18n="hero.slope"></span><output id="b1v"></output></label><input id="b1" type="range" min="-15" max="25" step="0.5" value="-7" /></div>
+              <div class="slider"><label for="b2"><span data-i18n="hero.curvature"></span><output id="b2v"></output></label><input id="b2" type="range" min="-15" max="15" step="0.5" value="2" /></div>
+              <div class="slider"><label for="lam"><span data-i18n="hero.decay"></span><output id="lamv"></output></label><input id="lam" type="range" min="0.5" max="6" step="0.1" value="2.5" /></div>
+            </div>
+            <p class="curve-readout" id="curveReadout" aria-live="polite"></p>
+            <div class="curve-foot">
+              <p class="curve-note" data-i18n="hero.curveNote"></p>
+              <button type="button" class="link-btn" data-ask-key="hero.askCurveQ" data-i18n="hero.askCurve"></button>
             </div>
           </div>
         </div>
-        <div class="controls">
-          <select id="language-select">
-            <option value="it">Italiano</option>
-            <option value="en" selected>English</option>
-            <option value="sv">Svenska</option>
-          </select>
-          <button class="reset-btn" id="reset-btn">Reset chat</button>
+      </section>
+
+      <!-- CHAT: stesso contratto di prima con /api/chat -->
+      <section id="twin">
+        <div class="wrap chat-grid">
+          <div class="chat-side">
+            <img src="/pietro-avatar.jpg" alt="Pietro Mischi" class="avatar" />
+            <h2 data-i18n="chat.title"></h2>
+            <p class="section-intro" data-i18n="chat.intro"></p>
+          </div>
+          <div>
+            <div class="chat-box">
+              <div class="chat-top">
+                <span class="chat-status">Pietro (AI)</span>
+                <button class="reset-btn" id="reset-btn" type="button" data-i18n="chat.reset"></button>
+              </div>
+              <div id="chat" class="chat" aria-live="polite"></div>
+              <div id="suggestions" class="suggestions-row"></div>
+              <div class="input-row">
+                <div class="input-shell">
+                  <label for="input" class="visually-hidden" data-i18n="chat.placeholder"></label>
+                  <input id="input" autocomplete="off" />
+                  <div class="hint" id="hint-label"></div>
+                </div>
+                <button id="send-btn" class="btn send-btn" type="button"></button>
+              </div>
+            </div>
+            <p id="disclaimer" class="disclaimer"></p>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div id="chat" class="chat"></div>
-
-      <div id="suggestions" class="suggestions-row"></div>
-
-      <div class="input-row">
-        <div class="input-shell">
-          <input id="input" autocomplete="off" />
-          <div class="hint" id="hint-label">Enter ↵</div>
+      <!-- JOURNEY -->
+      <section id="journey">
+        <div class="wrap">
+          <h2 data-i18n="journey.title"></h2>
+          <p class="section-intro" data-i18n="journey.intro"></p>
+          <div class="timeline" id="timeline" role="tablist"></div>
+          <div class="tl-panel" id="tlPanel" role="tabpanel">
+            <div><h3 id="tlTitle"></h3><p id="tlBody"></p></div>
+            <div class="tl-nav">
+              <button type="button" class="btn ghost small" id="tlPrev" aria-label="Previous">‹</button>
+              <button type="button" class="btn ghost small" id="tlNext" aria-label="Next">›</button>
+              <button type="button" class="btn small" id="tlAsk"></button>
+            </div>
+          </div>
         </div>
-        <button id="send-btn" class="send-btn">Send</button>
-      </div>
+      </section>
 
-      <div id="disclaimer" class="disclaimer">
-        AI-generated answers. They may contain inaccuracies.
+      <!-- PROJECTS -->
+      <section id="projects">
+        <div class="wrap">
+          <h2 data-i18n="projects.title"></h2>
+          <p class="section-intro" data-i18n="projects.intro"></p>
+          <div class="filters" id="filters"></div>
+          <ul class="proj-list" id="projList"></ul>
+        </div>
+      </section>
+
+      <!-- ARCADE -->
+      <section id="game">
+        <div class="wrap">
+          <h2 data-i18n="arcade.title"></h2>
+          <p class="section-intro" data-i18n="arcade.intro"></p>
+
+          <div class="arcade-tabs" role="tablist">
+            <button type="button" role="tab" id="tabTape" aria-controls="panelTape" aria-selected="true">
+              <strong data-i18n="arcade.tabTape"></strong><small data-i18n="arcade.tabTapeSub"></small>
+            </button>
+            <button type="button" role="tab" id="tabCarry" aria-controls="panelCarry" aria-selected="false" tabindex="-1">
+              <strong data-i18n="arcade.tabCarry"></strong><small data-i18n="arcade.tabCarrySub"></small>
+            </button>
+          </div>
+
+          <!-- Beat the Tape -->
+          <div id="panelTape" role="tabpanel" aria-labelledby="tabTape">
+            <p class="game-intro" data-i18n="tape.intro"></p>
+            <div class="game tape" id="tapeBox">
+              <div class="game-stats">
+                <div class="stat"><small data-i18n="tape.time"></small><strong id="tTime">60.0</strong></div>
+                <div class="stat"><small data-i18n="tape.pnl"></small><strong id="tPnl">0 kr</strong></div>
+                <div class="stat"><small data-i18n="tape.pos"></small><strong id="tPos">–</strong></div>
+                <div class="stat"><small data-i18n="tape.best"></small><strong id="tBest">–</strong></div>
+                <div class="stat tape-quote"><small>NORDX</small><strong id="tPrice">100.00</strong></div>
+              </div>
+              <div class="newswire" id="tNews" aria-live="polite">
+                <span class="wire-tag" id="tNewsTag"></span><span id="tNewsText"></span>
+              </div>
+              <div class="tape-chart-wrap">
+                <canvas id="tapeChart" aria-label="Price chart"></canvas>
+                <div class="tape-pop" id="tPop" aria-hidden="true"></div>
+              </div>
+              <div class="positions tape-actions" role="group">
+                <button type="button" class="pos-btn buy" data-tape="1"><span data-i18n="tape.buy"></span><kbd>↑</kbd></button>
+                <button type="button" class="pos-btn" data-tape="0"><span data-i18n="tape.close"></span><kbd>→</kbd></button>
+                <button type="button" class="pos-btn sell" data-tape="-1"><span data-i18n="tape.sell"></span><kbd>↓</kbd></button>
+              </div>
+              <div class="game-controls">
+                <button type="button" class="btn ghost small" id="tPause" disabled></button>
+                <p class="game-rules" data-i18n="tape.keys"></p>
+              </div>
+              <div class="toast" id="tToast" role="status"></div>
+
+              <div class="overlay" id="tStart">
+                <div class="overlay-inner">
+                  <h3>Beat the Tape</h3>
+                  <p data-i18n="tape.rules"></p>
+                  <p class="small-keys" data-i18n="tape.keys"></p>
+                  <button type="button" class="btn" id="tStartBtn" data-i18n="tape.start"></button>
+                </div>
+              </div>
+              <div class="overlay" id="tEnd" hidden>
+                <div class="overlay-inner">
+                  <p class="end-kicker" id="tEndKicker"></p>
+                  <h3 id="tRank"></h3>
+                  <div class="end-grid four">
+                    <div><small data-i18n="tape.pnl"></small><strong id="teP"></strong></div>
+                    <div><small data-i18n="tape.trades"></small><strong id="teT"></strong></div>
+                    <div><small data-i18n="tape.hit"></small><strong id="teH"></strong></div>
+                    <div><small data-i18n="tape.dd"></small><strong id="teD"></strong></div>
+                  </div>
+                  <p data-i18n="tape.lesson"></p>
+                  <div class="actions">
+                    <button type="button" class="btn" id="tAgain" data-i18n="tape.again"></button>
+                    <button type="button" class="btn ghost" id="tShare" data-i18n="tape.share"></button>
+                    <button type="button" class="btn ghost" data-ask-key="tape.askQ" data-i18n="tape.ask"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carry & Crash -->
+          <div id="panelCarry" role="tabpanel" aria-labelledby="tabCarry" hidden>
+            <p class="game-intro" data-i18n="game.intro"></p>
+          <div class="game" id="gameBox">
+            <div class="game-stats">
+              <div class="stat"><small data-i18n="game.day"></small><strong id="gDay">0 / 120</strong></div>
+              <div class="stat"><small><span class="swatch" aria-hidden="true"></span><span data-i18n="game.book"></span></small><strong id="gEq">100 000 kr</strong></div>
+              <div class="stat"><small><span class="swatch bench" aria-hidden="true"></span><span data-i18n="game.bench"></span></small><strong id="gBench">100 000 kr</strong></div>
+              <div class="stat"><small data-i18n="game.best"></small><strong id="gBest">–</strong></div>
+            </div>
+            <div class="game-main">
+              <canvas id="gameChart" aria-label="Equity chart"></canvas>
+              <div class="signal-box">
+                <small data-i18n="game.signal"></small>
+                <canvas id="sigCurve" aria-hidden="true"></canvas>
+                <div class="sig-state" id="sigState"></div>
+                <div class="sig-nums" id="sigNums"></div>
+              </div>
+            </div>
+            <div class="positions" role="group">
+              <button type="button" class="pos-btn" data-pos="short"><span data-i18n="game.short"></span><kbd>1</kbd></button>
+              <button type="button" class="pos-btn" data-pos="cash" aria-pressed="true"><span data-i18n="game.cash"></span><kbd>2</kbd></button>
+              <button type="button" class="pos-btn" data-pos="long"><span data-i18n="game.long"></span><kbd>3</kbd></button>
+            </div>
+            <div class="game-controls">
+              <button type="button" class="btn ghost small" id="gPause" disabled></button>
+              <p class="game-rules" data-i18n="game.rules"></p>
+            </div>
+            <div class="toast" id="gToast" role="status"></div>
+
+            <div class="overlay" id="gStart">
+              <div class="overlay-inner">
+                <h3>Carry &amp; Crash</h3>
+                <p data-i18n="game.rules"></p>
+                <button type="button" class="btn" id="gStartBtn" data-i18n="game.start"></button>
+              </div>
+            </div>
+            <div class="overlay" id="gEnd" hidden>
+              <div class="overlay-inner">
+                <h3 data-i18n="game.finalBook"></h3>
+                <div class="end-grid">
+                  <div><small data-i18n="game.finalBook"></small><strong id="eEq"></strong></div>
+                  <div><small data-i18n="game.ret"></small><strong id="eRet"></strong></div>
+                  <div><small data-i18n="game.dd"></small><strong id="eDd"></strong></div>
+                </div>
+                <p class="end-verdict" id="eVerdict"></p>
+                <p data-i18n="game.lesson"></p>
+                <div class="actions">
+                  <button type="button" class="btn" id="gAgain" data-i18n="game.again"></button>
+                  <button type="button" class="btn ghost" data-ask-key="game.askRealQ" data-i18n="game.askReal"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OFF THE DESK -->
+      <section id="life">
+        <div class="wrap">
+          <h2 data-i18n="life.title"></h2>
+          <div class="life-grid" id="lifeGrid"></div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section id="contact">
+        <div class="wrap">
+          <h2 data-i18n="contact.title"></h2>
+          <p class="section-intro" data-i18n="contact.body"></p>
+          <a class="contact-email" href="mailto:pietro.mischi@yahoo.it">pietro.mischi@yahoo.it</a>
+          <div class="contact-actions">
+            <button type="button" class="btn" id="copyEmail" data-i18n="contact.copy"></button>
+            <a class="btn ghost" href="https://www.linkedin.com/in/pietro-mischi" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn ghost" href="https://github.com/pi-mis" target="_blank" rel="noopener">GitHub</a>
+            <span class="copied" id="copied" data-i18n="contact.copied" role="status"></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap" data-i18n="footer"></div>
+    </footer>
+
+    <button type="button" class="fab" id="fab" hidden><span class="fab-dot" aria-hidden="true"></span><span data-i18n="palette.fab"></span></button>
+
+    <div class="kbar" id="kbar" hidden>
+      <div class="kbar-backdrop" data-close></div>
+      <div class="kbar-box" role="dialog" aria-modal="true" aria-labelledby="kbarInput">
+        <input id="kbarInput" type="text" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="kbarList" />
+        <ul id="kbarList" role="listbox"></ul>
+        <p class="kbar-hint" data-i18n="palette.hint"></p>
       </div>
     </div>
 
-    <script>
-      const chatEl = document.getElementById('chat');
-      const inputEl = document.getElementById('input');
-      const sendBtn = document.getElementById('send-btn');
-      const resetBtn = document.getElementById('reset-btn');
-      const langSelect = document.getElementById('language-select');
-      const subtitleEl = document.getElementById('subtitle');
-      const hintLabel = document.getElementById('hint-label');
-      const suggestionsEl = document.getElementById('suggestions');
-      const disclaimerEl = document.getElementById('disclaimer');
-
-      const STORAGE_KEY = 'cv-chat-messages';
-
-      const uiText = {
-        it: {
-          subtitle:
-            'Chiedimi qualcosa sul mio percorso. Questo chatbot AI è un progetto personale che ho creato nel 2026 per andare oltre un CV statico e far emergere dettagli di me che normalmente non si vedono sulla carta.',
-          placeholder: 'Chiedi qualcosa sul mio profilo...',
-          send: 'Invia',
-          hint: 'Invio ↵',
-          resetConfirm: 'Vuoi davvero resettare la conversazione?',
-          metaTips:
-            'Suggerimenti: chiedi delle esperienze in BDO, del Master a Stoccolma, o dei progetti accademici.',
-          disclaimer:
-            'Risposte generate con AI. Potrebbero contenere imprecisioni.',
-        },
-        en: {
-          subtitle:
-            'Ask me anything about my background. This AI chatbot is a personal project I built in 2026 to go beyond a static CV and surface details about me that usually stay hidden on paper.',
-          placeholder: 'Ask something about my profile...',
-          send: 'Send',
-          hint: 'Enter ↵',
-          resetConfirm: 'Do you really want to reset the conversation?',
-          metaTips:
-            'Tips: ask about my BDO experience, my Master in Stockholm, or academic projects.',
-          disclaimer:
-            'AI-generated answers. They may contain inaccuracies.',
-        },
-        sv: {
-          subtitle:
-            'Fråga vad som helst om min bakgrund. Den här AI-chatten är ett personligt projekt från 2026 för att gå bortom ett statiskt CV och lyfta fram detaljer om mig som vanligtvis inte syns på papper.',
-          placeholder: 'Fråga något om min profil...',
-          send: 'Skicka',
-          hint: 'Enter ↵',
-          resetConfirm: 'Vill du verkligen återställa konversationen?',
-          metaTips:
-            'Tips: fråga om min erfarenhet på BDO, min master i Stockholm eller akademiska projekt.',
-          disclaimer:
-            'Svar genereras av AI och kan innehålla fel.',
-        },
-      };
-
-      const suggestionsByLang = {
-        it: [
-          'Raccontami qualcosa sulla tua esperienza in BDO.',
-          'Perché hai scelto il Master a Stoccolma?',
-          'Quali sono i tuoi principali interessi in ambito Banking & Finance?',
-        ],
-        en: [
-          'Tell me about your experience at BDO.',
-          'Why did you choose the Master in Stockholm?',
-          'What are your main interests in Banking & Finance?',
-        ],
-        sv: [
-          'Berätta om din erfarenhet på BDO.',
-          'Varför valde du din master i Stockholm?',
-          'Vilka är dina huvudintressen inom Banking & Finance?',
-        ],
-      };
-
-      let currentLang = langSelect.value;
-      let messages = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-
-      function applyLanguage() {
-        const t = uiText[currentLang];
-        subtitleEl.textContent = t.subtitle;
-        inputEl.placeholder = t.placeholder;
-        sendBtn.textContent = t.send;
-        hintLabel.textContent = t.hint;
-        disclaimerEl.textContent = t.disclaimer;
-      }
-
-      function render() {
-        chatEl.innerHTML = '';
-
-        if (!messages.length) {
-          const meta = document.createElement('div');
-          meta.className = 'msg meta';
-          meta.textContent = uiText[currentLang].metaTips;
-          chatEl.appendChild(meta);
-        } else {
-          for (const m of messages) {
-            const div = document.createElement('div');
-            div.className = 'msg ' + (m.role === 'user' ? 'user' : 'bot');
-            div.textContent = m.content;
-            chatEl.appendChild(div);
-          }
-        }
-
-        // suggerimenti (domande di esempio)
-        suggestionsEl.innerHTML = '';
-        const sugList = suggestionsByLang[currentLang] || [];
-        sugList.forEach((q) => {
-          const btn = document.createElement('button');
-          btn.className = 'suggestion-btn';
-          btn.textContent = q;
-          btn.onclick = () => {
-            inputEl.value = q;
-            send();
-          };
-          suggestionsEl.appendChild(btn);
-        });
-
-        chatEl.scrollTop = chatEl.scrollHeight;
-        localStorage.setItem(
-          STORAGE_KEY,
-          JSON.stringify(messages.slice(-30))
-        );
-      }
-
-      async function send() {
-        const text = inputEl.value.trim();
-        if (!text) return;
-
-        inputEl.value = '';
-
-        messages.push({ role: 'user', content: text });
-        render();
-
-        try {
-          const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ messages, language: currentLang }),
-          });
-
-          const data = await res.json().catch(() => ({}));
-
-          if (!res.ok || !data.answer) {
-            // Mostro il vero errore invece di un messaggio generico:
-            // senza questo un modello dismesso sembra un problema di rete.
-            console.error('Chat API error', res.status, data);
-            const detail =
-              data?.details?.body || data?.error || `HTTP ${res.status}`;
-            messages.push({
-              role: 'assistant',
-              content: `Error: ${detail}`,
-            });
-            render();
-            return;
-          }
-
-          const assistantMsg = {
-            role: 'assistant',
-            content: data.answer,
-          };
-
-          messages.push(assistantMsg);
-          render();
-        } catch (err) {
-          console.error('Chat fetch failed', err);
-          const assistantMsg = {
-            role: 'assistant',
-            content: 'Error: connection failed.',
-          };
-          messages.push(assistantMsg);
-          render();
-        }
-      }
-
-      sendBtn.onclick = send;
-
-      inputEl.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          send();
-        }
-      });
-
-      resetBtn.onclick = () => {
-        const t = uiText[currentLang];
-        if (!confirm(t.resetConfirm)) return;
-        messages = [];
-        localStorage.removeItem(STORAGE_KEY);
-        render();
-      };
-
-      langSelect.onchange = () => {
-        currentLang = langSelect.value;
-        applyLanguage();
-        render();
-      };
-
-      applyLanguage();
-      render();
-    </script>
+    <script src="/i18n.js"></script>
+    <script src="/i18n-extra.js"></script>
+    <script src="/curve.js"></script>
+    <script src="/app.js"></script>
+    <script src="/game.js"></script>
+    <script src="/tape.js"></script>
+    <script src="/extras.js"></script>
   </body>
 </html>

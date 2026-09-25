@@ -1,0 +1,23 @@
+# Pietro Mischi – AI twin & portfolio
+
+Personal portfolio with an AI chatbot ("AI twin") that answers questions about my background in Italian, English and Swedish.
+
+## Structure
+- `api/chat.js` – serverless function (Vercel) that retrieves the most relevant CV sections and calls the Groq API. Unchanged.
+- `cv-content.json` – CV knowledge base (one entry per topic, `text_it` / `text_en` / `text_sv`).
+- `public/index.html` – page layout.
+- `public/i18n.js` – all site copy in IT / EN / SV, plus project data.
+- `public/app.js` – language switch, chat UI, timeline, projects.
+- `public/curve.js` – interactive Nelson-Siegel volatility curve.
+- `public/game.js` – Carry & Crash, a short-vol / long-vol / cash game.
+- `public/tape.js` – Beat the Tape, a 60-second news trading game.
+- `public/extras.js` – arcade tabs, ticker tape, command palette (Ctrl/Cmd K), floating ask button.
+- `public/i18n-extra.js` – copy for the parts above in IT / EN / SV.
+- `public/styles.css` – styles (light and dark mode).
+
+## Run locally
+```bash
+npm install
+npm run dev   # http://localhost:3000
+```
+Requires `GROQ_API_KEY` in `.env.local` (never committed).
