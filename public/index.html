@@ -75,6 +75,7 @@
                   <button type="button" data-view="cinema" data-i18n="frontline.vCinema"></button>
                   <button type="button" data-view="history" data-i18n="frontline.vHistory"></button>
                 </div>
+                <button type="button" class="fl-help" id="flHelp"><span aria-hidden="true">?</span><span class="fl-help-t" data-i18n="frontline.tour.help"></span></button>
                 <button type="button" class="fl-close" id="flClose" data-i18n-aria="frontline.close">&times;</button>
               </div>
 
@@ -94,6 +95,20 @@
               <div class="fl-walls">
                 <div class="bull"><small data-i18n="frontline.support"></small><strong id="flSup">–</strong></div>
                 <div class="bear"><small data-i18n="frontline.resistance"></small><strong id="flRes">–</strong></div>
+              </div>
+
+              <!-- Mini tutorial mostrato quando si apre la vista 3D -->
+              <div class="fl-tour" id="flTour" hidden>
+                <div class="fl-tour-card" role="dialog" aria-modal="true" aria-labelledby="flTourTitle">
+                  <p class="fl-tour-step" id="flTourStep"></p>
+                  <div class="fl-tour-demo" aria-hidden="true"><span class="fl-pad"><span class="fl-finger"></span></span></div>
+                  <h3 id="flTourTitle"></h3>
+                  <ul class="fl-tour-list" id="flTourList"></ul>
+                  <div class="fl-tour-actions">
+                    <button type="button" class="fl-tour-skip" id="flTourSkip"></button>
+                    <button type="button" class="btn" id="flTourNext"></button>
+                  </div>
+                </div>
               </div>
 
               <button type="button" class="fl-open" id="flOpen"><span data-i18n="frontline.open"></span></button>

@@ -12,6 +12,15 @@
         open: 'Explore in 3D', close: 'Close', expandedTitle: 'BTC Frontline',
         vOverview: 'Overview', vFront: 'Front', vCinema: 'Cinema', vHistory: 'History',
         note: 'Soldiers are market orders, tanks guard the biggest walls in the book and artillery fires on every liquidation. Data from Binance, Kraken and Coinbase.',
+        tour: {
+          step: 'Step {n} of 2', help: 'How to move',
+          t1: 'Move around the battlefield',
+          pointer: ['Drag to rotate the view', 'Scroll with two fingers or pinch on the touchpad to zoom', 'Click with two fingers and drag to move sideways, or use W A S D'],
+          touch: ['Drag with one finger to rotate', 'Pinch to zoom', 'Drag with two fingers to move sideways'],
+          t2: 'Or jump to a ready-made view',
+          views: ['the whole battlefield from above', 'follows the front line as the price moves', 'close up, slowly circling the fight', 'Bitcoin\u2019s monthly chart since 2010'],
+          next: 'Next', skip: 'Skip', done: 'Start exploring'
+        },
         ask: 'Ask how I built it', askQ: 'How did you build BTC Frontline?'
       },
       nav: { game: 'Arcade' },
@@ -96,6 +105,15 @@
         open: 'Esplora in 3D', close: 'Chiudi', expandedTitle: 'BTC Frontline',
         vOverview: 'Panoramica', vFront: 'Fronte', vCinema: 'Cinema', vHistory: 'Storia',
         note: 'I soldati sono gli ordini a mercato, i carri armati difendono i muri più grossi del book e l\u2019artiglieria spara a ogni liquidazione. Dati da Binance, Kraken e Coinbase.',
+        tour: {
+          step: 'Passo {n} di 2', help: 'Come muoversi',
+          t1: 'Muoviti nel campo di battaglia',
+          pointer: ['Trascina per ruotare la visuale', 'Scorri con due dita o pizzica il touchpad per lo zoom', 'Clic con due dita e trascina per spostarti di lato, oppure usa W A S D'],
+          touch: ['Trascina con un dito per ruotare', 'Pizzica per lo zoom', 'Trascina con due dita per spostarti di lato'],
+          t2: 'Oppure salta a una vista pronta',
+          views: ['tutto il campo dall\u2019alto', 'segue la linea del fronte mentre il prezzo si muove', 'da vicino, girando lentamente intorno alla battaglia', 'il grafico mensile di Bitcoin dal 2010'],
+          next: 'Avanti', skip: 'Salta', done: 'Inizia a esplorare'
+        },
         ask: 'Chiedi come l\u2019ho costruito', askQ: 'Come hai costruito BTC Frontline?'
       },
       nav: { game: 'Giochi' },
@@ -180,6 +198,15 @@
         open: 'Utforska i 3D', close: 'Stäng', expandedTitle: 'BTC Frontline',
         vOverview: 'Översikt', vFront: 'Front', vCinema: 'Film', vHistory: 'Historia',
         note: 'Soldaterna är marknadsorder, stridsvagnarna vaktar de största murarna i orderboken och artilleriet skjuter vid varje likvidation. Data från Binance, Kraken och Coinbase.',
+        tour: {
+          step: 'Steg {n} av 2', help: 'Så rör du dig',
+          t1: 'Rör dig över slagfältet',
+          pointer: ['Dra för att rotera vyn', 'Scrolla med två fingrar eller nyp på styrplattan för att zooma', 'Klicka med två fingrar och dra för att flytta i sidled, eller använd W A S D'],
+          touch: ['Dra med ett finger för att rotera', 'Nyp för att zooma', 'Dra med två fingrar för att flytta i sidled'],
+          t2: 'Eller hoppa till en färdig vy',
+          views: ['hela slagfältet ovanifrån', 'följer frontlinjen när priset rör sig', 'nära, cirklar långsamt runt striden', 'Bitcoins månadsgraf sedan 2010'],
+          next: 'Nästa', skip: 'Hoppa över', done: 'Börja utforska'
+        },
         ask: 'Fråga hur jag byggde den', askQ: 'Hur byggde du BTC Frontline?'
       },
       nav: { game: 'Spel' },

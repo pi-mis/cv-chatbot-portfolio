@@ -237,9 +237,9 @@ if (EMBED) document.documentElement.classList.add('embed');
 const LOCALE = {it:'it-IT', en:'en-US', sv:'sv-SE'}[LANG];
 /* Testi dentro la scena 3D, nelle tre lingue del sito */
 const TXT = {
-  it: {askWall:'muro ask ', bidWall:'muro bid ', first:'Luglio 2010', hist:'STORIA DI BITCOIN · candele mensili · scala logaritmica · dati ', base:'Base della Tranquillità', apollo:'Apollo 11 · 20 luglio 1969', bn:' mld'},
-  en: {askWall:'ask wall ', bidWall:'bid wall ', first:'July 2010', hist:'BITCOIN HISTORY · monthly candles · log scale · data ', base:'Tranquility Base', apollo:'Apollo 11 · 20 July 1969', bn:'bn'},
-  sv: {askWall:'säljmur ', bidWall:'köpmur ', first:'Juli 2010', hist:'BITCOINS HISTORIA · månadsljus · logaritmisk skala · data ', base:'Stillhetens bas', apollo:'Apollo 11 · 20 juli 1969', bn:' mdr'}
+  it: {askWall:'muro ask ', bidWall:'muro bid ', first:'Luglio 2010', hist:'STORIA DI BITCOIN · candele mensili · scala logaritmica · dati ', base:'Base della Tranquillità', apollo:'Apollo 11 · 20 luglio 1969', archive:'archivio storico', bn:' mld'},
+  en: {askWall:'ask wall ', bidWall:'bid wall ', first:'July 2010', hist:'BITCOIN HISTORY · monthly candles · log scale · data ', base:'Tranquility Base', apollo:'Apollo 11 · 20 July 1969', archive:'historical archive', bn:'bn'},
+  sv: {askWall:'säljmur ', bidWall:'köpmur ', first:'Juli 2010', hist:'BITCOINS HISTORIA · månadsljus · logaritmisk skala · data ', base:'Stillhetens bas', apollo:'Apollo 11 · 20 juli 1969', archive:'historiskt arkiv', bn:' mdr'}
 }[LANG];
 const SIMX = LOWQ ? clamp(+QS.get('simx') || 1, 1, 20) : 1;
 
@@ -1440,35 +1440,28 @@ const bases = [makeHQ(0), makeHQ(1)];
 /* =====================================================================
    HISTORY CHART: holographic monthly candles from day one + spaceship
    ===================================================================== */
-/* Approximate monthly closes before Binance's BTCUSDT history (Jul 2010 – Jul 2017).
-   Values are rounded; [close, high?] with high only for the famous spikes. */
-const EARLY = {
-  2010: [[0.07],[0.06],[0.06],[0.19],[0.23],[0.30]],
-  2011: [[0.52],[0.86],[0.78],[3.5],[8.7],[16.1,31.9],[13.4],[8.2],[5.1],[3.2],[3.0],[4.7]],
-  2012: [[5.5],[4.9],[4.9],[5.0],[5.2],[6.7],[9.4],[10.2,16],[12.4],[11.2],[12.6],[13.5]],
-  2013: [[20.4],[33.4],[93],[139,266],[129],[97],[106],[135],[133],[204],[1130,1242],[757]],
-  2014: [[830],[580],[460],[450],[630],[640],[590],[480],[390],[340],[380],[320]],
-  2015: [[220],[255],[245],[237],[230],[264],[285],[230],[237],[315],[378],[430]],
-  2016: [[370],[437],[416],[448],[531],[673],[624],[575],[609],[701],[742],[964]],
-  2017: [[970],[1190],[1080],[1350],[2300],[2480],[2870]],
-};
-/* Offline fallback (approximate monthly closes) used only if Binance is unreachable. */
-const FALLBACK = {
-  2017: [,,,,,,,[4700],[4340],[6450],[9950],[13800]],
-  2018: [[10200],[10300],[6900],[9200],[7500],[6400],[7700],[7000],[6600],[6300],[4000],[3700]],
-  2019: [[3450],[3800],[4100],[5300],[8600],[10800],[10000],[9600],[8300],[9200],[7550],[7200]],
-  2020: [[9350],[8600],[6400],[8600],[9450],[9150],[11350],[11650],[10800],[13800],[19700],[29000]],
-  2021: [[33100],[45200],[58800],[57700],[37300],[35000],[41500],[47100],[43800],[61300],[57000],[46300]],
-  2022: [[38500],[43200],[45500],[37700],[31800],[19900],[23300],[20050],[19400],[20500],[17150],[16550]],
-  2023: [[23100],[23150],[28450],[29250],[27200],[30450],[29250],[25950],[26950],[34650],[37700],[42300]],
-  2024: [[42600],[61200],[71300],[60700],[67500],[62700],[64600],[58900],[63300],[70200],[96400],[93400]],
-};
-function monthsFrom(table, startYear, startMonth){
-  const out = [];
-  for (const y of Object.keys(table).map(Number).sort((a,b) => a-b)){
-    table[y].forEach((v, m) => { if (!v || (y === startYear && m < startMonth)) return; out.push({t: Date.UTC(y, m, 1), c: v[0], hi: v[1]}); });
+/* Storico mensile reale (OHLC in USD), luglio 2010 – agosto 2026.
+   Fonti: dati giornalieri CoinMarketCap/Kaggle fino a marzo 2024, poi chiusure giornaliere CoinGecko.
+   È solo la base: a ogni apertura i mesi dal 2017 in poi vengono riscaricati dal vivo (vedi Chart.load),
+   quindi il grafico resta aggiornato anche negli anni a venire senza toccare questo file. */
+const BAKED = [[201007,0.06,0.0699,0.0589,0.0679],[201008,0.0611,0.071,0.057,0.06],[201009,0.0629,0.0637,0.059,0.0619],[201010,0.062,0.1989,0.0611,0.1925],[201011,0.1955,0.39,0.1931,0.2082],[201012,0.2275,0.3,0.19,0.3],[201101,0.3,0.52,0.295,0.52],[201102,0.7,1.09,0.69,0.86],[201103,0.9202,0.9399,0.7411,0.7846],[201104,0.7741,3.5,0.68,3.5],[201105,3.033,8.8,3.033,8.741],[201106,9.57,29.6,9.57,16.1],[201107,15.4,15.44,12.91,13.35],[201108,13.09,13.09,6.55,8.2],[201109,8.21,8.64,4.77,5.14],[201110,5.032,5.032,2.27,3.248],[201111,3.15,3.254,2.05,2.97],[201112,3.06,4.722,2.794,4.722],[201201,5.268,7.114,4.881,5.484],[201202,6.076,6.1,4.222,4.86],[201203,4.921,5.38,4.55,4.909],[201204,4.827,5.35,4.687,4.949],[201205,5.0,5.18,4.85,5.18],[201206,5.275,6.69,5.205,6.69],[201207,6.629,9.35,6.45,9.35],[201208,9.55,13.5,8.0,10.16],[201209,9.965,12.57,9.965,12.4],[201210,12.4,12.89,10.17,11.2],[201211,10.57,12.56,10.47,12.56],[201212,12.56,13.7,12.5,13.51],[201301,13.3,20.41,13.28,20.41],[201302,20.5,33.38,19.63,33.38],[201303,34.5,93.03,34.25,93.03],[201304,104.0,230.0,68.36,139.0],[201305,139.0,139.9,79.1,129.0],[201306,128.8,129.8,88.5,96.61],[201307,97.51,111.3,65.53,106.1],[201308,106.2,140.9,101.2,135.3],[201309,135.1,146.5,118.5,133.0],[201310,132.7,217.4,102.2,204.0],[201311,203.9,1156,201.7,1129],[201312,1129,1156,420.5,754.0],[201401,755.0,1017,755.0,829.9],[201402,828.6,853.5,420.4,549.3],[201403,549.9,702.9,443.4,457.0],[201404,457.0,542.4,351.8,447.6],[201405,447.6,624.7,423.3,623.7],[201406,623.7,674.1,549.8,639.8],[201407,641.4,657.9,564.5,586.2],[201408,586.2,598.1,443.9,477.3],[201409,477.8,493.9,372.2,387.1],[201410,386.9,411.7,289.3,338.6],[201411,338.3,457.1,320.6,378.2],[201412,378.0,384.0,304.2,320.0],[201501,320.2,320.4,171.5,217.8],[201502,217.5,265.6,212.0,254.3],[201503,254.3,300.0,236.5,244.1],[201504,244.2,261.8,214.9,236.0],[201505,236.1,247.8,228.6,230.0],[201506,230.2,267.9,221.3,263.1],[201507,263.1,314.4,253.5,284.5],[201508,284.6,285.7,199.6,230.2],[201509,230.1,259.2,225.1,236.1],[201510,236.1,334.2,235.6,314.0],[201511,314.2,495.6,301.0,377.3],[201512,377.3,469.1,349.5,430.5],[201601,430.6,462.9,354.9,368.7],[201602,368.8,448.0,368.0,438.2],[201603,437.7,439.7,394.0,416.8],[201604,416.7,468.0,415.8,448.2],[201605,448.3,554.0,437.4,531.4],[201606,531.4,778.0,525.6,674.0],[201607,673.3,705.0,611.8,625.0],[201608,624.7,626.1,531.3,575.3],[201609,575.5,628.8,570.8,609.7],[201610,609.7,720.4,609.5,701.0],[201611,701.0,756.2,678.2,745.7],[201612,745.7,979.4,745.7,963.6],[201701,963.7,1191,755.8,970.6],[201702,970.4,1200,946.7,1180],[201703,1180,1280,903.7,1071],[201704,1072,1348,1061,1348],[201705,1348,2764,1348,2289],[201706,2286,3000,2213,2484],[201707,2481,2916,1843,2872],[201708,2875,4736,2669,4705],[201709,4703,4975,2947,4313],[201710,4314,6443,4158,6443],[201711,6433,11498,5614,10274],[201712,10216,19927,9686,14034],[201801,14046,18578,9301,10237],[201802,10270,11977,5963,10412],[201803,10424,11623,6665,6955],[201804,6960,9745,6506,9240],[201805,9253,9973,7108,7504],[201806,7504,7712,5830,6377],[201807,6385,8417,6130,7752],[201808,7745,7747,5952,7018],[201809,7012,7400,6164,6619],[201810,6624,7241,6219,6299],[201811,6300,6547,3596,4030],[201812,4036,4292,3189,3746],[201901,3747,4110,3393,3448],[201902,3445,4172,3367,3845],[201903,3845,4211,3734,4203],[201904,4200,5661,4185,5306],[201905,5306,8991,5224,8606],[201906,8599,13968,7623,10912],[201907,10908,13101,9134,10080],[201908,10084,12194,9389,9610],[201909,9607,10888,7773,8269],[201910,8287,10112,7378,9155],[201911,9147,9465,6583,7549],[201912,7552,7664,6456,7203],[202001,7197,9555,6892,9336],[202002,9346,10459,8478,8569],[202003,8551,9168,4004,6431],[202004,6419,9426,6177,8607],[202005,8629,9995,8303,9450],[202006,9454,10233,8942,9146],[202007,9136,11426,8958,11335],[202008,11336,12394,10983,11656],[202009,11650,12044,9894,10767],[202010,10777,13985,10414,13796],[202011,13795,19803,13270,19722],[202012,19692,29273,17604,28978],[202101,28939,41850,28719,33136],[202102,33083,58302,32402,44987],[202103,45109,61662,45016,58719],[202104,58752,64816,47200,57759],[202105,57711,59448,31283,37304],[202106,37271,41267,28900,35060],[202107,35020,42279,29355,41701],[202108,41583,50445,37462,47225],[202109,47132,52872,39870,43798],[202110,43768,66931,43346,61340],[202111,61290,68770,53559,57030],[202112,56970,58959,44648,46305],[202201,46198,47869,33111,38472],[202202,38465,45649,34409,43181],[202203,43182,48130,37173,45541],[202204,45520,47332,37653,37660],[202205,37636,39926,26813,31853],[202206,31780,31945,17698,19817],[202207,19923,24589,18973,23314],[202208,23312,25136,19540,20047],[202209,20053,22699,18201,19450],[202210,19424,21004,18291,20504],[202211,20496,21461,15598,17189],[202212,17165,18329,16366,16538],[202301,16537,23926,16507,23153],[202302,23131,25188,21435,23139],[202303,23127,29156,19597,28467],[202304,28468,30956,27122,29311],[202305,29191,29780,25955,27226],[202306,27234,31393,24877,30492],[202307,30494,31706,28946,29226],[202308,29226,30127,25458,25936],[202309,25967,27461,25004,26967],[202310,26966,35096,26548,34650],[202311,34600,38379,34131,37715],[202312,37688,44614,37625,42224],[202401,42396,48854,38605,42611],[202402,42604,63699,41932,61256],[202403,61140,73628,60792,71217],[202404,69702,71631,60637,60637],[202405,58254,71448,58254,67491],[202406,67707,71083,60277,62678],[202407,62852,68256,55849,64619],[202408,65358,65358,53991,59155],[202409,57454,66015,54133,63468],[202410,60981,72688,60337,70299],[202411,69590,98683,67858,96506],[202412,97365,105990,92982,93780],[202501,94757,106150,92692,102470],[202502,100700,101270,84470,84672],[202503,86382,94487,78734,82673],[202504,85197,95046,76332,94309],[202505,96467,111640,94704,104660],[202506,105620,110300,101200,107250],[202507,105920,119970,105920,115970],[202508,113500,122880,108380,108380],[202509,109410,117090,109180,114020],[202510,118670,124720,106700,109820],[202511,110290,110720,84890,90413],[202512,86473,93457,85670,87711],[202601,88876,96804,78816,78816],[202602,77013,78848,62940,67047],[202603,65792,74850,65792,68257],[202604,68074,78378,66886,76189],[202605,78138,82026,73370,73877],[202606,71349,71349,58519,58519],[202607,60415,66264,60415,62905],[202608,62798,80297,62798,78558]];
+const HIST_KEY = 'btcf-monthly-v2';
+async function getJSON(url, ms = 7000){
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms);
+  try { const r = await fetch(url, {signal: ctl.signal, cache: 'no-store'}); if (!r.ok) throw new Error(r.status); return await r.json(); }
+  finally { clearTimeout(timer); }
+}
+/* chiusure giornaliere {"2026-01-01": 88876, ...} -> candele mensili */
+function monthlyFromDaily(days){
+  const out = new Map();
+  for (const d of Object.keys(days).sort()){
+    const p = +days[d]; if (!(p > 0)) continue;
+    const t = Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, 1);
+    const m = out.get(t);
+    if (!m) out.set(t, {t, o: p, h: p, l: p, c: p});
+    else { m.h = Math.max(m.h, p); m.l = Math.min(m.l, p); m.c = p; }
   }
-  return out;
+  return [...out.values()];
 }
 const Chart = {
   C: [], ready: false, liveP: null, dirty: true, lastBuild: 0,
@@ -1477,27 +1470,34 @@ const Chart = {
   x(i){ const n = this.C.length; return lerp(this.X0, this.X1, (i + 0.5)/n); },
   y(p){ return this.Y0 + (Math.log10(Math.max(p, 0.01)) - this.L0)/(this.L1 - this.L0)*this.H; },
   async load(){
-    let early = monthsFrom(EARLY, 2010, 6).map((m, i, a) => {
-      const o = i ? a[i-1].c : m.c*0.9; return {t: m.t, o, c: m.c, h: Math.max(m.hi || 0, Math.max(o, m.c)*1.1), l: Math.min(o, m.c)*0.9};
-    });
-    let recent = [];
-    try {
-      const r = await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1M&limit=1000');
-      if (!r.ok) throw new Error(r.status);
-      recent = (await r.json()).map(k => ({t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4]}));
-      this.source = 'Binance';
-    } catch(e){
-      const fb = monthsFrom(FALLBACK, 2017, 7);
-      recent = fb.map((m, i) => { const o = i ? fb[i-1].c : 2870; return {t: m.t, o, c: m.c, h: Math.max(o, m.c)*1.08, l: Math.min(o, m.c)*0.92}; });
-      const last = recent[recent.length - 1], d = new Date();
-      let t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1);
-      const months = []; for (let k = new Date(last.t); ; ){ k.setUTCMonth(k.getUTCMonth() + 1); if (k.getTime() > t) break; months.push(k.getTime()); }
-      const target = M.price || 84000;
-      months.forEach((mt, i) => { const prev = recent[recent.length - 1].c, c = Math.exp(lerp(Math.log(last.c), Math.log(target), (i + 1)/months.length)); recent.push({t: mt, o: prev, c, h: Math.max(prev, c)*1.05, l: Math.min(prev, c)*0.95, approx: true}); });
-      this.source = 'approssimato (offline)';
+    const byT = new Map(), put = arr => arr.forEach(c => { if (c && c.c > 0) byT.set(c.t, c); });
+    put(BAKED.map(([ym, o, h, l, c]) => ({t: Date.UTC(Math.floor(ym/100), ym % 100 - 1, 1), o, h, l, c})));
+    this.source = TXT.archive;
+    /* ultima versione scaricata in una visita precedente: utile se oggi le API non rispondono */
+    try { const saved = JSON.parse(localStorage.getItem(HIST_KEY) || 'null'); if (saved && Array.isArray(saved.c)){ put(saved.c); this.source = saved.s || this.source; } } catch(e){}
+    let fresh = null, src = null;
+    /* 1) Binance: candele mensili dall'agosto 2017 a oggi (data-api.binance.vision non ha blocchi geografici) */
+    for (const host of ['https://data-api.binance.vision', 'https://api.binance.com']){
+      try {
+        const k = await getJSON(host + '/api/v3/klines?symbol=BTCUSDT&interval=1M&limit=1000');
+        const arr = k.map(x => ({t: x[0], o: +x[1], h: +x[2], l: +x[3], c: +x[4]}));
+        if (arr.length > 12){ fresh = arr; src = 'Binance'; break; }
+      } catch(e){}
     }
-    const firstRecent = recent.length ? recent[0].t : Infinity;
-    this.C = early.filter(m => m.t < firstRecent).concat(recent);
+    /* 2) in alternativa: chiusure giornaliere CoinGecko pubblicate su GitHub, aggiornate ogni giorno */
+    if (!fresh){
+      const y = new Date().getUTCFullYear(), days = {};
+      for (const yy of [y - 1, y]){
+        try { Object.assign(days, await getJSON(`https://raw.githubusercontent.com/viratsoft/btc-price-json/main/json/${yy}.json`)); } catch(e){}
+      }
+      const arr = monthlyFromDaily(days);
+      if (arr.length){ fresh = arr; src = 'CoinGecko'; }
+    }
+    if (fresh){
+      put(fresh); this.source = src;
+      try { localStorage.setItem(HIST_KEY, JSON.stringify({s: src, at: Date.now(), c: fresh.map(m => ({t: m.t, o: m.o, h: m.h, l: m.l, c: m.c}))})); } catch(e){}
+    }
+    this.C = [...byT.values()].sort((a, b) => a.t - b.t);
     this.ready = true; this.dirty = true;
   },
   setLive(p){
