@@ -3,6 +3,17 @@
 (function () {
   const EXTRA = {
     en: {
+      frontline: {
+        sub: 'Bitcoin\u2019s live order book as a 3D battle on the Moon: bulls against bears.',
+        loading: 'Connecting to the exchanges…', live: 'Live', demo: 'Simulated data', connecting: 'Connecting',
+        simulated: 'simulated market', pressure: 'Market pressure', bulls: 'Bulls', bears: 'Bears',
+        press: { wait: 'Waiting for trades', bull: 'Bulls are advancing', bear: 'Bears are advancing', contested: 'Contested front' },
+        support: 'Biggest buy wall', resistance: 'Biggest sell wall', bn: 'bn',
+        open: 'Explore in 3D', close: 'Close', expandedTitle: 'BTC Frontline',
+        vOverview: 'Overview', vFront: 'Front', vCinema: 'Cinema', vHistory: 'History',
+        note: 'Soldiers are market orders, tanks guard the biggest walls in the book and artillery fires on every liquidation. Data from Binance, Kraken and Coinbase.',
+        ask: 'Ask how I built it', askQ: 'How did you build BTC Frontline?'
+      },
       nav: { game: 'Arcade' },
       hero: { ctaGame: 'Play Beat the Tape' },
       arcade: {
@@ -60,7 +71,7 @@
           { s: 'IELTS', v: '7.5', d: 'up', q: 'What languages do you speak?' },
           { s: 'SVENSKA', v: 'improving', d: 'up', q: 'How is your Swedish going?' },
           { s: 'MARATHON', v: '42.2 km', d: 'up', q: 'Tell me about running the Stockholm Marathon.' },
-          { s: 'BUILDS', v: '7 projects', d: 'up', q: 'What have you built recently?' },
+          { s: 'BUILDS', v: '8 projects', d: 'up', q: 'What have you built recently?' },
           { s: 'BRIGHTWOOD', v: 'Nordic launch', d: 'up', q: 'What are you doing for Brightwood in Scandinavia?' },
           { s: 'COFFEE', v: 'fika mastered', d: 'up', q: 'What do you like about life in Stockholm?' }
         ]
@@ -76,6 +87,17 @@
     },
 
     it: {
+      frontline: {
+        sub: 'Il book di Bitcoin dal vivo come una battaglia 3D sulla Luna: tori contro orsi.',
+        loading: 'Collegamento agli exchange…', live: 'Live', demo: 'Dati simulati', connecting: 'Collegamento',
+        simulated: 'mercato simulato', pressure: 'Pressione di mercato', bulls: 'Tori', bears: 'Orsi',
+        press: { wait: 'In attesa degli scambi', bull: 'I tori avanzano', bear: 'Gli orsi avanzano', contested: 'Fronte conteso' },
+        support: 'Muro acquisti', resistance: 'Muro vendite', bn: ' mld',
+        open: 'Esplora in 3D', close: 'Chiudi', expandedTitle: 'BTC Frontline',
+        vOverview: 'Panoramica', vFront: 'Fronte', vCinema: 'Cinema', vHistory: 'Storia',
+        note: 'I soldati sono gli ordini a mercato, i carri armati difendono i muri più grossi del book e l\u2019artiglieria spara a ogni liquidazione. Dati da Binance, Kraken e Coinbase.',
+        ask: 'Chiedi come l\u2019ho costruito', askQ: 'Come hai costruito BTC Frontline?'
+      },
       nav: { game: 'Giochi' },
       hero: { ctaGame: 'Gioca a Beat the Tape' },
       arcade: {
@@ -133,7 +155,7 @@
           { s: 'IELTS', v: '7,5', d: 'up', q: 'Che lingue parli?' },
           { s: 'SVENSKA', v: 'in crescita', d: 'up', q: 'Come va con lo svedese?' },
           { s: 'MARATONA', v: '42,2 km', d: 'up', q: 'Raccontami della Maratona di Stoccolma.' },
-          { s: 'BUILDS', v: '7 progetti', d: 'up', q: 'Cosa hai costruito di recente?' },
+          { s: 'BUILDS', v: '8 progetti', d: 'up', q: 'Cosa hai costruito di recente?' },
           { s: 'BRIGHTWOOD', v: 'lancio nordico', d: 'up', q: 'Cosa stai facendo per Brightwood in Scandinavia?' },
           { s: 'CAFFÈ', v: 'fika imparata', d: 'up', q: 'Cosa ti piace della vita a Stoccolma?' }
         ]
@@ -149,6 +171,17 @@
     },
 
     sv: {
+      frontline: {
+        sub: 'Bitcoins orderbok i realtid som en 3D-strid på månen: tjurar mot björnar.',
+        loading: 'Ansluter till börserna…', live: 'Live', demo: 'Simulerad data', connecting: 'Ansluter',
+        simulated: 'simulerad marknad', pressure: 'Marknadstryck', bulls: 'Tjurar', bears: 'Björnar',
+        press: { wait: 'Väntar på affärer', bull: 'Tjurarna avancerar', bear: 'Björnarna avancerar', contested: 'Omstridd front' },
+        support: 'Största köpmuren', resistance: 'Största säljmuren', bn: ' mdr',
+        open: 'Utforska i 3D', close: 'Stäng', expandedTitle: 'BTC Frontline',
+        vOverview: 'Översikt', vFront: 'Front', vCinema: 'Film', vHistory: 'Historia',
+        note: 'Soldaterna är marknadsorder, stridsvagnarna vaktar de största murarna i orderboken och artilleriet skjuter vid varje likvidation. Data från Binance, Kraken och Coinbase.',
+        ask: 'Fråga hur jag byggde den', askQ: 'Hur byggde du BTC Frontline?'
+      },
       nav: { game: 'Spel' },
       hero: { ctaGame: 'Spela Beat the Tape' },
       arcade: {
@@ -206,7 +239,7 @@
           { s: 'IELTS', v: '7,5', d: 'up', q: 'Vilka språk talar du?' },
           { s: 'SVENSKA', v: 'på väg upp', d: 'up', q: 'Hur går det med svenskan?' },
           { s: 'MARATON', v: '42,2 km', d: 'up', q: 'Berätta om Stockholm Marathon.' },
-          { s: 'BUILDS', v: '7 projekt', d: 'up', q: 'Vad har du byggt på sistone?' },
+          { s: 'BUILDS', v: '8 projekt', d: 'up', q: 'Vad har du byggt på sistone?' },
           { s: 'BRIGHTWOOD', v: 'nordisk lansering', d: 'up', q: 'Vad gör du för Brightwood i Skandinavien?' },
           { s: 'FIKA', v: 'bemästrad', d: 'up', q: 'Vad gillar du med livet i Stockholm?' }
         ]

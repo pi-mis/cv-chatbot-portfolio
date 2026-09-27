@@ -55,6 +55,7 @@ window.SITE_TEXT = {
       filters: { all: 'All', quant: 'Quant research', product: 'AI & product' },
       ask: 'Ask the twin', stack: 'Built with',
       items: {
+        frontline: { name: 'BTC Frontline', line: 'Bitcoin\u2019s live order book as a 3D battle between bulls and bears.', body: 'A 3D scene on the Moon built with Three.js and live WebSocket feeds from Binance, Kraken and Coinbase: market orders become soldiers, the biggest walls in the book become tanks and every liquidation fires the artillery. A holographic chart in the background shows every monthly candle since 2010.', q: 'How did you build BTC Frontline?' },
         ns: { name: 'Nelson-Siegel on implied volatility', line: 'A yield-curve model applied to the VIX term structure, turned into an S&P 500 backtest.', body: 'Level, slope and curvature are estimated on VIX term-structure indices, forecast with ARIMA in a walk-forward setup, and used to allocate between SVXY, VXX and SPY. Written up as a paper; code in its own GitHub repo.', q: 'Explain your Nelson-Siegel volatility strategy.' },
         twin: { name: 'This AI twin', line: 'A CV you can talk to, in three languages.', body: 'Vercel serverless functions match each question to the closest sections of my CV and send them to an open-weight model via Groq, so answers stay grounded.', q: 'How did you build this AI twin?' },
         brightwood: { name: 'Brightwood go-to-market tool', line: 'Bringing an Italian LED-wood startup to Scandinavia.', body: 'Brightwood, co-founded by my father, sells LED-illuminated wood panels to furniture, architecture and design companies. I built a Lovable tool to find and onboard partners and clients in the Nordics.', q: 'What are you doing for Brightwood in Scandinavia?' },
@@ -153,6 +154,7 @@ window.SITE_TEXT = {
       filters: { all: 'Tutti', quant: 'Ricerca quant', product: 'AI e prodotto' },
       ask: 'Chiedi al gemello', stack: 'Costruito con',
       items: {
+        frontline: { name: 'BTC Frontline', line: 'Il book di Bitcoin dal vivo come una battaglia 3D tra tori e orsi.', body: 'Una scena 3D sulla Luna costruita con Three.js e flussi WebSocket in tempo reale da Binance, Kraken e Coinbase: gli ordini a mercato diventano soldati, i muri più grossi del book diventano carri armati e ogni liquidazione fa sparare l\u2019artiglieria. Sullo sfondo un grafico olografico mostra tutte le candele mensili dal 2010.', q: 'Come hai costruito BTC Frontline?' },
         ns: { name: 'Nelson-Siegel sulla volatilità implicita', line: 'Un modello per le curve dei tassi applicato alla struttura a termine del VIX, trasformato in un backtest sull\u2019S&P 500.', body: 'Livello, pendenza e curvatura sono stimati sugli indici della struttura a termine del VIX, previsti con ARIMA in walk-forward e usati per allocare tra SVXY, VXX e SPY. Descritto in un paper; il codice è in un repo GitHub dedicato.', q: 'Spiegami la tua strategia di volatilità con Nelson-Siegel.' },
         twin: { name: 'Questo gemello AI', line: 'Un CV con cui parlare, in tre lingue.', body: 'Le funzioni serverless di Vercel abbinano ogni domanda alle sezioni più vicine del mio CV e le inviano a un modello open-weight tramite Groq, così le risposte restano ancorate ai fatti.', q: 'Come hai costruito questo gemello AI?' },
         brightwood: { name: 'Strumento go-to-market per Brightwood', line: 'Portare una startup italiana di legno e LED in Scandinavia.', body: 'Brightwood, co-fondata da mio padre, vende pannelli in legno illuminati a LED ad aziende di arredamento, architettura e design. Ho costruito con Lovable uno strumento per trovare e coinvolgere partner e clienti nei paesi nordici.', q: 'Cosa stai facendo per Brightwood in Scandinavia?' },
@@ -251,6 +253,7 @@ window.SITE_TEXT = {
       filters: { all: 'Alla', quant: 'Kvantforskning', product: 'AI och produkt' },
       ask: 'Fråga tvillingen', stack: 'Byggt med',
       items: {
+        frontline: { name: 'BTC Frontline', line: 'Bitcoins orderbok i realtid som en 3D-strid mellan tjurar och björnar.', body: 'En 3D-scen på månen byggd med Three.js och WebSocket-flöden i realtid från Binance, Kraken och Coinbase: marknadsorder blir soldater, orderbokens största murar blir stridsvagnar och varje likvidation avfyrar artilleriet. I bakgrunden visar ett holografiskt diagram varje månadsljus sedan 2010.', q: 'Hur byggde du BTC Frontline?' },
         ns: { name: 'Nelson-Siegel på implicit volatilitet', line: 'En räntekurvsmodell på VIX-terminsstrukturen, omgjord till en backtest på S&P 500.', body: 'Nivå, lutning och krökning skattas på VIX-terminsstrukturens index, prognostiseras med ARIMA i walk-forward och används för att fördela mellan SVXY, VXX och SPY. Beskrivet i en uppsats; koden finns i ett eget GitHub-repo.', q: 'Förklara din Nelson-Siegel-strategi för volatilitet.' },
         twin: { name: 'Den här AI-tvillingen', line: 'Ett CV du kan prata med, på tre språk.', body: 'Vercels serverlösa funktioner matchar varje fråga mot de närmaste delarna av mitt CV och skickar dem till en open-weight-modell via Groq, så att svaren håller sig till fakta.', q: 'Hur byggde du den här AI-tvillingen?' },
         brightwood: { name: 'Go-to-market-verktyg för Brightwood', line: 'Ett italienskt startup i trä och LED på väg till Skandinavien.', body: 'Brightwood, grundat av bland andra min pappa, säljer LED-belysta träpaneler till möbel-, arkitekt- och designföretag. Jag byggde ett verktyg i Lovable för att hitta partner och kunder i Norden.', q: 'Vad gör du för Brightwood i Skandinavien?' },
@@ -299,6 +302,7 @@ window.SITE_TEXT = {
 
 // Dati dei progetti indipendenti dalla lingua: tag per i filtri e stack tecnologico.
 window.PROJECTS = [
+  { id: 'frontline', tags: ['quant', 'product'], stack: ['Three.js', 'WebSockets', 'Binance · Kraken · Coinbase'] },
   { id: 'ns', tags: ['quant'], stack: ['Python', 'ARIMA', 'VIX term structure', 'SVXY / VXX / SPY'] },
   { id: 'twin', tags: ['product'], stack: ['Vercel', 'Serverless', 'Groq', 'JavaScript'] },
   { id: 'brightwood', tags: ['product'], stack: ['Lovable'] },

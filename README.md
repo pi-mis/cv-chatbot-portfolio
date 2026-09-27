@@ -10,6 +10,8 @@ Personal portfolio with an AI chatbot ("AI twin") that answers questions about m
 - `public/app.js` – language switch, chat UI, timeline, projects.
 - `public/curve.js` – interactive Nelson-Siegel volatility curve.
 - `public/game.js` – Carry & Crash, a short-vol / long-vol / cash game.
+- `public/frontline/index.html` – BTC Frontline, the live 3D Bitcoin order book. Works on its own at `/frontline/`; with `?embed=1&lang=en` it shows only the scene and sends its data to the page.
+- `public/frontline-embed.js` – embeds BTC Frontline in the hero and shows price, pressure and walls in the site's style.
 - `public/tape.js` – Beat the Tape, a 60-second news trading game.
 - `public/extras.js` – arcade tabs, ticker tape, command palette (Ctrl/Cmd K), floating ask button.
 - `public/i18n-extra.js` – copy for the parts above in IT / EN / SV.

@@ -11,7 +11,7 @@
     <link rel="icon" href="/pietro-avatar.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
@@ -54,29 +54,54 @@
             </div>
           </div>
 
-          <div class="curve-panel">
-            <div class="curve-head">
-              <h2 data-i18n="hero.curveTitle"></h2>
-              <div class="presets">
-                <button type="button" data-preset="calm" data-i18n="hero.presetCalm"></button>
-                <button type="button" data-preset="stress" data-i18n="hero.presetStress"></button>
-                <button type="button" data-preset="hump" data-i18n="hero.presetHump"></button>
+          <div class="fl-panel" id="flPanel">
+            <div class="fl-head">
+              <div>
+                <h2>BTC Frontline</h2>
+                <p class="fl-sub" data-i18n="frontline.sub"></p>
               </div>
+              <span class="fl-status" id="flStatus"><span class="fl-dot" aria-hidden="true"></span><span id="flStatusTxt"></span></span>
             </div>
-            <div class="curve-canvas-wrap">
-              <canvas id="curve" aria-label="Nelson-Siegel implied volatility curve"></canvas>
-              <div class="curve-tip" id="curveTip"></div>
+
+            <div class="fl-stage" id="flStage">
+              <iframe id="flFrame" title="BTC Frontline" tabindex="-1" allow="fullscreen"></iframe>
+              <div class="fl-loading" id="flLoading"><span data-i18n="frontline.loading"></span></div>
+
+              <div class="fl-bar">
+                <strong data-i18n="frontline.expandedTitle"></strong>
+                <div class="fl-views" role="group">
+                  <button type="button" data-view="overview" data-i18n="frontline.vOverview"></button>
+                  <button type="button" data-view="front" data-i18n="frontline.vFront"></button>
+                  <button type="button" data-view="cinema" data-i18n="frontline.vCinema"></button>
+                  <button type="button" data-view="history" data-i18n="frontline.vHistory"></button>
+                </div>
+                <button type="button" class="fl-close" id="flClose" data-i18n-aria="frontline.close">&times;</button>
+              </div>
+
+              <div class="fl-hud">
+                <div class="fl-price">
+                  <small>BTC / USD</small>
+                  <strong id="flPrice">–</strong>
+                  <span id="flChg"></span>
+                </div>
+                <div class="fl-pressure">
+                  <small data-i18n="frontline.pressure"></small>
+                  <strong id="flPress"></strong>
+                  <div class="fl-meter" aria-hidden="true"><span id="flMeter"></span></div>
+                  <div class="fl-sides"><span class="bull"><span data-i18n="frontline.bulls"></span> <b id="flBulls">0</b></span><span class="bear"><span data-i18n="frontline.bears"></span> <b id="flBears">0</b></span></div>
+                </div>
+              </div>
+              <div class="fl-walls">
+                <div class="bull"><small data-i18n="frontline.support"></small><strong id="flSup">–</strong></div>
+                <div class="bear"><small data-i18n="frontline.resistance"></small><strong id="flRes">–</strong></div>
+              </div>
+
+              <button type="button" class="fl-open" id="flOpen"><span data-i18n="frontline.open"></span></button>
             </div>
-            <div class="sliders">
-              <div class="slider"><label for="b0"><span data-i18n="hero.level"></span><output id="b0v"></output></label><input id="b0" type="range" min="10" max="35" step="0.5" value="21" /></div>
-              <div class="slider"><label for="b1"><span data-i18n="hero.slope"></span><output id="b1v"></output></label><input id="b1" type="range" min="-15" max="25" step="0.5" value="-7" /></div>
-              <div class="slider"><label for="b2"><span data-i18n="hero.curvature"></span><output id="b2v"></output></label><input id="b2" type="range" min="-15" max="15" step="0.5" value="2" /></div>
-              <div class="slider"><label for="lam"><span data-i18n="hero.decay"></span><output id="lamv"></output></label><input id="lam" type="range" min="0.5" max="6" step="0.1" value="2.5" /></div>
-            </div>
-            <p class="curve-readout" id="curveReadout" aria-live="polite"></p>
-            <div class="curve-foot">
-              <p class="curve-note" data-i18n="hero.curveNote"></p>
-              <button type="button" class="link-btn" data-ask-key="hero.askCurveQ" data-i18n="hero.askCurve"></button>
+
+            <div class="fl-foot">
+              <p class="fl-note" data-i18n="frontline.note"></p>
+              <button type="button" class="link-btn" data-ask-key="frontline.askQ" data-i18n="frontline.ask"></button>
             </div>
           </div>
         </div>
@@ -270,6 +295,38 @@
         </div>
       </section>
 
+      <!-- CURVA DI VOLATILITÀ -->
+      <section id="curve-lab">
+        <div class="wrap curve-grid">
+          <div>
+            <h2 data-i18n="hero.curveTitle"></h2>
+            <p class="section-intro" data-i18n="hero.curveNote"></p>
+            <button type="button" class="btn ghost" data-ask-key="hero.askCurveQ" data-i18n="hero.askCurve"></button>
+          </div>
+          <div class="curve-panel">
+            <div class="curve-head">
+              <p class="curve-kicker">Nelson-Siegel</p>
+              <div class="presets">
+                <button type="button" data-preset="calm" data-i18n="hero.presetCalm"></button>
+                <button type="button" data-preset="stress" data-i18n="hero.presetStress"></button>
+                <button type="button" data-preset="hump" data-i18n="hero.presetHump"></button>
+              </div>
+            </div>
+            <div class="curve-canvas-wrap">
+              <canvas id="curve" aria-label="Nelson-Siegel implied volatility curve"></canvas>
+              <div class="curve-tip" id="curveTip"></div>
+            </div>
+            <div class="sliders">
+              <div class="slider"><label for="b0"><span data-i18n="hero.level"></span><output id="b0v"></output></label><input id="b0" type="range" min="10" max="35" step="0.5" value="21" /></div>
+              <div class="slider"><label for="b1"><span data-i18n="hero.slope"></span><output id="b1v"></output></label><input id="b1" type="range" min="-15" max="25" step="0.5" value="-7" /></div>
+              <div class="slider"><label for="b2"><span data-i18n="hero.curvature"></span><output id="b2v"></output></label><input id="b2" type="range" min="-15" max="15" step="0.5" value="2" /></div>
+              <div class="slider"><label for="lam"><span data-i18n="hero.decay"></span><output id="lamv"></output></label><input id="lam" type="range" min="0.5" max="6" step="0.1" value="2.5" /></div>
+            </div>
+            <p class="curve-readout" id="curveReadout" aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+
       <!-- OFF THE DESK -->
       <section id="life">
         <div class="wrap">
@@ -316,5 +373,6 @@
     <script src="/game.js"></script>
     <script src="/tape.js"></script>
     <script src="/extras.js"></script>
+    <script src="/frontline-embed.js"></script>
   </body>
 </html>

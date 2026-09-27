@@ -467,3 +467,126 @@ body.kbar-open { overflow: hidden; }
   .ticker-group[aria-hidden="true"] { display: none; }
   .newswire.flash, .kbar-box, .fab { animation: none; }
 }
+
+/* ================= BTC Frontline nella hero ================= */
+.fl-panel {
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 22px 22px 18px; min-width: 0;
+}
+.fl-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.fl-head h2 { font-size: 22px; letter-spacing: -0.01em; margin: 0; }
+.fl-sub { margin: 4px 0 0; color: var(--ink-soft); font-size: 15px; max-width: 46ch; }
+.fl-status {
+  display: inline-flex; align-items: center; gap: 7px; flex-shrink: 0; font-size: 13px; font-weight: 600;
+  border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px 3px 8px; color: var(--ink-soft);
+}
+.fl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.fl-status.live .fl-dot { background: var(--up); box-shadow: 0 0 0 3px color-mix(in srgb, var(--up) 25%, transparent); animation: fl-pulse 2s ease-in-out infinite; }
+.fl-status.live { color: var(--ink); }
+.fl-status.demo .fl-dot { background: var(--accent); }
+@keyframes fl-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--up) 0%, transparent); } }
+
+/* Palco: la scena resta scura (è lo spazio), i testi usano font e colori del sito in versione scura */
+.fl-stage {
+  --fl-ink: #e5ebf2; --fl-soft: #97a8bc; --fl-up: #5cc08d; --fl-down: #f08066; --fl-line: rgba(229, 235, 242, .16);
+  position: relative; margin: 14px 0 12px; height: 380px; border-radius: var(--r-md); overflow: hidden;
+  background: radial-gradient(ellipse at 50% 60%, #0e1726, #04060b 75%); color: var(--fl-ink);
+  isolation: isolate;
+}
+.fl-stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; pointer-events: none; opacity: 0; transition: opacity .8s; }
+.fl-stage.ready iframe { opacity: 1; }
+.fl-stage::after { /* velo per leggere i testi sopra la scena */
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: linear-gradient(180deg, rgba(4, 7, 12, .72), rgba(4, 7, 12, 0) 34%, rgba(4, 7, 12, 0) 66%, rgba(4, 7, 12, .78));
+}
+.fl-loading { position: absolute; inset: 0; display: grid; place-items: center; z-index: 2; color: var(--fl-soft); font-size: 15px; }
+.fl-stage.ready .fl-loading { display: none; }
+
+.fl-hud { position: absolute; left: 16px; right: 16px; top: 14px; z-index: 2; display: flex; justify-content: space-between; gap: 16px; pointer-events: none; }
+.fl-hud small, .fl-walls small { display: block; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--fl-soft); }
+.fl-price strong {
+  display: block; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 600; font-size: 30px; line-height: 1.1;
+  font-variant-numeric: tabular-nums; margin-top: 2px; border-radius: 4px;
+}
+.fl-price strong.tick-up { animation: fl-up .7s ease-out; } .fl-price strong.tick-down { animation: fl-down .7s ease-out; }
+@keyframes fl-up { from { color: var(--fl-up); } } @keyframes fl-down { from { color: var(--fl-down); } }
+.fl-price span { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; font-weight: 600; color: var(--fl-soft); }
+.fl-price span.up { color: var(--fl-up); } .fl-price span.down { color: var(--fl-down); }
+.fl-pressure { text-align: right; min-width: 0; }
+.fl-pressure strong { display: block; font-family: var(--f-display); font-size: 18px; margin-top: 2px; }
+.fl-pressure strong.up { color: var(--fl-up); } .fl-pressure strong.down { color: var(--fl-down); }
+.fl-meter { margin: 7px 0 5px auto; width: 170px; max-width: 100%; height: 5px; border-radius: 3px; background: var(--fl-down); overflow: hidden; }
+.fl-meter span { display: block; height: 100%; width: 50%; background: var(--fl-up); transition: width .8s ease; }
+.fl-sides { display: flex; justify-content: flex-end; gap: 12px; font-size: 13px; color: var(--fl-soft); }
+.fl-sides b { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-weight: 600; }
+.fl-sides .bull b { color: var(--fl-up); } .fl-sides .bear b { color: var(--fl-down); }
+
+.fl-walls { position: absolute; left: 16px; bottom: 14px; z-index: 2; display: flex; gap: 22px; pointer-events: none; }
+.fl-walls strong { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 14px; font-weight: 600; }
+.fl-walls .bull strong { color: var(--fl-up); } .fl-walls .bear strong { color: var(--fl-down); }
+
+.fl-open {
+  position: absolute; right: 14px; bottom: 14px; z-index: 3; border: 1px solid var(--fl-line); cursor: pointer;
+  background: rgba(229, 235, 242, .1); color: var(--fl-ink); border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 14px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+.fl-open:hover { background: rgba(229, 235, 242, .2); }
+.fl-bar { display: none; }
+.fl-foot { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; }
+.fl-note { font-size: 14px; color: var(--ink-soft); margin: 0; max-width: 52ch; }
+
+/* Vista estesa: il palco occupa tutto lo schermo e la scena diventa esplorabile */
+.fl-stage.expanded { position: fixed; inset: 0; margin: 0; height: auto; border-radius: 0; z-index: 70; }
+.fl-stage.expanded iframe { pointer-events: auto; top: 58px; height: calc(100% - 58px); }
+.fl-stage.expanded::after { top: 58px; background: linear-gradient(180deg, rgba(4, 7, 12, .6), rgba(4, 7, 12, 0) 22%, rgba(4, 7, 12, 0) 80%, rgba(4, 7, 12, .7)); }
+.fl-stage.expanded .fl-bar {
+  display: flex; align-items: center; gap: 16px; position: absolute; left: 0; right: 0; top: 0; height: 58px; z-index: 3;
+  padding: 0 16px; padding-top: env(safe-area-inset-top, 0px); background: #0a111c; border-bottom: 1px solid var(--fl-line);
+}
+.fl-bar strong { font-family: var(--f-display); font-size: 19px; }
+.fl-views { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.fl-views button, .fl-close {
+  border: 1px solid var(--fl-line); background: transparent; color: var(--fl-ink); border-radius: 999px;
+  padding: 5px 12px; font-size: 14px; cursor: pointer;
+}
+.fl-views button:hover, .fl-close:hover { border-color: var(--fl-ink); }
+.fl-close { font-size: 20px; line-height: 1; padding: 4px 11px 6px; }
+.fl-stage.expanded .fl-hud { top: 72px; left: 24px; right: 24px; }
+.fl-stage.expanded .fl-price strong { font-size: 40px; }
+.fl-stage.expanded .fl-walls { left: 24px; bottom: 20px; }
+.fl-stage.expanded .fl-open { display: none; }
+body.fl-lock { overflow: hidden; }
+
+/* ================= Curva di volatilità, ora sotto la sala giochi ================= */
+.curve-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px; align-items: center; }
+.curve-grid .section-intro { margin-bottom: 22px; }
+.curve-kicker { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+
+@media (max-width: 900px) {
+  .curve-grid { grid-template-columns: 1fr; gap: 28px; }
+}
+@media (max-width: 620px) {
+  .fl-stage { height: 330px; }
+  .fl-price strong { font-size: 24px; }
+  .fl-pressure strong { font-size: 15px; }
+  .fl-meter { width: 120px; }
+  .fl-walls { flex-direction: column; gap: 6px; }
+  .fl-stage:not(.expanded) .fl-walls { display: none; }
+  .fl-price { flex-shrink: 0; }
+  .fl-price span { white-space: nowrap; font-size: 12px; }
+  .fl-hud small { font-size: 11px; }
+  .fl-walls strong { font-size: 13px; }
+  .fl-head { flex-direction: column; gap: 8px; }
+  .fl-stage.expanded .fl-bar { flex-wrap: wrap; height: auto; padding: 8px 12px; gap: 8px; }
+  .fl-stage.expanded .fl-bar strong { display: none; }
+  .fl-views { margin-left: 0; }
+  .fl-stage.expanded iframe, .fl-stage.expanded::after { top: 92px; height: calc(100% - 92px); }
+  .fl-stage.expanded .fl-hud { top: 104px; left: 14px; right: 14px; }
+  .fl-stage.expanded .fl-price strong { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-status.live .fl-dot { animation: none; }
+  .fl-stage iframe { transition: none; }
+}
+/* i muri non devono mai finire sotto il pulsante "Esplora in 3D" */
+.fl-stage:not(.expanded) .fl-walls { right: 150px; flex-wrap: wrap; row-gap: 6px; }
