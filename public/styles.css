@@ -678,3 +678,23 @@ body.fl-lock { overflow: hidden; }
   .fl-views button { padding: 5px 7px; font-size: 12.5px; }
   .fl-close { padding: 3px 8px 4px; font-size: 18px; }
 }
+
+/* ================= BTC Frontline: pulsante audio ================= */
+.fl-sound {
+  display: grid; place-items: center; width: 34px; height: 32px; border: 1px solid var(--fl-line); background: transparent;
+  color: var(--fl-ink); border-radius: 999px; cursor: pointer; padding: 0; flex-shrink: 0;
+}
+.fl-sound:hover { border-color: var(--fl-ink); }
+.fl-sound svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.fl-sound .snd-on { display: none; }
+.fl-sound[aria-pressed="true"] { border-color: var(--accent); color: #fff; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.fl-sound[aria-pressed="true"] .snd-on { display: block; }
+.fl-sound[aria-pressed="true"] .snd-off { display: none; }
+@media (max-width: 620px) { .fl-sound { width: 30px; height: 30px; } }
+@media (max-width: 620px) {
+  /* su telefono le viste scorrono di lato, così audio, aiuto e chiusura restano sulla stessa riga */
+  .fl-stage.expanded .fl-bar { flex-wrap: nowrap; }
+  .fl-views { flex-wrap: nowrap; overflow-x: auto; flex: 1 1 auto; min-width: 0; scrollbar-width: none; padding: 3px 2px; }
+  .fl-views::-webkit-scrollbar { display: none; }
+  .fl-views button { flex-shrink: 0; }
+}

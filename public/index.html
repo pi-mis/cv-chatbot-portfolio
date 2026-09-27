@@ -75,6 +75,10 @@
                   <button type="button" data-view="cinema" data-i18n="frontline.vCinema"></button>
                   <button type="button" data-view="history" data-i18n="frontline.vHistory"></button>
                 </div>
+                <button type="button" class="fl-sound" id="flSound" aria-pressed="false">
+                  <svg class="snd-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
+                  <svg class="snd-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg>
+                </button>
                 <button type="button" class="fl-help" id="flHelp"><span aria-hidden="true">?</span><span class="fl-help-t" data-i18n="frontline.tour.help"></span></button>
                 <button type="button" class="fl-close" id="flClose" data-i18n-aria="frontline.close">&times;</button>
               </div>
@@ -388,6 +392,7 @@
     <script src="/game.js"></script>
     <script src="/tape.js"></script>
     <script src="/extras.js"></script>
+    <script src="/frontline-sound.js"></script>
     <script src="/frontline-embed.js"></script>
   </body>
 </html>

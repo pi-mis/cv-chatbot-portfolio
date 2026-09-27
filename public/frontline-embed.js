@@ -27,7 +27,7 @@
     loadedLang = window.currentLang || 'en';
     frame.src = `/frontline/?embed=1&lang=${loadedLang}`;
   }
-  frame.addEventListener('load', () => { send({ type: 'visible', v: visible || expanded }); send({ type: 'interactive', v: expanded }); });
+  frame.addEventListener('load', () => { send({ type: 'visible', v: visible || expanded }); send({ type: 'interactive', v: expanded }); applySound(); });
   if (document.readyState === 'complete') setTimeout(load, 300);
   else window.addEventListener('load', () => setTimeout(load, 300));
 
@@ -35,6 +35,7 @@
   window.addEventListener('message', (e) => {
     if (e.origin !== location.origin || !e.data || e.data.src !== 'frontline') return;
     if (e.data.type === 'close') return setExpanded(false);
+    if (e.data.type === 'sfx') { if (window.FLSound) window.FLSound.play(e.data); return; }
     if (e.data.type !== 'state') return;
     state = e.data;
     if (state.price && state.ready) stage.classList.add('ready'); // mostra la scena solo quando il campo è costruito
@@ -84,6 +85,7 @@
     if (on === expanded) return;
     expanded = on;
     if (!on && tourStep) closeTour();
+    applySound();
     stage.classList.toggle('expanded', on);
     document.body.classList.toggle('fl-lock', on);
     send({ type: 'interactive', v: on });
@@ -185,9 +187,31 @@
     else if (!e.shiftKey && i === f.length - 1) { e.preventDefault(); f[0].focus(); }
   });
 
+  // ---------- Audio: si sente solo nella vista 3D estesa, se l'utente l'ha attivato ----------
+  const SOUND_KEY = 'btcf-sound';
+  const soundBtn = $('flSound');
+  let soundPref = false;
+  try { soundPref = localStorage.getItem(SOUND_KEY) === '1'; } catch (e) {}
+  if (!window.FLSound || !window.FLSound.supported) soundBtn.hidden = true;
+  function applySound() {
+    const want = soundPref && expanded && !document.hidden;
+    if (window.FLSound) window.FLSound.set(want);
+    send({ type: 'sound', v: want });
+    soundBtn.setAttribute('aria-pressed', String(soundPref));
+    const label = soundPref ? T().soundOff : T().soundOn;
+    soundBtn.setAttribute('aria-label', label); soundBtn.title = label;
+  }
+  soundBtn.onclick = () => {
+    soundPref = !soundPref;
+    try { localStorage.setItem(SOUND_KEY, soundPref ? '1' : '0'); } catch (e) {}
+    applySound();
+  };
+  document.addEventListener('visibilitychange', applySound);
+  applySound();
+
   // ---------- Lingua ----------
   function labels() { $('flClose').setAttribute('aria-label', T().close); }
-  window.addEventListener('langchange', () => { labels(); render(); renderTour(); if (loadedLang && loadedLang !== window.currentLang) load(); });
+  window.addEventListener('langchange', () => { labels(); render(); renderTour(); applySound(); if (loadedLang && loadedLang !== window.currentLang) load(); });
   labels();
   render();
 })();

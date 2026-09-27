@@ -9,7 +9,7 @@
         simulated: 'simulated market', pressure: 'Market pressure', bulls: 'Bulls', bears: 'Bears',
         press: { wait: 'Waiting for trades', bull: 'Bulls are advancing', bear: 'Bears are advancing', contested: 'Contested front' },
         support: 'Biggest buy wall', resistance: 'Biggest sell wall', bn: 'bn',
-        open: 'Explore in 3D', close: 'Close', expandedTitle: 'BTC Frontline',
+        soundOn: 'Turn sound on', soundOff: 'Turn sound off', open: 'Explore in 3D', close: 'Close', expandedTitle: 'BTC Frontline',
         vOverview: 'Overview', vFront: 'Front', vCinema: 'Cinema', vHistory: 'History',
         note: 'Soldiers are market orders, tanks guard the biggest walls in the book and artillery fires on every liquidation. Data from Binance, Kraken and Coinbase.',
         tour: {
@@ -102,7 +102,7 @@
         simulated: 'mercato simulato', pressure: 'Pressione di mercato', bulls: 'Tori', bears: 'Orsi',
         press: { wait: 'In attesa degli scambi', bull: 'I tori avanzano', bear: 'Gli orsi avanzano', contested: 'Fronte conteso' },
         support: 'Muro acquisti', resistance: 'Muro vendite', bn: ' mld',
-        open: 'Esplora in 3D', close: 'Chiudi', expandedTitle: 'BTC Frontline',
+        soundOn: 'Attiva l\u2019audio', soundOff: 'Disattiva l\u2019audio', open: 'Esplora in 3D', close: 'Chiudi', expandedTitle: 'BTC Frontline',
         vOverview: 'Panoramica', vFront: 'Fronte', vCinema: 'Cinema', vHistory: 'Storia',
         note: 'I soldati sono gli ordini a mercato, i carri armati difendono i muri più grossi del book e l\u2019artiglieria spara a ogni liquidazione. Dati da Binance, Kraken e Coinbase.',
         tour: {
@@ -195,7 +195,7 @@
         simulated: 'simulerad marknad', pressure: 'Marknadstryck', bulls: 'Tjurar', bears: 'Björnar',
         press: { wait: 'Väntar på affärer', bull: 'Tjurarna avancerar', bear: 'Björnarna avancerar', contested: 'Omstridd front' },
         support: 'Största köpmuren', resistance: 'Största säljmuren', bn: ' mdr',
-        open: 'Utforska i 3D', close: 'Stäng', expandedTitle: 'BTC Frontline',
+        soundOn: 'Slå på ljudet', soundOff: 'Stäng av ljudet', open: 'Utforska i 3D', close: 'Stäng', expandedTitle: 'BTC Frontline',
         vOverview: 'Översikt', vFront: 'Front', vCinema: 'Film', vHistory: 'Historia',
         note: 'Soldaterna är marknadsorder, stridsvagnarna vaktar de största murarna i orderboken och artilleriet skjuter vid varje likvidation. Data från Binance, Kraken och Coinbase.',
         tour: {

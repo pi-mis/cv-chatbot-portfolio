@@ -591,6 +591,19 @@ function updateHud(){
   $('#liveDot').className = 'dot ' + (M.mode === 'demo' ? 'demo' : live ? 'live' : 'down');
   $('#liveTxt').textContent = M.mode === 'demo' ? 'DEMO' : 'LIVE';
 }
+/* Suoni: la scena non produce audio da sola. Quando il portfolio attiva il volume,
+   segnala spari ed esplosioni (con la posizione sullo schermo per il panning) e la pagina li sintetizza. */
+let SOUND = false;
+const _sv = new THREE.Vector3(), sfxLast = {shot: 0, cannon: 0, launch: 0, boom: 0};
+const SFX_GAP = {shot: 55, cannon: 120, launch: 150, boom: 70};
+function sfx(k, x, y, z, extra){
+  if (!SOUND || !EMBED || parent === window) return;
+  const t = performance.now(); if (t - sfxLast[k] < SFX_GAP[k]) return; sfxLast[k] = t;
+  _sv.set(x, y, z).project(camera);
+  if (_sv.z > 1 || Math.abs(_sv.x) > 1.4) return;                 // fuori inquadratura: niente suono
+  const near = clamp(1 - camera.position.distanceTo(_sv.set(x, y, z))/900, 0.15, 1);
+  parent.postMessage(Object.assign({src:'frontline', type:'sfx', k, pan: clamp(_sv.x, -1, 1), near}, extra || {}), location.origin);
+}
 /* Stato inviato al portfolio (stessa origine), che lo mostra con lo stile del sito */
 let lastPost = 0;
 function postState(){
@@ -1875,6 +1888,7 @@ const World = {
     this.tracers.push({x0: mx, y0: my, z0: mz, x1: tx + rand(-0.6, 0.6), y1: ty + rand(-0.5, 0.3), z1: tz + rand(-0.6, 0.6), t: 0, dur: 0.08 + dist/260, side, target, hit: Math.random() < 0.3, shell: false});
     fire.emit(mx + dir*0.3, my, mz, dir*4, rand(0, 1), rand(-1, 1), 0.07, 1.4, 3, 2.2, 1.1, 1);
     u.recoil = 1;
+    sfx('shot', mx, my, mz, {side});
   },
   tankFire(side, c, y){
     const dir = SIDE_DIR[side], foes = this.inf[1 - side];
@@ -1889,6 +1903,7 @@ const World = {
     for (let k = 0; k < 10; k++) fire.emit(mx, my, mz, Math.cos(ang)*rand(6, 18), rand(-1, 3), Math.sin(ang)*rand(6, 18), rand(0.1, 0.22), rand(3, 6), 3.2, 1.8, 0.6, 1, {drag: 5});
     for (let k = 0; k < 5; k++) smoke.emit(mx, my, mz, Math.cos(ang)*rand(2, 6), rand(1, 3), Math.sin(ang)*rand(2, 6), rand(1.5, 2.5), rand(4, 7), 0.5, 0.48, 0.44, 0.45, {kind:1, grow:1.5, drag:1.5});
     c.recoil = 1;
+    sfx('cannon', mx, my, mz, {side});
   },
 
   update(dt, t){
@@ -1997,6 +2012,7 @@ const World = {
         b.c.g.updateMatrixWorld(true);
         _v.set(4.1, 0, 0); b.c.barrel.localToWorld(_v);
         b.x0 = _v.x; b.y0 = _v.y; b.z0 = _v.z; b.y1 = heightAt(b.x1, b.z1);
+        sfx('launch', b.x0, b.y0, b.z0, {side: b.side});
         b.dur = 1.2 + Math.abs(b.x1 - b.x0)/200; b.peak = 22 + Math.abs(b.x1 - b.x0)*0.25;
         b.c.recoil = 1; b.mesh.visible = true;
         for (let k = 0; k < 16; k++) fire.emit(b.x0, b.y0, b.z0, dir*rand(8, 30), rand(-2, 8), rand(-5, 5), rand(0.12, 0.3), rand(4, 9), 3.2, 1.7, 0.5, 1, {drag: 4});
@@ -2036,6 +2052,7 @@ const World = {
 
   explodeFx(x, z, s){
     const y = heightAt(x, z);
+    sfx('boom', x, y, z, {s});
     const nf = Math.round((REDUCED ? 12 : 26)*s), ns = Math.round((REDUCED ? 8 : 14)*s);
     for (let i = 0; i < nf; i++){ const a = rand(0, 6.28), sp = rand(4, 22)*s; fire.emit(x, y + 1, z, Math.cos(a)*sp*0.6, rand(6, 24)*s, Math.sin(a)*sp*0.6, rand(0.35, 0.85), rand(5, 12)*s, 3.2, rand(1.1, 1.7), rand(0.25, 0.5), 1, {grav: 26, drag: 1.6}); }
     for (let i = 0; i < ns; i++) smoke.emit(x + rand(-3,3)*s, y + 2, z + rand(-3,3)*s, rand(-3,3), rand(3, 9)*s, rand(-3,3), rand(2.4, 4.4), rand(10, 20)*s, 0.07, 0.065, 0.06, 0.75, {kind:1, grow:1.8, drag:1.2});
@@ -2331,6 +2348,7 @@ if (EMBED){
     if (m.type === 'visible') paused = !m.v;
     if (m.type === 'interactive'){ controls.enabled = !!m.v; controls.enableZoom = !!m.v; controls.enablePan = !!m.v; if (!m.v && World.ready) View.set('front', 1.2); }
     if (m.type === 'view' && World.ready) View.set(m.mode);
+    if (m.type === 'sound') SOUND = !!m.v;
   });
   /* Esc dentro la scena chiude la vista estesa nella pagina */
   addEventListener('keydown', e => { if (e.key === 'Escape') parent.postMessage({src:'frontline', type:'close'}, location.origin); });
