@@ -1,5 +1,5 @@
-// Audio di BTC Frontline: una battaglia spaziale con colonna sonora, sintetizzata con la Web Audio API.
-// Nessun file audio: musica synthwave, sottofondo (ronzio dell'astronave e rombo lontano), laser dei soldati,
+// Audio di BTC Frontline: battaglia spaziale e "La cavalcata delle valchirie", sintetizzate con la Web Audio API.
+// Nessun file audio: la musica è suonata nota per nota da sintetizzatori, più sottofondo (ronzio dell'astronave e rombo lontano), laser dei soldati,
 // cannoni dei carri, lanci d'artiglieria ed esplosioni, generati al momento.
 // La scena 3D (nell'iframe) segnala gli eventi; qui diventano suoni, con il panning sullo schermo.
 (function () {
@@ -7,28 +7,47 @@
   let ctx = null, master = null, bus = null, noise = null, bedNodes = [], on = false, suspendT = null;
   let musicBus = null, duck = null, echo = null, arpLp = null;
 
-  // ---------- Musica: synthwave spaziale in La minore, 118 BPM ----------
-  const BPM = 118, STEP = 60 / BPM / 4;          // durata di una semicroma
+  // ---------- Musica: "La cavalcata delle valchirie" (Wagner, 1856; opera di pubblico dominio) ----------
+  // Arrangiamento sintetizzato: ottoni sul tema, archi che turbinano, basso al galoppo, timpani e piatti.
+  // 9/8 con la semiminima puntata a 100: la griglia è la semicroma, 18 per battuta.
+  const BEAT = 60 / 100, STEP = BEAT / 6;
   const MUSIC_VOL = 0.5;
   const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
-  // giro di accordi i–VI–III–VII: Lam, Fa, Do, Sol
-  const CHORDS = [
-    { bass: 33, arp: [57, 60, 64, 69], pad: [57, 60, 64] },
-    { bass: 29, arp: [53, 57, 60, 65], pad: [53, 57, 60] },
-    { bass: 36, arp: [55, 60, 64, 67], pad: [55, 60, 64] },
-    { bass: 31, arp: [55, 59, 62, 67], pad: [55, 59, 62] }
+  const CH = {
+    Bm:  { bass: 35, tones: [59, 62, 66] },   // Si minore
+    D:   { bass: 38, tones: [62, 66, 69] },   // Re maggiore
+    Fsm: { bass: 42, tones: [61, 66, 69] },   // Fa# minore
+    Fs:  { bass: 42, tones: [58, 61, 66] },   // Fa# maggiore (dominante)
+    B:   { bass: 35, tones: [59, 63, 66] }    // Si maggiore
+  };
+  // Il tema procede per "cellule" di 2 movimenti (12 semicrome) che scavalcano le stanghette:
+  // levare di una semicroma (X), poi Y puntata, X semicroma, Y croma, e la nota lunga Z.
+  // [X, Y, Z, accordo] — Si minore che sale, poi Re, Fa# minore, Fa# e l'arrivo in Si maggiore.
+  const CELLS = [
+    [66, 71, 74, 'Bm'], [71, 74, 78, 'Bm'], [74, 78, 81, 'Bm'],
+    [69, 74, 78, 'D'],  [69, 74, 78, 'D'],  [74, 78, 81, 'D'],
+    [66, 69, 73, 'Fsm'], [73, 78, 82, 'Fs'], [66, 71, 75, 'B']
   ];
-  const ARP = [0, 1, 2, 3, 1, 2, 3, 2, 0, 1, 2, 3, 2, 3, 1, 2];
-  // melodia: [semicroma, nota MIDI, durata in semicrome], una battuta per accordo
-  const LEAD_A = [
-    [[0, 76, 3], [3, 74, 1], [4, 72, 2], [6, 69, 2], [8, 72, 4], [12, 74, 4]],
-    [[0, 72, 3], [3, 74, 1], [4, 76, 4], [8, 77, 2], [10, 76, 2], [12, 72, 4]],
-    [[0, 76, 3], [3, 79, 1], [4, 76, 2], [6, 74, 2], [8, 72, 6], [14, 74, 2]],
-    [[0, 74, 4], [4, 71, 2], [6, 74, 2], [8, 79, 4], [12, 76, 4]]
-  ];
-  const LEAD_B = [LEAD_A[0], LEAD_A[1], LEAD_A[2], [[0, 74, 3], [3, 76, 1], [4, 79, 6], [10, 81, 2], [12, 79, 4]]];
-  // 16 battute: 4 di intro (pad, arpeggio, charleston), 4 con cassa e basso, 8 con la melodia; poi riparte dalla 5ª
-  let step = 0, bar = 0, nextT = 0, timer = null, events = [];
+  const INTRO = 36, S = 36;                    // 2 battute di introduzione, poi il tema sul battere
+  const END = S + CELLS.length * 12 + 12;      // l'ultima nota lunga, poi il ritorno sulla dominante
+  const LOOP_END = END + 36;                   // 2 battute di trillo e rullo di timpani, poi si riparte da S
+  const mel = new Map();                       // posizione (semicroma) -> [nota, durata, cellula]
+  const put = (pos, m, len, k) => { if (!mel.has(pos)) mel.set(pos, []); mel.get(pos).push([m, len, k]); };
+  CELLS.forEach(([x, y, z], k) => {
+    const at = S + k * 12, last = k === CELLS.length - 1;
+    put(at - 1, x, 1, k);
+    if (k === 0) put(LOOP_END - 1, x, 1, k);   // il levare del tema, anche quando il giro ricomincia
+    put(at, y, 3, k); put(at + 3, x, 1, k); put(at + 4, y, 2, k);
+    put(at + 6, z, last ? 12 : 5, k);
+  });
+  const cellAt = (pos) => Math.floor((pos - S + 1) / 12);
+  function chordAt(pos) {
+    if (pos < S - 1) return 'Bm';
+    if (pos >= END) return 'Fs';
+    const k = cellAt(pos);
+    return k < CELLS.length ? CELLS[k][3] : 'B';
+  }
+  let pos = 0, nextT = 0, timer = null, events = [];
   const active = { shot: 0, boom: 0 };
   const LIMIT = { shot: 7, boom: 5 };
 
@@ -62,7 +81,7 @@
     const t = ctx.currentTime;
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 240; lp.Q.value = 3;
     const g = ctx.createGain(); g.gain.value = 0.13;
-    [[55, 'sawtooth', 0], [82.4, 'sawtooth', 7], [27.5, 'sine', 0]].forEach(([f, type, det]) => {
+    [[61.74, 'sawtooth', 0], [92.5, 'sawtooth', 7], [30.87, 'sine', 0]].forEach(([f, type, det]) => {
       const o = ctx.createOscillator(); o.type = type; o.frequency.value = f; o.detune.value = det;
       o.connect(lp); o.start(t); bedNodes.push(o);
     });
@@ -143,93 +162,89 @@
   }
 
   // ---------- Strumenti della musica ----------
-  function kick(t) {
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.14);
-    env(g.gain, t, 0.9, 0.003, 0.32);
-    o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 0.4);
+  function brass(t, m, len, full) {
+    [[m, 0.085], ...(full ? [[m - 12, 0.06]] : [])].forEach(([n, vol]) => {
+      const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 2;
+      lp.frequency.setValueAtTime(500, t); lp.frequency.exponentialRampToValueAtTime(3400, t + 0.05);
+      lp.frequency.exponentialRampToValueAtTime(1700, t + 0.05 + Math.min(len, 0.5));
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+      g.gain.setValueAtTime(vol * 0.85, t + Math.max(0.03, len - 0.05)); g.gain.exponentialRampToValueAtTime(0.0001, t + len + 0.15);
+      lp.connect(g); g.connect(musicBus); if (len > STEP * 4) g.connect(echo);
+      [-7, 7].forEach((det) => {
+        const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mtof(n); o.detune.value = det;
+        o.connect(lp); o.start(t); o.stop(t + len + 0.2);
+      });
+    });
   }
-  function snare(t, v = 1) {
-    const n = ctx.createBufferSource(); n.buffer = noise;
-    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1600;
-    const g = ctx.createGain(); env(g.gain, t, 0.32 * v, 0.002, 0.17);
-    n.connect(hp); hp.connect(g); g.connect(musicBus); n.start(t, Math.random()); n.stop(t + 0.22);
-    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(120, t + 0.1);
-    const og = ctx.createGain(); env(og.gain, t, 0.25 * v, 0.002, 0.1);
-    o.connect(og); og.connect(musicBus); o.start(t); o.stop(t + 0.15);
-  }
-  function hat(t, open, v) {
-    const n = ctx.createBufferSource(); n.buffer = noise;
-    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 7500;
-    const g = ctx.createGain(); env(g.gain, t, v, 0.001, open ? 0.2 : 0.045);
-    n.connect(hp); hp.connect(g); g.connect(musicBus); n.start(t, Math.random()); n.stop(t + (open ? 0.25 : 0.08));
+  function strings(t, m, len, vol) {               // archi: note rapide, morbide, con l'eco
+    const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mtof(m);
+    const g = ctx.createGain(); env(g.gain, t, vol, 0.006, len);
+    o.connect(g); g.connect(arpLp); o.start(t); o.stop(t + len + 0.05);
   }
   function bassNote(t, m, len) {
     const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mtof(m);
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 6;
-    lp.frequency.setValueAtTime(900, t); lp.frequency.exponentialRampToValueAtTime(180, t + len);
-    const g = ctx.createGain(); env(g.gain, t, 0.26, 0.004, len);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 5;
+    lp.frequency.setValueAtTime(700, t); lp.frequency.exponentialRampToValueAtTime(160, t + len);
+    const g = ctx.createGain(); env(g.gain, t, 0.24, 0.005, len);
     o.connect(lp); lp.connect(g); g.connect(musicBus); o.start(t); o.stop(t + len + 0.05);
   }
-  function arpNote(t, m) {
-    const o = ctx.createOscillator(); o.type = 'square'; o.frequency.value = mtof(m);
-    const g = ctx.createGain(); env(g.gain, t, 0.07, 0.003, STEP * 0.9);
-    o.connect(g); g.connect(arpLp); o.start(t); o.stop(t + STEP + 0.05);
+  function timpani(t, m, v) {
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(mtof(m) * 1.5, t); o.frequency.exponentialRampToValueAtTime(mtof(m), t + 0.08);
+    const g = ctx.createGain(); env(g.gain, t, 0.6 * v, 0.004, 0.6);
+    o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + 0.7);
+    const n = ctx.createBufferSource(); n.buffer = noise;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 400; bp.Q.value = 1;
+    const ng = ctx.createGain(); env(ng.gain, t, 0.12 * v, 0.002, 0.08);
+    n.connect(bp); bp.connect(ng); ng.connect(musicBus); n.start(t, Math.random()); n.stop(t + 0.12);
   }
-  function padChord(t, notes, len) {
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1100;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.6);
-    g.gain.setValueAtTime(0.05, t + len - 0.4); g.gain.exponentialRampToValueAtTime(0.0001, t + len + 0.3);
-    lp.connect(g); g.connect(musicBus);
-    notes.forEach((m) => [-8, 8].forEach((det) => {
-      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = mtof(m); o.detune.value = det;
-      o.connect(lp); o.start(t); o.stop(t + len + 0.4);
-    }));
-  }
-  function leadNote(t, m, len) {
-    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.value = mtof(m);
-    const o2 = ctx.createOscillator(); o2.type = 'square'; o2.frequency.value = mtof(m); o2.detune.value = 6;
-    const vib = ctx.createOscillator(); vib.frequency.value = 5.5; const vg = ctx.createGain(); vg.gain.value = 5;
-    vib.connect(vg); vg.connect(o.detune); vg.connect(o2.detune);
-    const mix = ctx.createGain(); mix.gain.value = 0.35; o2.connect(mix);
-    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 3200;
-    const g = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.11, t + 0.02);
-    g.gain.setValueAtTime(0.09, t + Math.max(0.03, len - 0.06)); g.gain.exponentialRampToValueAtTime(0.0001, t + len + 0.12);
-    o.connect(lp); mix.connect(lp); lp.connect(g); g.connect(musicBus); g.connect(echo);
-    [o, o2, vib].forEach((x) => { x.start(t); x.stop(t + len + 0.2); });
+  function crash(t) {
+    const n = ctx.createBufferSource(); n.buffer = noise;
+    const hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 5000;
+    const g = ctx.createGain(); env(g.gain, t, 0.22, 0.003, 1.6);
+    n.connect(hp); hp.connect(g); g.connect(musicBus); n.start(t, Math.random() * 0.3); n.stop(t + 1.7);
   }
 
   // ---------- Sequencer: programma le note con un po' di anticipo, senza scatti ----------
   function scheduleStep(t) {
-    const c = CHORDS[bar % 4], s16 = step, beat = s16 % 4 === 0;
-    const drums = bar >= 4, lead = bar >= 8, fill = bar % 8 === 7 && s16 >= 12;
-    if (s16 === 0) padChord(t, c.pad, STEP * 16);
-    arpNote(t, c.arp[ARP[s16]] + (lead && s16 % 8 === 7 ? 12 : 0));
-    hat(t, s16 % 8 === 6 && drums, s16 % 2 ? 0.05 : 0.09);
-    if (drums) {
-      if (beat) kick(t);
-      if (s16 === 4 || s16 === 12) snare(t);
-      if (fill && s16 % 1 === 0 && s16 !== 12) snare(t, 0.35 + (s16 - 12) * 0.15);
-      if (s16 % 2 === 0) bassNote(t, c.bass + (s16 % 4 === 2 ? 12 : 0), STEP * 1.8);
+    const c = CH[chordAt(pos)], s18 = pos % 18, beatStart = s18 % 6 === 0;
+    const intro = pos < INTRO, trill = pos >= END || pos < 18, k = cellAt(pos);
+    if (trill) {
+      // trillo dei legni sulla dominante (Fa#-Sol), due note per semicroma
+      strings(t, 78, STEP * 0.45, 0.05); strings(t + STEP / 2, 79, STEP * 0.45, 0.05);
+      // e, nell'ultima metà di ogni battuta, gli archi che salgono in scala
+      if (s18 >= 12) strings(t, [59, 61, 62, 64, 66, 67][s18 - 12] + 12, STEP * 0.9, 0.05);
+    } else {
+      // archi che turbinano: a ogni battito una scala che sale sulle note dell'accordo
+      const [x, y, z] = c.tones, run = [x, y, z, x + 12, y + 12, z + 12];
+      strings(t, run[s18 % 6] + 12, STEP * 0.9, intro ? 0.02 + s18 * 0.0015 : 0.035);
     }
-    if (lead) {
-      const phrase = (bar % 8 < 4 ? LEAD_A : LEAD_B)[bar % 4];
-      phrase.forEach(([at, m, len]) => { if (at === s16) leadNote(t, m, len * STEP); });
+    // basso al galoppo sul ritmo del tema: lunga, corta, lunga
+    if (pos >= 18) {
+      if (beatStart) bassNote(t, c.bass, STEP * 2.8);
+      if (s18 % 6 === 3) bassNote(t, c.bass + 12, STEP * 0.9);
+      if (s18 % 6 === 4) bassNote(t, c.bass, STEP * 1.8);
     }
+    // timpani sul primo battito; rullo crescente prima di ripartire
+    if (pos >= LOOP_END - 18) timpani(t, 42, 0.25 + (pos - (LOOP_END - 18)) / 24);
+    else if (s18 === 0 && pos >= 18) timpani(t, c.bass + 12, 0.8);
+    // piatti all'ingresso del tema, del Re maggiore e del Si maggiore
+    if (pos === S || pos === S + 36 || pos === S + 96) crash(t);
+    const notes = mel.get(pos);
+    if (notes) notes.forEach(([m, len, cell]) => brass(t, m, len * STEP, cell >= 3));
   }
   function tick() {
-    // l'arpeggio si apre quando la battaglia è intensa, si chiude quando è calma
+    // gli archi si fanno più brillanti quando la battaglia è intensa, più morbidi quando è calma
     const now = performance.now();
     events = events.filter((x) => now - x < 3000);
     const heat = Math.min(1, events.length / 40);
-    arpLp.frequency.setTargetAtTime(1300 + heat * 3200, ctx.currentTime, 0.8);
+    arpLp.frequency.setTargetAtTime(1600 + heat * 3000, ctx.currentTime, 0.8);
     while (nextT < ctx.currentTime + 0.12) {
       scheduleStep(nextT);
       nextT += STEP;
-      step = (step + 1) % 16;
-      if (step === 0) { bar++; if (bar >= 16) bar = 4; }
+      pos++;
+      if (pos >= LOOP_END) pos = S;               // l'introduzione si sente solo la prima volta
     }
   }
   function startMusic() {
@@ -273,5 +288,5 @@
     return true;
   }
 
-  window.FLSound = { set, play, supported: !!AC, _tap: () => ({ ctx, master, bar, step }) };
+  window.FLSound = { set, play, supported: !!AC, _tap: () => ({ ctx, master, pos }) };
 })();
