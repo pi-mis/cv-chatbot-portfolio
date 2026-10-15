@@ -80,7 +80,7 @@
           { s: 'IELTS', v: '7.5', d: 'up', q: 'What languages do you speak?' },
           { s: 'SVENSKA', v: 'improving', d: 'up', q: 'How is your Swedish going?' },
           { s: 'MARATHON', v: '42.2 km', d: 'up', q: 'Tell me about running the Stockholm Marathon.' },
-          { s: 'BUILDS', v: '8 projects', d: 'up', q: 'What have you built recently?' },
+          { s: 'BUILDS', v: '{n} projects', d: 'up', q: 'What have you built recently?' },
           { s: 'BRIGHTWOOD', v: 'Nordic launch', d: 'up', q: 'What are you doing for Brightwood in Scandinavia?' },
           { s: 'COFFEE', v: 'fika mastered', d: 'up', q: 'What do you like about life in Stockholm?' }
         ]
@@ -173,7 +173,7 @@
           { s: 'IELTS', v: '7,5', d: 'up', q: 'Che lingue parli?' },
           { s: 'SVENSKA', v: 'in crescita', d: 'up', q: 'Come va con lo svedese?' },
           { s: 'MARATONA', v: '42,2 km', d: 'up', q: 'Raccontami della Maratona di Stoccolma.' },
-          { s: 'BUILDS', v: '8 progetti', d: 'up', q: 'Cosa hai costruito di recente?' },
+          { s: 'BUILDS', v: '{n} progetti', d: 'up', q: 'Cosa hai costruito di recente?' },
           { s: 'BRIGHTWOOD', v: 'lancio nordico', d: 'up', q: 'Cosa stai facendo per Brightwood in Scandinavia?' },
           { s: 'CAFFÈ', v: 'fika imparata', d: 'up', q: 'Cosa ti piace della vita a Stoccolma?' }
         ]
@@ -266,7 +266,7 @@
           { s: 'IELTS', v: '7,5', d: 'up', q: 'Vilka språk talar du?' },
           { s: 'SVENSKA', v: 'på väg upp', d: 'up', q: 'Hur går det med svenskan?' },
           { s: 'MARATON', v: '42,2 km', d: 'up', q: 'Berätta om Stockholm Marathon.' },
-          { s: 'BUILDS', v: '8 projekt', d: 'up', q: 'Vad har du byggt på sistone?' },
+          { s: 'BUILDS', v: '{n} projekt', d: 'up', q: 'Vad har du byggt på sistone?' },
           { s: 'BRIGHTWOOD', v: 'nordisk lansering', d: 'up', q: 'Vad gör du för Brightwood i Skandinavien?' },
           { s: 'FIKA', v: 'bemästrad', d: 'up', q: 'Vad gillar du med livet i Stockholm?' }
         ]

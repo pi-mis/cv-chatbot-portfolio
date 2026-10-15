@@ -30,8 +30,6 @@
     hintLabel.textContent = t.chat.hint;
     disclaimerEl.textContent = t.chat.disclaimer;
     renderChat();
-    renderTimeline();
-    renderProjects();
     renderLife();
     window.dispatchEvent(new Event('langchange'));
   }
@@ -156,85 +154,7 @@
     }
   });
 
-  // ---------- Percorso ----------
-  let tlIndex = 4; // parte dal 2026
-  function renderTimeline() {
-    const items = T().journey.items;
-    const tl = $('timeline');
-    tl.innerHTML = '';
-    items.forEach((it, i) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'tl-btn'; b.setAttribute('role', 'tab');
-      b.textContent = it.year;
-      b.setAttribute('aria-selected', String(i === tlIndex));
-      b.onclick = () => { tlIndex = i; renderTimeline(); };
-      tl.appendChild(b);
-    });
-    const it = items[tlIndex];
-    $('tlTitle').textContent = it.title;
-    $('tlBody').textContent = it.body;
-    $('tlAsk').textContent = T().journey.ask;
-    $('tlAsk').onclick = () => window.askTwin(it.q);
-    $('tlPrev').disabled = tlIndex === 0;
-    $('tlNext').disabled = tlIndex === items.length - 1;
-  }
-  $('tlPrev').onclick = () => { tlIndex = Math.max(0, tlIndex - 1); renderTimeline(); };
-  $('tlNext').onclick = () => { tlIndex = Math.min(T().journey.items.length - 1, tlIndex + 1); renderTimeline(); };
-  $('timeline').addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') $('tlNext').click();
-    if (e.key === 'ArrowLeft') $('tlPrev').click();
-    if (e.key.startsWith('Arrow')) $('timeline').children[tlIndex].focus();
-  });
-
-  // ---------- Progetti ----------
-  let filter = 'all';
-  const open = new Set(['ns']);
-  function renderProjects() {
-    const t = T().projects;
-    const fEl = $('filters');
-    fEl.innerHTML = '';
-    Object.entries(t.filters).forEach(([k, label]) => {
-      const b = document.createElement('button');
-      b.type = 'button'; b.textContent = label;
-      b.setAttribute('aria-pressed', String(k === filter));
-      b.onclick = () => { filter = k; renderProjects(); };
-      fEl.appendChild(b);
-    });
-
-    const list = $('projList');
-    list.innerHTML = '';
-    window.PROJECTS.forEach((p) => {
-      const c = t.items[p.id];
-      const li = document.createElement('li');
-      li.className = 'proj';
-      li.hidden = filter !== 'all' && !p.tags.includes(filter);
-      const isOpen = open.has(p.id);
-      li.innerHTML = `
-        <button type="button" class="proj-head" aria-expanded="${isOpen}" aria-controls="pb-${p.id}">
-          <span><span class="proj-name"></span><span class="proj-line"></span></span>
-          <span class="proj-toggle" aria-hidden="true">+</span>
-        </button>
-        <div class="proj-body" id="pb-${p.id}" ${isOpen ? '' : 'hidden'}>
-          <div><p></p><button type="button" class="link-btn ask"></button></div>
-          <div><p class="stack-label"></p><div class="chips"></div></div>
-        </div>`;
-      li.querySelector('.proj-name').textContent = c.name;
-      li.querySelector('.proj-line').textContent = c.line;
-      li.querySelector('.proj-body p').textContent = c.body;
-      li.querySelector('.stack-label').textContent = t.stack;
-      li.querySelector('.ask').textContent = t.ask;
-      li.querySelector('.ask').onclick = () => window.askTwin(c.q);
-      const chips = li.querySelector('.chips');
-      p.stack.forEach((s) => {
-        const sp = document.createElement('span'); sp.className = 'chip'; sp.textContent = s; chips.appendChild(sp);
-      });
-      li.querySelector('.proj-head').onclick = () => {
-        open.has(p.id) ? open.delete(p.id) : open.add(p.id);
-        renderProjects();
-      };
-      list.appendChild(li);
-    });
-  }
+  // Percorso e Progetti ora vivono in journey.js e projects.js.
 
   // ---------- Fuori ufficio ----------
   function renderLife() {

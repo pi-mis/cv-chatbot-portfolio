@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>Pietro Mischi – AI twin and portfolio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Pietro Mischi: MSc Banking & Finance at Stockholm University. Ask my AI twin, explore my projects and play two trading games." />
+    <meta name="description" content="Pietro Mischi: MSc Banking & Finance at Stockholm University. Ask my AI twin, explore my projects and research, and play two trading games." />
     <meta property="og:title" content="Pietro Mischi – AI twin and portfolio" />
     <meta property="og:description" content="Finance student in Stockholm who builds the models he studies." />
     <meta property="og:image" content="/pietro-avatar.jpg" />
@@ -22,6 +22,7 @@
           <a href="#twin" data-i18n="nav.chat">AI twin</a>
           <a href="#journey" data-i18n="nav.journey">Journey</a>
           <a href="#projects" data-i18n="nav.projects">Projects</a>
+          <a href="#research" data-i18n="nav.research">Research</a>
           <a href="#game" data-i18n="nav.game">Game</a>
           <a href="#life" data-i18n="nav.life">Off the desk</a>
           <a href="#contact" data-i18n="nav.contact">Contact</a>
@@ -156,30 +157,70 @@
         </div>
       </section>
 
-      <!-- JOURNEY -->
+      <!-- JOURNEY: il percorso come il grafico di un titolo (journey.js) -->
       <section id="journey">
         <div class="wrap">
           <h2 data-i18n="journey.title"></h2>
           <p class="section-intro" data-i18n="journey.intro"></p>
-          <div class="timeline" id="timeline" role="tablist"></div>
-          <div class="tl-panel" id="tlPanel" role="tabpanel">
-            <div><h3 id="tlTitle"></h3><p id="tlBody"></p></div>
-            <div class="tl-nav">
-              <button type="button" class="btn ghost small" id="tlPrev" aria-label="Previous">‹</button>
-              <button type="button" class="btn ghost small" id="tlNext" aria-label="Next">›</button>
-              <button type="button" class="btn small" id="tlAsk"></button>
+          <div class="jr">
+            <div class="jr-quote">
+              <div class="jr-id">
+                <strong data-i18n="journey.ticker"></strong>
+                <span data-i18n="journey.exchange"></span>
+              </div>
+              <div class="jr-px">
+                <small data-i18n="journey.index"></small>
+                <strong id="jrPx"></strong>
+                <span id="jrChg"></span>
+              </div>
+              <button type="button" class="jr-rating" data-ask-key="journey.ratingQ">
+                <small data-i18n="journey.consensus"></small>
+                <strong data-i18n="journey.rating"></strong>
+              </button>
+              <dl class="jr-stats" id="jrStats"></dl>
             </div>
+            <div class="jr-legend" id="jrLegend" role="group"></div>
+            <div class="jr-chart" id="jrChart">
+              <svg id="jrSvg" role="img" aria-label="Career chart"></svg>
+              <div class="jr-tip" id="jrTip" aria-hidden="true"></div>
+            </div>
+            <div class="jr-dates" id="jrDates" role="tablist"></div>
+            <div class="jr-detail" id="jrDetail" aria-live="polite"></div>
           </div>
         </div>
       </section>
 
-      <!-- PROJECTS -->
+      <!-- PROJECTS: rete 3D o lista, con i repository di GitHub aggiunti da soli (projects.js) -->
       <section id="projects">
         <div class="wrap">
           <h2 data-i18n="projects.title"></h2>
           <p class="section-intro" data-i18n="projects.intro"></p>
-          <div class="filters" id="filters"></div>
-          <ul class="proj-list" id="projList"></ul>
+          <div class="pj-bar">
+            <div class="filters" id="filters"></div>
+            <div class="pj-view" id="pjView" role="group">
+              <button type="button" data-view="net"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="7" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="12" cy="18" r="2.2"/><path d="M8 8l3 8M8.2 6.8l7.6-.6M16.8 8L13 16"/></svg><span></span></button>
+              <button type="button" data-view="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg><span></span></button>
+            </div>
+          </div>
+          <div class="pj-net" id="pjNet">
+            <div class="pj-stage" id="pjStage">
+              <canvas id="pjEdges" aria-hidden="true"></canvas>
+              <div class="pj-nodes" id="pjNodes"></div>
+              <p class="pj-hint" id="pjHint"></p>
+            </div>
+            <aside class="pj-card" id="pjCard" aria-live="polite"></aside>
+          </div>
+          <ul class="proj-list" id="projList" hidden></ul>
+          <p class="pj-meta" id="pjMeta"></p>
+        </div>
+      </section>
+
+      <!-- RESEARCH: saggi, paper e presentazioni (research.js + research/index.json) -->
+      <section id="research">
+        <div class="wrap">
+          <h2 data-i18n="research.title"></h2>
+          <p class="section-intro" data-i18n="research.intro"></p>
+          <div class="rs-list" id="rsList"></div>
         </div>
       </section>
 
@@ -374,6 +415,27 @@
       <div class="wrap" data-i18n="footer"></div>
     </footer>
 
+    <!-- finestra di lettura per PDF e presentazioni -->
+    <dialog class="rs-viewer" id="rsViewer" aria-labelledby="rsvTitle">
+      <div class="rsv-bar">
+        <strong id="rsvTitle"></strong>
+        <a class="btn ghost small" id="rsvNew" target="_blank" rel="noopener"></a>
+        <a class="btn ghost small" id="rsvDl"></a>
+        <button type="button" class="rsv-close" id="rsvClose">&times;</button>
+      </div>
+      <iframe id="rsvFrame" title="Document"></iframe>
+      <p class="rsv-note" id="rsvNote"></p>
+    </dialog>
+
+    <!-- colore condiviso dai loghi dei progetti che sono sia quant sia prodotto -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="lgBoth" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0.5" class="st-q"/><stop offset="0.5" class="st-p"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
     <button type="button" class="fab" id="fab" hidden><span class="fab-dot" aria-hidden="true"></span><span data-i18n="palette.fab"></span></button>
 
     <div class="kbar" id="kbar" hidden>
@@ -387,6 +449,7 @@
 
     <script src="/i18n.js"></script>
     <script src="/i18n-extra.js"></script>
+    <script src="/i18n-v3.js"></script>
     <script src="/curve.js"></script>
     <script src="/app.js"></script>
     <script src="/game.js"></script>
@@ -394,5 +457,9 @@
     <script src="/extras.js"></script>
     <script src="/frontline-sound.js"></script>
     <script src="/frontline-embed.js"></script>
+    <script src="/projects.js"></script>
+    <script src="/journey.js"></script>
+    <script src="/research.js"></script>
+    <script src="/interludes.js"></script>
   </body>
 </html>

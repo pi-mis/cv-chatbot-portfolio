@@ -1,0 +1,41 @@
+{
+  "_howto": "Per aggiungere un lavoro: crea una cartella in public/research/ con i file (pdf, pptx, xlsx) e un'anteprima jpg, poi aggiungi un oggetto a 'items'. I file pptx/xlsx si aprono online con il visualizzatore di Office; se c'e' 'preview' (un pdf), si apre quello.",
+  "items": [
+    {
+      "id": "price-is-the-weapon",
+      "date": "2026-10",
+      "course": "Energy and Geopolitics",
+      "institution": "KTH Royal Institute of Technology",
+      "kind": { "en": "Individual essay and presentation", "it": "Saggio individuale e presentazione", "sv": "Individuell essä och presentation" },
+      "title": "The price is the weapon",
+      "subtitle": "How Europe's gas market reform changed the shape of its vulnerability",
+      "summary": {
+        "en": "In 2021 European gas prices rose several-fold while the pipelines stayed open: the damage arrived through price, not shortage. The essay argues that liberalisation, built to reduce supplier power, moved price formation from long-term contracts to the TTF hub, where withholding the marginal molecule reprices all the gas. A chokepoint effect without control of the chokepoint.",
+        "it": "Nel 2021 i prezzi europei del gas si sono moltiplicati mentre i gasdotti restavano aperti: il danno è arrivato dal prezzo, non dalla scarsità. Il saggio sostiene che la liberalizzazione, nata per ridurre il potere dei fornitori, ha spostato la formazione del prezzo dai contratti di lungo periodo all'hub TTF, dove trattenere la molecola marginale riprezza tutto il gas. Un effetto chokepoint senza controllare il chokepoint.",
+        "sv": "2021 mångdubblades de europeiska gaspriserna medan rörledningarna förblev öppna: skadan kom genom priset, inte genom brist. Essän hävdar att liberaliseringen, som skulle minska leverantörernas makt, flyttade prissättningen från långa kontrakt till TTF-hubben, där det räcker att hålla inne den marginella molekylen för att prissätta om all gas. En flaskhalseffekt utan att kontrollera flaskhalsen."
+      },
+      "key": {
+        "en": "The pipeline decides whether gas arrives; the market design decides what arriving gas can be made to cost.",
+        "it": "Il gasdotto decide se il gas arriva; il disegno del mercato decide quanto si può far costare il gas che arriva.",
+        "sv": "Rörledningen avgör om gasen kommer fram; marknadens utformning avgör vad den gas som kommer fram kan fås att kosta."
+      },
+      "tags": ["Energy security", "Market design", "TTF", "Weaponised interdependence"],
+      "thumb": "/research/price-is-the-weapon/essay.jpg",
+      "gallery": [
+        "/research/price-is-the-weapon/slide-1.jpg",
+        "/research/price-is-the-weapon/slide-2.jpg",
+        "/research/price-is-the-weapon/slide-3.jpg",
+        "/research/price-is-the-weapon/slide-4.jpg"
+      ],
+      "files": [
+        { "role": "read", "type": "pdf", "href": "/research/price-is-the-weapon/the-price-is-the-weapon-essay.pdf", "pages": 4 },
+        { "role": "slides", "type": "pptx", "href": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pptx", "preview": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pdf", "pages": 4 }
+      ],
+      "q": {
+        "en": "What is your essay \"The price is the weapon\" about?",
+        "it": "Di cosa parla il tuo saggio \"The price is the weapon\"?",
+        "sv": "Vad handlar din essä \"The price is the weapon\" om?"
+      }
+    }
+  ]
+}
