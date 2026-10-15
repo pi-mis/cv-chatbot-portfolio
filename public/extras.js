@@ -47,7 +47,7 @@
         if (copy) b.tabIndex = -1;
         b.innerHTML = '<span class="sym"></span><span class="val"></span><span class="arr" aria-hidden="true"></span>';
         b.querySelector('.sym').textContent = it.s;
-        b.querySelector('.val').textContent = it.v;
+        b.querySelector('.val').textContent = it.v.replace('{n}', window.PROJECT_COUNT || 11);
         b.querySelector('.arr').textContent = it.d === 'up' ? '▲' : '▼';
         b.title = it.q;
         b.onclick = () => window.askTwin(it.q);
@@ -186,6 +186,7 @@
 
   // ---------- Lingua ----------
   window.addEventListener('langchange', () => { renderTicker(); if (!kbar.hidden) renderList(); });
+  window.addEventListener('projectsupdate', renderTicker);
   renderTicker();
   showTab('tape');
 })();
