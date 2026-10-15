@@ -412,8 +412,64 @@
     </main>
 
     <footer>
-      <div class="wrap" data-i18n="footer"></div>
+      <div class="wrap foot-grid">
+        <div>
+          <p data-i18n="footer"></p>
+          <p class="foot-privacy" data-i18n="privacy"></p>
+        </div>
+        <button type="button" class="adm-btn" id="admBtn">Accesso admin</button>
+      </div>
     </footer>
+
+    <!-- Pannello analytics: visibile solo dopo il login admin (admin.js + api/admin.js) -->
+    <section id="admin" class="admin" hidden>
+      <div class="wrap">
+        <div class="ad-head">
+          <div>
+            <p class="ad-kicker">Back office</p>
+            <h2>Analytics</h2>
+            <p class="ad-note" id="admNote"></p>
+          </div>
+          <div class="ad-actions">
+            <label class="ad-check"><input type="checkbox" id="admShowAdmin" /> Mostra le mie visite</label>
+            <button type="button" class="btn ghost small" id="admReload">Aggiorna</button>
+            <button type="button" class="btn ghost small" id="admCsv">Esporta CSV</button>
+            <button type="button" class="btn small" id="admOut">Esci</button>
+          </div>
+        </div>
+        <p class="ad-state" id="admState" role="status"></p>
+        <div class="ad-tiles" id="admTiles"></div>
+        <div class="ad-breaks" id="admBreaks"></div>
+        <div class="ad-tools">
+          <input type="search" id="admSearch" placeholder="Cerca per IP, città, paese, domanda…" aria-label="Cerca nelle visite" />
+          <span id="admCount"></span>
+        </div>
+        <div class="ad-table-wrap">
+          <table class="ad-table">
+            <thead><tr><th></th><th>Quando</th><th>Visitatore</th><th>Luogo</th><th>Dispositivo</th><th>Provenienza</th><th>Tempo</th><th>Chat</th><th></th></tr></thead>
+            <tbody id="admRows"></tbody>
+          </table>
+        </div>
+        <button type="button" class="btn ghost small ad-more" id="admMore" hidden>Carica visite più vecchie</button>
+        <div class="ad-danger">
+          <p>I dati restano salvati finché non li elimini tu.</p>
+          <button type="button" class="btn ghost small" id="admDelAll">Elimina tutti i dati</button>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="adm-login" id="admLogin" aria-labelledby="admTitle">
+      <form id="admForm">
+        <h3 id="admTitle">Accesso admin</h3>
+        <label>Email<input type="email" id="admEmail" autocomplete="username" required /></label>
+        <label>Password<input type="password" id="admPw" autocomplete="current-password" required /></label>
+        <p class="adm-err" id="admErr" role="alert"></p>
+        <div class="adm-act">
+          <button type="button" class="btn ghost small" id="admCancel">Annulla</button>
+          <button type="submit" class="btn small" id="admGo">Entra</button>
+        </div>
+      </form>
+    </dialog>
 
     <!-- finestra di lettura per PDF e presentazioni -->
     <dialog class="rs-viewer" id="rsViewer" aria-labelledby="rsvTitle">
@@ -461,5 +517,7 @@
     <script src="/journey.js"></script>
     <script src="/research.js"></script>
     <script src="/interludes.js"></script>
+    <script src="/track.js"></script>
+    <script src="/admin.js"></script>
   </body>
 </html>

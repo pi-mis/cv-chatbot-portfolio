@@ -116,6 +116,8 @@
         messages.push({ role: 'assistant', content: `Error: ${detail}` });
       } else {
         messages.push({ role: 'assistant', content: data.answer });
+        // registra domanda e risposta per il pannello analytics (track.js)
+        try { if (window.trackChat) window.trackChat(text, data.answer, window.currentLang); } catch (e) {}
       }
     } catch (err) {
       console.error('Chat fetch failed', err);

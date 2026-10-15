@@ -4,6 +4,8 @@ Personal portfolio with an AI chatbot ("AI twin") that answers questions about m
 
 ## Structure
 - `api/chat.js` – serverless function (Vercel) that retrieves the most relevant CV sections and calls the Groq API. Unchanged.
+- `api/track.js` – records visits (IP, approximate location from Vercel, device, referrer/LinkedIn, active time, sections seen) and chatbot conversations for the admin analytics.
+- `api/admin.js` – admin login (ADMIN_EMAIL / ADMIN_PASSWORD env vars), visits list with conversations, deletion. `api/_lib/` holds the shared helpers (Upstash Redis REST client, signed tokens, user-agent parsing).
 - `api/github.js` – lists my public GitHub repositories for the projects section (cached on Vercel's CDN for an hour). Optional `GITHUB_TOKEN` env var raises GitHub's rate limit.
 - `cv-content.json` – CV knowledge base (one entry per topic, `text_it` / `text_en` / `text_sv`).
 - `public/index.html` – page layout.
@@ -22,6 +24,7 @@ Personal portfolio with an AI chatbot ("AI twin") that answers questions about m
 - `public/research.js` + `public/research/index.json` – research & presentations (PDF, PowerPoint, Excel) with an in-page viewer.
 - `public/interludes.js` – narrative "trading day" interludes between sections, title reveals and the day-progress bar.
 - `public/i18n-v3.js` – copy for the four parts above in IT / EN / SV.
+- `public/track.js` – client side of the visit tracking; `public/admin.js` – admin login button in the footer and the Analytics section.
 - `public/styles.css` – styles (light and dark mode).
 
 ## Adding a research document
@@ -35,3 +38,9 @@ npm install
 npm run dev   # http://localhost:3000
 ```
 Requires `GROQ_API_KEY` in `.env.local` (never committed).
+
+## Analytics (admin)
+Needs two things on Vercel, then a redeploy:
+1. **Storage → Create → Upstash for Redis** (free), connected to this project: it adds `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
+2. **Settings → Environment Variables**: `ADMIN_EMAIL` and `ADMIN_PASSWORD` (type Secret).
+Data stays in Redis until deleted from the Analytics panel. Tip: share the site on LinkedIn as `…vercel.app/?ref=linkedin` so those visits are always recognised.
