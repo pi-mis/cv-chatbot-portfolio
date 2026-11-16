@@ -4,7 +4,7 @@
   --surface: #f7f9fb;
   --surface-2: #ffffff;
   --ink: #152a47;
-  --ink-soft: #4d5f76;
+  --ink-soft: #3a4b62;
   --line: #c8d2dc;
   --accent: #c98a12;
   --accent-ink: #7a5000;
@@ -418,7 +418,8 @@ body.kbar-open { overflow: hidden; }
 .game-intro { color: var(--ink-soft); max-width: 62ch; margin: 0 0 16px; }
 
 /* ---------- Beat the Tape ---------- */
-.tape:focus { outline: none; }
+.tape:focus:not(:focus-visible) { outline: none; }
+.tape:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
 .tape-quote { margin-left: auto; text-align: right; }
 .stat strong.up { color: var(--up); } .stat strong.down { color: var(--down); }
 .newswire {
@@ -815,10 +816,10 @@ a.pj-name:hover, a.proj-name:hover { color: var(--accent-ink); text-decoration: 
 }
 .rs-cover {
   position: relative; align-self: start; padding: 0; border: 1px solid var(--line); border-radius: var(--r-sm); overflow: hidden;
-  background: #fff; cursor: zoom-in; transform: rotate(-1.4deg); transition: transform .25s ease, box-shadow .25s ease;
+  background: #fff; cursor: zoom-in; transition: transform .25s ease, box-shadow .25s ease;
   box-shadow: 0 14px 34px rgba(21, 42, 71, .16), 6px 6px 0 -1px var(--surface), 6px 6px 0 0 var(--line);
 }
-.rs-cover:hover, .rs-cover:focus-visible { transform: rotate(0) translateY(-3px); box-shadow: 0 18px 40px rgba(21, 42, 71, .22), 3px 3px 0 -1px var(--surface), 3px 3px 0 0 var(--line); }
+.rs-cover:hover, .rs-cover:focus-visible { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(21, 42, 71, .22), 3px 3px 0 -1px var(--surface), 3px 3px 0 0 var(--line); }
 .rs-cover img { display: block; width: 100%; height: auto; }
 .rs-types { position: absolute; left: 10px; bottom: 10px; display: flex; gap: 6px; }
 .rs-type { font: 600 12px var(--f-body); padding: 3px 9px; border-radius: 999px; color: #fff; background: #3d4b5c; }
@@ -996,7 +997,7 @@ html.reveal-on main > section .curve-grid h2 { clip-path: inset(0 0 0 0); transi
    ===================================================================== */
 .foot-grid { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
 .foot-grid p { margin: 0; }
-.foot-privacy { margin-top: 6px !important; font-size: 12.5px; max-width: 74ch; opacity: .85; }
+.foot-privacy { margin-top: 6px !important; font-size: 12.5px; max-width: 74ch; }
 .adm-btn { border: 1px solid var(--line); background: transparent; color: var(--ink-soft); border-radius: 999px; padding: 5px 12px; font-size: 12.5px; cursor: pointer; }
 .adm-btn:hover { color: var(--ink); border-color: var(--ink-soft); }
 
@@ -1078,3 +1079,72 @@ section.admin { border-top: 1px solid var(--line); padding: 56px 0 72px; backgro
   .ad-breaks { grid-template-columns: 1fr; }
   .ad-detail dl { grid-template-columns: 1fr; }
 }
+
+/* ================= Rifinitura (regole di tasteskill) ================= */
+/* Salta al contenuto: primo stop del tasto Tab */
+.skip-link {
+  position: fixed; left: 16px; top: 10px; z-index: 100; transform: translateY(-160%);
+  background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: var(--r-sm); font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { transform: none; }
+
+/* La prima schermata: l'apertura riempie lo schermo da sola */
+@media (min-width: 921px) and (min-height: 680px) {
+  .hero { min-height: calc(100svh - var(--chrome-h, 100px)); display: flex; align-items: center; padding: 40px 0; box-sizing: border-box; }
+  .hero > .wrap { width: 100%; box-sizing: border-box; }
+}
+
+/* Ingresso dell'apertura, una volta sola al caricamento */
+@media (prefers-reduced-motion: no-preference) {
+  .hero[data-enter] .hero-name span, .hero[data-enter] .hero-lead, .hero[data-enter] .hero-sub,
+  .hero[data-enter] .hero-cta, .hero[data-enter] .fl-panel { animation: hero-in .8s cubic-bezier(.2,.7,.2,1) both; }
+  .hero[data-enter] .hero-name span:last-child { animation-delay: .08s; }
+  .hero[data-enter] .hero-lead { animation-delay: .18s; }
+  .hero[data-enter] .hero-sub { animation-delay: .26s; }
+  .hero[data-enter] .hero-cta { animation-delay: .34s; }
+  .hero[data-enter] .fl-panel { animation-delay: .22s; animation-duration: 1s; }
+}
+@keyframes hero-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+/* Pulsanti: salgono di un passo al passaggio, scendono al clic */
+.btn { transition: transform .12s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease; }
+.btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 18%, transparent); }
+.btn:not(.ghost):hover { background: color-mix(in srgb, var(--ink) 88%, var(--accent)); }
+.btn:active { transform: translateY(1px); box-shadow: none; }
+
+/* Schede delle ricerche: la scheda si solleva, la copertina si avvicina */
+.rs-item { transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+.rs-item:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--ink) 25%, var(--line)); box-shadow: 0 14px 34px rgba(21, 42, 71, .10); }
+.rs-cover img { transition: transform .35s ease; }
+.rs-cover:hover img { transform: scale(1.03); }
+.rs-thumb { overflow: hidden; }
+.rs-thumb img { transition: transform .3s ease; }
+.rs-thumb:hover img { transform: scale(1.03); }
+
+/* Navigazione: la sezione in cui sei si vede chiaramente */
+.nav a { position: relative; }
+.nav a.active { color: var(--bg); background: var(--ink); box-shadow: none; }
+.nav a.active:hover { color: var(--bg); background: var(--ink); }
+
+/* Nastro: si ferma quando lo si usa da tastiera e il focus resta visibile */
+.ticker:focus-within .ticker-track { animation-play-state: paused; }
+.ticker.kbd { overflow-x: auto; scrollbar-width: none; }
+.ticker.kbd .ticker-track { animation: none; }
+.tick:focus-visible { outline-offset: -3px; }
+
+/* Telefono: la barra in alto mostra che si scorre, e ogni comando si tocca bene */
+@media (max-width: 620px) {
+  .nav { -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); padding-right: 18px; }
+  .nav a, .lang button { min-height: 44px; display: inline-flex; align-items: center; }
+  .lang button { min-width: 40px; justify-content: center; }
+  .jr-lg, .presets button, .filters button, .reset-btn, .suggestion-btn, .pj-view button { min-height: 44px; }
+  .jr-legend, .presets, .filters, #jrLegend { gap: 8px !important; }
+  .link-btn { min-height: 44px; display: inline-flex; align-items: center; }
+  .fl-open, #flOpen { min-height: 44px; }
+  .tick { padding-top: 11px; padding-bottom: 11px; }
+}
+
+/* Orari degli intermezzi: sono link, quindi rispondono al passaggio e al focus */
+.il-time { transition: color .15s ease, background-color .15s ease; }
+.il-time:hover { background: color-mix(in srgb, var(--accent) 16%, transparent); border-color: var(--accent); }
+.il-time:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }

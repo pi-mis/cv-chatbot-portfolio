@@ -181,7 +181,8 @@
   window.addEventListener('scroll', () => {
     const r = chatSection.getBoundingClientRect();
     const chatVisible = r.top < window.innerHeight * 0.85 && r.bottom > window.innerHeight * 0.15;
-    fab.hidden = chatVisible || window.scrollY < window.innerHeight * 0.6;
+    const nearEnd = document.documentElement.scrollHeight - (window.scrollY + window.innerHeight) < 260;
+    fab.hidden = chatVisible || nearEnd || window.scrollY < window.innerHeight * 0.6;
   }, { passive: true });
 
   // ---------- Lingua ----------
