@@ -4,6 +4,7 @@
   const EXTRA = {
     en: {
       chat: { disclaimer: 'AI-generated answers. They may contain inaccuracies. Conversations are saved.' },
+      skip: 'Skip to content',
       privacy: 'To see how the site is used, I record visits (IP address, approximate location, device, where the link came from, time on the page) and conversations with the AI twin. Email me to have your data deleted.',
       nav: { research: 'Research' },
       projects: {
@@ -82,6 +83,7 @@
 
     it: {
       chat: { disclaimer: 'Risposte generate con AI. Potrebbero contenere imprecisioni. Le conversazioni vengono salvate.' },
+      skip: 'Vai al contenuto',
       privacy: 'Per capire come viene usato il sito registro le visite (indirizzo IP, posizione approssimativa, dispositivo, provenienza del link, tempo sulla pagina) e le conversazioni con il gemello AI. Scrivimi per far cancellare i tuoi dati.',
       nav: { research: 'Ricerche' },
       projects: {
@@ -160,6 +162,7 @@
 
     sv: {
       chat: { disclaimer: 'Svar genereras av AI och kan innehålla fel. Samtalen sparas.' },
+      skip: 'Hoppa till innehållet',
       privacy: 'För att se hur webbplatsen används registrerar jag besök (IP-adress, ungefärlig plats, enhet, var länken kom ifrån, tid på sidan) och samtal med AI-tvillingen. Mejla mig om du vill att dina uppgifter raderas.',
       nav: { research: 'Forskning' },
       projects: {
