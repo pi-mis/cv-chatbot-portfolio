@@ -238,3 +238,19 @@
 .ph-dot { width: 28px; height: 44px; border: 0; background: transparent; cursor: pointer; position: relative; }
 .ph-dot::after { content: ""; position: absolute; left: 4px; right: 4px; top: 21px; height: 2px; background: var(--line-strong); }
 .ph-dot[aria-current="true"]::after { background: var(--accent); }
+
+/* telefono: gemello AI con la chat visibile, apertura con la scena più grande */
+@media (max-width: 639px) {
+  #twin .app-frame { height: calc(100svh - 190px); min-height: 520px; max-height: 680px; }
+  .app-frame__side { padding: var(--s-2) var(--s-3); }
+  .app-frame__side .suggestions-row { flex-wrap: nowrap; }
+  .app-frame__side .suggestion-btn { flex: none; min-height: 40px; padding: 8px 12px; }
+  .app-frame__main { padding: var(--s-3); }
+  .app-frame .disclaimer { font-size: 11.5px; }
+  main .hero--collage .hero__art { flex: none; height: min(118vw, 470px); }
+  .hero--collage .btn-row .btn--secondary { flex: 1 1 auto; }
+  .note-card { width: 210px; padding: var(--s-2) var(--s-3); font-size: 12px; }
+  .note-card__price strong { font-size: 20px; }
+  .note-card__line { padding: 3px 0; }
+  .note-card__line:last-of-type, .note-card__foot { display: none; }
+}

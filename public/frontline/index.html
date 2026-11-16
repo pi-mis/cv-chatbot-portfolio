@@ -652,7 +652,7 @@ function toast(msg, ms = 6000){ toastEl.textContent = msg; toastEl.classList.add
 const canvas = $('#scene');
 const POST = QS.get('nopost') !== '1' && !!(THREE.EffectComposer && THREE.RenderPass && THREE.ShaderPass && THREE.UnrealBloomPass && THREE.FXAAShader);
 const renderer = new THREE.WebGLRenderer({canvas, antialias: !POST, powerPreference:'high-performance'});
-const PR = LOWQ ? 1 : Math.min(window.devicePixelRatio || 1, (MOBILE || EMBED) ? 1.5 : 2);
+const PR = LOWQ ? 1 : Math.min(window.devicePixelRatio || 1, (MOBILE && !EMBED) ? 1.5 : 2);
 renderer.setPixelRatio(PR);
 renderer.outputEncoding = POST ? THREE.LinearEncoding : THREE.sRGBEncoding;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
