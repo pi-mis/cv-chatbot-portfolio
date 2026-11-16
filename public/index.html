@@ -425,7 +425,19 @@
         <div class="faq__item"><h3>What did you do at BDO Italia?</h3><p>From September 2024 to August 2025 I audited financial institutions, from assistant to expert assistant auditor. On the Tether assurance I worked on two workstreams: checking its subsidiaries and testing on-chain transactions.</p></div>
         <div class="faq__item"><h3>What do you do outside finance?</h3><p>I ran the Stockholm Marathon in May 2026. I hold a lifeguard licence and volunteered with Legambiente on a school renovation in 2025.</p></div>
       </div>
-      <figure class="faq-photo span-6 start-7"><img src="/pietro-avatar.jpg" alt="Pietro Mischi" width="518" height="518" loading="lazy" data-source="client" data-subject="portrait of Pietro"></figure>
+      <div class="faq-photo ph span-6 start-7" aria-roledescription="carousel" aria-label="Photos of Pietro">
+        <div class="ph-track" id="phTrack" tabindex="0">
+          <figure class="ph-slide" role="group" aria-roledescription="slide" aria-label="1 / 4"><img src="/photos/pro.jpg" alt="" width="1100" height="1100" style="object-position: 50% 22%" data-source="client"><figcaption data-i18n="v4.ph1">Pietro Mischi · MSc Banking and Finance</figcaption></figure>
+          <figure class="ph-slide" role="group" aria-roledescription="slide" aria-label="2 / 4"><img src="/photos/marathon.jpg" alt="" width="1100" height="1100" loading="lazy" style="object-position: 50% 30%" data-source="client"><figcaption data-i18n="v4.ph2">Stockholm Marathon, 2026</figcaption></figure>
+          <figure class="ph-slide" role="group" aria-roledescription="slide" aria-label="3 / 4"><img src="/photos/balkans.jpg" alt="" width="1100" height="1100" loading="lazy" style="object-position: 62% 40%" data-source="client"><figcaption data-i18n="v4.ph3">Balkans, autumn 2026</figcaption></figure>
+          <figure class="ph-slide" role="group" aria-roledescription="slide" aria-label="4 / 4"><img src="/photos/rain.jpg" alt="" width="1100" height="1100" loading="lazy" style="object-position: 50% 35%" data-source="client"><figcaption data-i18n="v4.ph4">Stockholm, in proper Swedish weather</figcaption></figure>
+        </div>
+        <div class="ph-ctrl">
+          <button type="button" class="ph-btn" id="phPrev" aria-label="Previous photo"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2.5 4 6l3.5 3.5"/></svg></button>
+          <div class="ph-dots" id="phDots"></div>
+          <button type="button" class="ph-btn" id="phNext" aria-label="Next photo"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M4.5 2.5 8 6l-3.5 3.5"/></svg></button>
+        </div>
+      </div>
       </div>
     </div>
   </section>
@@ -556,6 +568,7 @@
 <script src="/track.js"></script>
 <script src="/admin.js"></script>
 <script src="/hero-card.js"></script>
+<script src="/photos.js"></script>
 <script type="module" src="/assets/system.js"></script>
 <script type="module" src="/assets/motion/motion.js"></script>
 <script type="module" src="/assets/layout/layout.js"></script>
