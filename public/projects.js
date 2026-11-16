@@ -76,9 +76,8 @@
   let projects = [];                    // lista finale dopo l'unione curati + GitHub
   let edges = [];                       // [i, j, traitsCondivisi]
   let filter = 'all';
-  let view = 'net';
-  try { view = localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'net'; } catch (e) {}
-  if (window.matchMedia('(max-width: 360px)').matches) view = 'list';
+  // solo la rete 3D (la vista lista è stata tolta)
+  const view = 'net';
 
   function build() {
     const t = T();
@@ -159,10 +158,12 @@
     const inner = p.icon && ICONS[p.icon]
       ? `<g class="lg-ico" transform="translate(12 12) scale(.92) translate(-12 -12)">${ICONS[p.icon]}</g>`
       : `<text x="12" y="12.5" class="lg-mono">${p.mono || '?'}</text>`;
-    const shape = p.auto
-      ? '<path class="lg-bg" d="M12 1.2l9.3 5.4v10.8L12 22.8l-9.3-5.4V6.6z"/>'
-      : '<circle class="lg-bg" cx="12" cy="12" r="11"/>';
-    return `<svg class="lg ${cls}" viewBox="0 0 24 24" aria-hidden="true">${shape}<g transform="translate(5.4 5.4) scale(.55)">${inner}</g></svg>`;
+    // un solo riquadro per tutti i progetti; il punto in alto a destra dice la categoria
+    const shape = '<rect class="lg-bg" x="1" y="1" width="22" height="22" rx="5"/>';
+    const dot = both
+      ? '<circle class="lg-dot q" cx="18.6" cy="5.4" r="1.7"/><circle class="lg-dot p" cx="14.6" cy="5.4" r="1.7"/>'
+      : `<circle class="lg-dot ${cls === 'quant' ? 'q' : 'p'}" cx="18.6" cy="5.4" r="1.7"/>`;
+    return `<svg class="lg ${cls}${p.auto ? ' auto' : ''}" viewBox="0 0 24 24" aria-hidden="true">${shape}<g transform="translate(6 6.4) scale(.5)">${inner}</g>${dot}</svg>`;
   }
 
   // ---------- Elementi della sezione ----------
@@ -193,20 +194,11 @@
       b.onclick = () => { filter = k; if (focus != null && !matches(projects[focus])) clearFocus(true); renderControls(); applyFilter(); renderList(); };
       els.filters.appendChild(b);
     });
-    els.toggle.querySelectorAll('button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.view === view));
-      b.querySelector('span').textContent = b.dataset.view === 'net' ? t.view3d : t.viewList;
-    });
     els.net.hidden = view !== 'net';
     els.list.hidden = view !== 'list';
     els.hint.textContent = window.matchMedia('(pointer: coarse)').matches ? t.hintTouch : t.hint;
   }
-  els.toggle.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
-    view = b.dataset.view;
-    try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
-    renderControls();
-    if (view === 'net') { resize(); kick(); }
-  }));
+
 
   const matches = (p) => filter === 'all' || p.tags.includes(filter);
 
@@ -543,31 +535,14 @@
     head.innerHTML = `<span class="pj-big-logo">${logoSVG(p)}</span>`;
     const ht = document.createElement('div');
     const kick = document.createElement('p'); kick.className = 'pj-kicker';
-    kick.textContent = p.tags.map((x) => (x === 'quant' ? t.legendQuant : t.legendProduct)).join(' · ') + (p.auto ? ' · ' + t.fromGithub : '');
+    kick.textContent = p.tags.map((x) => (x === 'quant' ? t.legendQuant : t.legendProduct)).join(' · ');
     ht.appendChild(kick);
     const h = document.createElement('h3'); h.appendChild(nameLink(p, 'pj-name'));
     if (isNew(p)) { const n = document.createElement('span'); n.className = 'pj-new'; n.textContent = t.newBadge; h.appendChild(n); }
     ht.appendChild(h); head.appendChild(ht); c.appendChild(head);
     const line = document.createElement('p'); line.className = 'pj-line'; line.textContent = p.line; c.appendChild(line);
-    if (p.body) { const b = document.createElement('p'); b.className = 'pj-body'; b.textContent = p.body; c.appendChild(b); }
-
-    const nb = edges.filter((e) => e[0] === focus || e[1] === focus).map((e) => ({ j: e[0] === focus ? e[1] : e[0], shared: e[2] })).filter((x) => matches(projects[x.j]));
-    if (nb.length) {
-      const lab = document.createElement('p'); lab.className = 'pj-sub'; lab.textContent = t.connected; c.appendChild(lab);
-      const row = document.createElement('div'); row.className = 'pj-links-row';
-      nb.forEach(({ j, shared }) => {
-        const b = document.createElement('button'); b.type = 'button'; b.className = 'pj-link';
-        b.innerHTML = `<span class="mini">${logoSVG(projects[j])}</span><span></span>`;
-        b.lastChild.textContent = projects[j].name;
-        b.title = shared.map((s) => t.traits[s] || s).join(' · ');
-        b.onclick = () => setFocus(j, true);
-        row.appendChild(b);
-      });
-      c.appendChild(row);
-    }
     const chips = document.createElement('div'); chips.className = 'chips';
     (p.stack || []).forEach((s) => { const x = document.createElement('span'); x.className = 'chip'; x.textContent = s; chips.appendChild(x); });
-    if (p.pushed) { const x = document.createElement('span'); x.className = 'chip soft'; x.textContent = t.updated.replace('{d}', ago(p.pushed)); chips.appendChild(x); }
     c.appendChild(chips);
     const links = document.createElement('div'); links.className = 'proj-links'; linkButtons(p, links); c.appendChild(links);
   }

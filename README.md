@@ -44,3 +44,11 @@ Needs two things on Vercel, then a redeploy:
 1. **Storage → Create → Upstash for Redis** (free), connected to this project: it adds `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
 2. **Settings → Environment Variables**: `ADMIN_EMAIL` and `ADMIN_PASSWORD` (type Secret).
 Data stays in Redis until deleted from the Analytics panel. Tip: share the site on LinkedIn as `…vercel.app/?ref=linkedin` so those visits are always recognised.
+
+## v4: design rifatto con tasteskill
+La pagina usa il sistema di [tasteskill](https://github.com/Leonxlnx/taste-skill) (copiato in `public/assets/`, file del kit non modificati):
+- `public/index.html`: una sezione per schermata (apertura con BTC Frontline, gemello AI, progetti, percorso, frase, ricerche, giochi, curva, domande, chiusura).
+- `public/site.css`: caratteri ospitati sul sito (`public/fonts/`), ponte tra i colori dei componenti e i token del sistema.
+- `public/components.css`: gli stili dei componenti interattivi presi dalla v3.
+- `public/i18n-v4.js`: i testi nuovi in inglese, italiano e svedese.
+La chat (`api/chat.js`) e gli analytics non sono cambiati.

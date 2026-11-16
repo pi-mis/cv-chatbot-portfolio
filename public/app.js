@@ -162,6 +162,7 @@
   function renderLife() {
     const t = T().life;
     const g = $('lifeGrid');
+    if (!g) return;
     g.innerHTML = '';
     t.items.forEach((it) => {
       const d = document.createElement('div');
@@ -177,7 +178,7 @@
   }
 
   // ---------- Contatti ----------
-  $('copyEmail').onclick = async () => {
+  if ($('copyEmail')) $('copyEmail').onclick = async () => {
     try {
       await navigator.clipboard.writeText('pietro.mischi@yahoo.it');
       const c = $('copied');

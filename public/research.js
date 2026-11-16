@@ -80,13 +80,16 @@
       // anteprime delle slide: un clic apre la presentazione a quella pagina
       const slidesF = it.files.find((f) => f.role === 'slides');
       const gal = art.querySelector('.rs-gallery');
-      if (it.gallery && it.gallery.length && slidesF) {
-        it.gallery.forEach((src, i) => {
+      const galF = slidesF || read;
+      if (it.gallery && it.gallery.length && galF) {
+        it.gallery.forEach((g, i) => {
+          const src = typeof g === 'string' ? g : g.src;
+          const page = typeof g === 'string' ? i + 1 : g.page;
           const b = document.createElement('button');
           b.type = 'button'; b.className = 'rs-thumb';
-          b.innerHTML = `<img alt="" loading="lazy" src="${src}"/><span>${i + 1}</span>`;
-          b.setAttribute('aria-label', `${t.slides} ${i + 1}`);
-          b.onclick = () => openViewer(it, slidesF, i + 1);
+          b.innerHTML = `<img alt="" loading="lazy" src="${src}"/><span>${page}</span>`;
+          b.setAttribute('aria-label', `${galF === slidesF ? t.slides : t.read} ${page}`);
+          b.onclick = () => openViewer(it, galF, page);
           gal.appendChild(b);
         });
       } else gal.remove();

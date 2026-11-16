@@ -6,7 +6,11 @@
       "date": "2026-10",
       "course": "Energy and Geopolitics",
       "institution": "KTH Royal Institute of Technology",
-      "kind": { "en": "Individual essay and presentation", "it": "Saggio individuale e presentazione", "sv": "Individuell essä och presentation" },
+      "kind": {
+        "en": "Individual essay and presentation",
+        "it": "Saggio individuale e presentazione",
+        "sv": "Individuell essä och presentation"
+      },
       "title": "The price is the weapon",
       "subtitle": "How Europe's gas market reform changed the shape of its vulnerability",
       "summary": {
@@ -19,7 +23,12 @@
         "it": "Il gasdotto decide se il gas arriva; il disegno del mercato decide quanto si può far costare il gas che arriva.",
         "sv": "Rörledningen avgör om gasen kommer fram; marknadens utformning avgör vad den gas som kommer fram kan fås att kosta."
       },
-      "tags": ["Energy security", "Market design", "TTF", "Weaponised interdependence"],
+      "tags": [
+        "Energy security",
+        "Market design",
+        "TTF",
+        "Weaponised interdependence"
+      ],
       "thumb": "/research/price-is-the-weapon/essay.jpg",
       "gallery": [
         "/research/price-is-the-weapon/slide-1.jpg",
@@ -28,13 +37,81 @@
         "/research/price-is-the-weapon/slide-4.jpg"
       ],
       "files": [
-        { "role": "read", "type": "pdf", "href": "/research/price-is-the-weapon/the-price-is-the-weapon-essay.pdf", "pages": 4 },
-        { "role": "slides", "type": "pptx", "href": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pptx", "preview": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pdf", "pages": 4 }
+        {
+          "role": "read",
+          "type": "pdf",
+          "href": "/research/price-is-the-weapon/the-price-is-the-weapon-essay.pdf",
+          "pages": 4
+        },
+        {
+          "role": "slides",
+          "type": "pptx",
+          "href": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pptx",
+          "preview": "/research/price-is-the-weapon/the-price-is-the-weapon-slides.pdf",
+          "pages": 4
+        }
       ],
       "q": {
         "en": "What is your essay \"The price is the weapon\" about?",
         "it": "Di cosa parla il tuo saggio \"The price is the weapon\"?",
         "sv": "Vad handlar din essä \"The price is the weapon\" om?"
+      }
+    },
+    {
+      "id": "spx-vol-strategy",
+      "date": "2026-04",
+      "course": "",
+      "institution": "Independent research",
+      "kind": {
+        "en": "Strategy paper and backtest",
+        "it": "Paper di strategia e backtest",
+        "sv": "Strategirapport och backtest"
+      },
+      "title": "MISCHI: an S&P 500 volatility strategy",
+      "subtitle": "Multi-factor Implied Spread-Carry Harvesting Index, with Nelson-Siegel term structure forecasting",
+      "summary": {
+        "en": "A systematic strategy that trades S&P 500 volatility with ETFs (SVXY, VXX) and keeps idle capital in SPY. A short volatility position opens only when three signals agree: a Nelson-Siegel and ARIMA forecast of the implied volatility curve, contango in the term structure and a positive equity variance risk premium. Backtest from January 2019 to April 2026, 1,692 trading days.",
+        "it": "Una strategia sistematica che opera sulla volatilità dell'S&P 500 con ETF (SVXY, VXX) e tiene il capitale libero in SPY. Una posizione short di volatilità si apre solo quando tre segnali concordano: una previsione Nelson-Siegel e ARIMA della curva di volatilità implicita, il contango della struttura a termine e un premio per il rischio di varianza positivo. Backtest da gennaio 2019 ad aprile 2026, 1.692 giorni di borsa.",
+        "sv": "En systematisk strategi som handlar volatiliteten i S&P 500 med ETF:er (SVXY, VXX) och håller ledigt kapital i SPY. En kort volatilitetsposition öppnas bara när tre signaler är överens: en Nelson-Siegel- och ARIMA-prognos av den implicita volatilitetskurvan, contango i terminsstrukturen och en positiv varianspremie. Backtest från januari 2019 till april 2026, 1 692 handelsdagar."
+      },
+      "key": {
+        "en": "Net return +220.65% against +163.47% for SPY buy-and-hold, Sharpe 1.12 against 0.78, maximum drawdown −17.73%; a permutation test gives p = 0.012.",
+        "it": "Rendimento netto +220,65% contro +163,47% di SPY buy-and-hold, Sharpe 1,12 contro 0,78, drawdown massimo −17,73%; un test di permutazione dà p = 0,012.",
+        "sv": "Nettoavkastning +220,65 % mot +163,47 % för SPY köp-och-behåll, Sharpe 1,12 mot 0,78, största nedgång −17,73 %; ett permutationstest ger p = 0,012."
+      },
+      "tags": [
+        "Volatility",
+        "Nelson-Siegel",
+        "VIX term structure",
+        "Backtesting"
+      ],
+      "thumb": "/research/spx-vol-strategy/cover.jpg",
+      "gallery": [
+        {
+          "src": "/research/spx-vol-strategy/fig-16.jpg",
+          "page": 16
+        },
+        {
+          "src": "/research/spx-vol-strategy/fig-17.jpg",
+          "page": 17
+        },
+        {
+          "src": "/research/spx-vol-strategy/fig-18.jpg",
+          "page": 18
+        }
+      ],
+      "files": [
+        {
+          "role": "read",
+          "type": "pdf",
+          "href": "/research/spx-vol-strategy/mischi-spx-volatility-strategy.pdf",
+          "pages": 28
+        }
+      ],
+      "q": {
+        "en": "Explain your S&P 500 volatility strategy in simple terms.",
+        "it": "Spiegami in modo semplice la tua strategia di volatilità sull'S&P 500.",
+        "sv": "Förklara din volatilitetsstrategi för S&P 500 på ett enkelt sätt."
       }
     }
   ]
