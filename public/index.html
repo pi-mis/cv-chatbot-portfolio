@@ -15,7 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://cv-chatbot-portfolio.vercel.app/share.jpg">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta name="theme-color" content="#111111">
+<meta name="theme-color" content="#0a0d14">
 <link rel="canonical" href="https://cv-chatbot-portfolio.vercel.app/">
 <meta name="site-kind" content="software">
 <meta name="page-type" content="software">
@@ -28,10 +28,10 @@
 <link rel="stylesheet" href="/assets/icons/icon.css">
 <style>
 :root {
-  --p-bg: #111111; --p-surface: #1c1c1c; --p-ink: #f2f2f2; --p-muted: #8f8f8f;
-  --p-accent: #a08672; --p-accent-ink: #111111; --p-action: #a08672; --p-action-ink: #111111;
-  --p-inv-bg: #f2f2f2; --p-inv-surface: #e0e0e0; --p-inv-ink: #111111; --p-inv-muted: #5c5c5c;
-  --p-inv-accent: #a08672; --p-inv-accent-ink: #111111; --p-inv-action: #a08672; --p-inv-action-ink: #111111;
+  --p-bg: #0a0d14; --p-surface: #131824; --p-ink: #e9edf3; --p-muted: #8891a1;
+  --p-accent: #5ab9fc; --p-accent-ink: #0a0d14; --p-action: #5ab9fc; --p-action-ink: #0a0d14;
+  --p-inv-bg: #e9edf3; --p-inv-surface: #d7dbe1; --p-inv-ink: #0a0d14; --p-inv-muted: #54575f;
+  --p-inv-accent: #0a0d14; --p-inv-accent-ink: #e9edf3; --p-inv-action: #0a0d14; --p-inv-action-ink: #e9edf3;
   --font-display: "Familjen Grotesk", system-ui, sans-serif;
   --font-text: "Familjen Grotesk", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -53,7 +53,7 @@
 <body>
 <!-- type: software (personal portfolio of a finance student who builds trading tools; main action: Ask my AI twin)
      deal: hero collage, nav nav-centre, close close-word, footer footer-statement, rhythm dark-band, buttons arrow, mark dots, ground sky
-     palette lunar-grey-bronze (a trading terminal's near-black screen and the bronze of an old exchange floor), type familjen
+     palette blue-black-cornflower (a trading screen at night: blue-black ground, one sky-blue accent; the bronze of the first deal was turned down by the client), type familjen
      moments: letters-assemble (#statement, the page's one statement), line-carries-colour (#game, the one inverse ground) -->
 <header class="nav nav--centre">
   <div class="wrap nav__bar">
@@ -169,11 +169,13 @@
             </div>
 
         </div>
-        <div class="ly-piece ly-piece--note note-card" aria-hidden="true" data-ly-steps="700">
-          <div class="note-card__row"><b data-i18n="v4.cardTitle">Order book feed</b><span class="chip" data-step data-step-at="4" data-i18n="v4.cardLive">Live</span></div>
-          <div class="note-card__line" data-step><i>✓</i><span data-i18n="v4.card1">Binance connected</span></div>
-          <div class="note-card__line" data-step><i>✓</i><span data-i18n="v4.card2">Kraken connected</span></div>
-          <div class="note-card__line" data-step><i>✓</i><span data-i18n="v4.card3">Coinbase connected</span></div>
+        <div class="ly-piece ly-piece--note note-card" id="liveCard">
+          <div class="note-card__row"><span class="note-card__live"><i aria-hidden="true"></i><span data-i18n="v4.cardLive">Live</span></span><span class="note-card__pair">BTC / USD</span></div>
+          <p class="note-card__price"><strong id="ncPrice">–</strong> <span id="ncChg"></span></p>
+          <div class="note-card__line"><span data-i18n="v4.card1">Biggest buy wall</span><b class="up" id="ncSup">–</b></div>
+          <div class="note-card__line"><span data-i18n="v4.card2">Biggest sell wall</span><b class="down" id="ncRes">–</b></div>
+          <div class="note-card__line"><span data-i18n="v4.card3">Buy vs sell pressure</span><b id="ncFlow">–</b></div>
+          <p class="note-card__foot" data-i18n="v4.cardFoot">Each soldier is a real order on Binance, Kraken or Coinbase, drawn as it trades.</p>
         </div>
       </div>
     </div></div>
@@ -278,7 +280,7 @@
     </div>
   </section>
 
-  <section class="section" id="research" style="--hm: 2" aria-labelledby="research-h">
+  <section class="section" id="research" style="--h: 2; --hm: 2" aria-labelledby="research-h">
     <div class="wrap">
       <div class="section-head">
         <h2 id="research-h"><span data-i18n="v4.researchH">Research and presentations.</span> <span class="muted" data-i18n="v4.researchM">Open them here or download the files.</span></h2>
@@ -415,36 +417,6 @@
     </div>
   </section>
 
-  <section class="section" id="curve-lab" aria-labelledby="curve-h">
-    <div class="wrap">
-      <div class="section-head section-head--split">
-        <div><h2 id="curve-h"><span data-i18n="v4.curveH">Nelson-Siegel volatility curve.</span> <span class="muted" data-i18n="v4.curveM">Move its three factors.</span></h2></div>
-        <button type="button" class="link-btn" data-ask-key="hero.askCurveQ" data-i18n="v4.curveAsk">Ask how I use the model</button>
-      </div>
-      <div class="curve-panel ui">
-            <div class="curve-head">
-              <p class="curve-kicker">Nelson-Siegel</p>
-              <div class="presets">
-                <button type="button" data-preset="calm" data-i18n="hero.presetCalm"></button>
-                <button type="button" data-preset="stress" data-i18n="hero.presetStress"></button>
-                <button type="button" data-preset="hump" data-i18n="hero.presetHump"></button>
-              </div>
-            </div>
-            <div class="curve-canvas-wrap">
-              <canvas id="curve" aria-label="Nelson-Siegel implied volatility curve"></canvas>
-              <div class="curve-tip" id="curveTip"></div>
-            </div>
-            <div class="sliders">
-              <div class="slider"><label for="b0"><span data-i18n="hero.level"></span><output id="b0v"></output></label><input id="b0" type="range" min="10" max="35" step="0.5" value="21" /></div>
-              <div class="slider"><label for="b1"><span data-i18n="hero.slope"></span><output id="b1v"></output></label><input id="b1" type="range" min="-15" max="25" step="0.5" value="-7" /></div>
-              <div class="slider"><label for="b2"><span data-i18n="hero.curvature"></span><output id="b2v"></output></label><input id="b2" type="range" min="-15" max="15" step="0.5" value="2" /></div>
-              <div class="slider"><label for="lam"><span data-i18n="hero.decay"></span><output id="lamv"></output></label><input id="lam" type="range" min="0.5" max="6" step="0.1" value="2.5" /></div>
-            </div>
-            <p class="curve-readout" id="curveReadout" aria-live="polite"></p>
-          </div>
-    </div>
-  </section>
-
   <section class="section" id="faq" style="--hm: 2" aria-labelledby="faq-h">
     <div class="wrap">
       <div class="section-head"><h2 id="faq-h" data-i18n="v4.faqH">Studies, languages and life in Stockholm</h2></div>
@@ -573,7 +545,7 @@
 <script src="/i18n-extra.js"></script>
 <script src="/i18n-v3.js"></script>
 <script src="/i18n-v4.js"></script>
-<script src="/curve.js"></script>
+<script src="/helpers.js"></script>
 <script src="/app.js"></script>
 <script src="/game.js"></script>
 <script src="/tape.js"></script>
@@ -585,6 +557,7 @@
 <script src="/research.js"></script>
 <script src="/track.js"></script>
 <script src="/admin.js"></script>
+<script src="/hero-card.js"></script>
 <script type="module" src="/assets/system.js"></script>
 <script type="module" src="/assets/motion/motion.js"></script>
 <script type="module" src="/assets/layout/layout.js"></script>

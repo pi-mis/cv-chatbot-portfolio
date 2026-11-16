@@ -15,7 +15,7 @@
   --f-body: var(--font-text);
 }
 :root { --up: #5cc08d; --down: #f08066; --stress: rgba(240, 128, 102, .14);
-  --pj-quant: #47b388; --pj-product: #d6a05a; --c-edu: #7fa6ff; --c-work: #d6a05a; --c-proj: #5cc08d; --c-cert: #c9a4f0; --c-life: #5cc6d6; }
+  --pj-quant: #47b388; --pj-product: #5ab9fc; --c-edu: #7fa6ff; --c-work: #e0b25c; --c-proj: #5cc08d; --c-cert: #c9a4f0; --c-life: #5cc6d6; }
 .ground-inverse { --up: #1f7a4d; --down: #b3432e; --stress: rgba(179, 67, 46, .12); }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
@@ -52,13 +52,21 @@
 .hero__art .fl-stage:not(.expanded) .fl-walls { bottom: calc(16px + var(--ly-cut)); }
 .hero__art:has(.fl-stage.expanded), .hero:has(.fl-stage.expanded), .hero:has(.fl-stage.expanded) .hero__grid { overflow: visible; transform: none; filter: none; contain: none; z-index: 80; }
 .hero__proof { font-size: var(--t-small); color: var(--muted); margin-top: var(--s-5); }
-.note-card { left: var(--s-6); bottom: var(--s-6); width: 300px; z-index: 2; background: #f7f7f5; color: #16181a; border-radius: var(--r-md);
-  padding: var(--s-4); box-shadow: 0 0 0 1px rgb(0 0 0 / .06), 0 18px 40px -18px rgb(0 0 0 / .55); font-size: 13px; }
-.note-card__row { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-2); font-size: 14px; }
-.note-card__row b { font-weight: 500; }
-.note-card .chip { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: #e7f4ec; color: #17673f; }
-.note-card__line { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid rgb(0 0 0 / .06); color: #3d4247; }
-.note-card__line i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; background: #e7f4ec; color: #17673f; font-style: normal; font-size: 12px; font-weight: 700; }
+.note-card { left: var(--s-6); bottom: var(--s-6); width: 300px; z-index: 2; background: rgb(19 24 36 / .92); color: var(--p-ink); border: 1px solid rgb(255 255 255 / .12); border-radius: var(--r-md);
+  padding: var(--s-4); box-shadow: 0 18px 40px -18px rgb(0 0 0 / .8); backdrop-filter: blur(6px); font-size: 13px; }
+.note-card__row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--p-muted); }
+.note-card__live { display: inline-flex; align-items: center; gap: 7px; font-weight: 500; color: var(--p-ink); }
+.note-card__live i { width: 8px; height: 8px; border-radius: 50%; background: var(--p-muted); }
+.note-card.is-live .note-card__live i { background: #5cc08d; box-shadow: 0 0 0 3px rgb(92 192 141 / .25); animation: fl-pulse 2s ease-in-out 3; }
+.note-card__pair { font-family: var(--font-mono); font-size: 12px; }
+.note-card__price { margin: var(--s-2) 0 var(--s-2); font-variant-numeric: tabular-nums; }
+.note-card__price strong { font: 500 28px/1.1 var(--font-display); letter-spacing: -.02em; }
+.note-card__price span { font-size: 13px; margin-left: 6px; }
+.note-card__price .up, .note-card .up { color: #5cc08d; } .note-card__price .down, .note-card .down { color: #f08066; }
+.note-card__line { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid rgb(255 255 255 / .08); color: #c3cad4; }
+.note-card__line b { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--p-ink); }
+.note-card__foot { margin-top: var(--s-2); color: var(--p-muted); font-size: 12px; line-height: 1.45; }
+.hero__art .fl-stage:not(.expanded) .fl-price { display: none; }
 @media (max-width: 1023px) { .note-card { left: var(--s-4); bottom: var(--s-4); width: 260px; } }
 
 /* ---------- il gemello AI come un'applicazione: domande a sinistra, conversazione a destra ---------- */
@@ -185,3 +193,23 @@
   .arcade-tabs small { display: none; }
 }
 .curve-panel { background: transparent; border: 0; padding-inline: 0; }
+
+/* loghi dei progetti: un riquadro scuro con l'icona in chiaro, un punto di colore per la categoria */
+.lg .lg-bg { fill: #15181c; stroke: rgb(255 255 255 / .22); stroke-width: .7; }
+.lg.quant .lg-bg, .lg.product .lg-bg, .lg.both .lg-bg { fill: #15181c; }
+.lg.auto .lg-bg { stroke-dasharray: 2 1.4; }
+.lg-ico { stroke: #eef1f4; stroke-width: 2; }
+.lg-mono { fill: #eef1f4; font: 500 14px var(--font-mono); }
+.lg-dot.q { fill: var(--pj-quant); } .lg-dot.p { fill: var(--pj-product); }
+.pj-node .lg { filter: drop-shadow(0 6px 14px rgb(0 0 0 / .55)); }
+.pj-node.focus .lg .lg-bg { stroke: var(--accent); stroke-width: 1.2; }
+.pj-node.focus .lg, .pj-node.near .lg { filter: drop-shadow(0 6px 14px rgb(0 0 0 / .55)); }
+.pj-card .pj-line { font-size: var(--t-body); line-height: 1.5; color: var(--ink); }
+.pj-card .chips { margin-top: var(--s-4); }
+.pj-card .proj-links { margin-top: var(--s-5); }
+:root { --pj-hot: #5ab9fc; --pj-tag-bg: #5ab9fc; --pj-tag-ink: #0a0d14; }
+/* ricerche: due lavori, uno per schermata */
+@media (min-width: 1024px) {
+  #research > .wrap { position: relative; height: 100%; }
+  #research .rs-item:nth-child(2) { position: absolute; left: 0; right: 0; top: 100svh; }
+}
