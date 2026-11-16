@@ -37,7 +37,7 @@
         faq: [
           ['Where are you based?', 'In Stockholm. I study at Stockholm University and take courses at KTH Royal Institute of Technology.'],
           ['Which languages do you work in?', 'Italian is my first language and I work in English (IELTS 7.5). I am learning Swedish: several courses, a language exchange, and I use it every day, though I am not fluent yet.'],
-          ['What did you do at BDO Italia?', 'From September 2024 to August 2025 I audited financial institutions, from assistant to expert assistant auditor. On the Tether assurance I led two workstreams, including on-chain transaction testing.'],
+          ['What did you do at BDO Italia?', 'From September 2024 to August 2025 I audited financial institutions, from assistant to expert assistant auditor. On the Tether assurance I worked on two workstreams: checking its subsidiaries and testing on-chain transactions.'],
           ['What do you do outside finance?', 'I ran the Stockholm Marathon in May 2026. I hold a lifeguard licence and volunteered with Legambiente on a school renovation in 2025.']
         ],
         closeH: 'Ask my AI twin',
@@ -84,7 +84,7 @@
         faq: [
           ['Dove vivi?', 'A Stoccolma. Studio alla Stockholm University e seguo corsi al KTH Royal Institute of Technology.'],
           ['In che lingue lavori?', 'L’italiano è la mia lingua madre e lavoro in inglese (IELTS 7.5). Sto imparando lo svedese: diversi corsi, uno scambio linguistico, e lo uso ogni giorno, anche se non sono ancora fluente.'],
-          ['Cosa facevi in BDO Italia?', 'Da settembre 2024 ad agosto 2025 ho fatto revisione di istituzioni finanziarie, da assistant a expert assistant auditor. Sull’incarico Tether ho guidato due filoni, tra cui il test delle transazioni on-chain.'],
+          ['Cosa facevi in BDO Italia?', 'Da settembre 2024 ad agosto 2025 ho fatto revisione di istituzioni finanziarie, da assistant a expert assistant auditor. Sull’incarico Tether mi sono occupato di due filoni: la verifica delle controllate e il test delle transazioni on-chain.'],
           ['Cosa fai fuori dalla finanza?', 'A maggio 2026 ho corso la Maratona di Stoccolma. Ho il brevetto da bagnino e nel 2025 ho fatto volontariato con Legambiente nella ristrutturazione di una scuola.']
         ],
         closeH: 'Chiedi al mio gemello AI',
@@ -131,7 +131,7 @@
         faq: [
           ['Var bor du?', 'I Stockholm. Jag studerar vid Stockholms universitet och läser kurser på KTH.'],
           ['Vilka språk arbetar du på?', 'Italienska är mitt modersmål och jag arbetar på engelska (IELTS 7.5). Jag lär mig svenska: flera kurser, ett språkutbyte, och jag använder det varje dag, men jag är inte flytande än.'],
-          ['Vad gjorde du på BDO Italia?', 'Från september 2024 till augusti 2025 reviderade jag finansiella institut, från assistent till expert assistant auditor. I Tether-uppdraget ledde jag två arbetsströmmar, bland annat test av transaktioner on-chain.'],
+          ['Vad gjorde du på BDO Italia?', 'Från september 2024 till augusti 2025 reviderade jag finansiella institut, från assistent till expert assistant auditor. I Tether-uppdraget arbetade jag med två arbetsströmmar: kontroll av dotterbolagen och test av transaktioner on-chain.'],
           ['Vad gör du utanför finansen?', 'Jag sprang Stockholm Marathon i maj 2026. Jag har livräddarcertifikat och var volontär hos Legambiente vid en skolrenovering 2025.']
         ],
         closeH: 'Fråga min AI-tvilling',

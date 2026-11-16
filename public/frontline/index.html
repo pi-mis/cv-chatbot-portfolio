@@ -2288,10 +2288,20 @@ function updateCamera(dt){
   if (tiltH){ const amt = clamp((dist - 40)/250, 0, 1)*(MOBILE ? 1.2 : 2.2); tiltH.uniforms.uAmt.value = amt; tiltV.uniforms.uAmt.value = amt; }
 }
 
+/* inquadratura nell'apertura del sito: la pagina può spostare e ingrandire la scena (solo vista non interattiva) */
+const FRAME = { x: 0, y: 0, zoom: 1 };
+function applyFrame(w, h){
+  w = w || innerWidth; h = h || Math.max(1, innerHeight);
+  const on = EMBED && !controls.enabled && (FRAME.x || FRAME.y || FRAME.zoom !== 1);
+  if (on){ camera.setViewOffset(w, h, -FRAME.x*w, -FRAME.y*h, w, h); camera.zoom = FRAME.zoom; }
+  else { camera.clearViewOffset(); camera.zoom = 1; }
+  camera.updateProjectionMatrix();
+}
 function resize(){
   const w = innerWidth, h = Math.max(1, innerHeight - (EMBED ? 0 : canvas.getBoundingClientRect().top));
   renderer.setSize(w, h, false);
-  camera.aspect = w/h; camera.fov = w < 700 ? 52 : 36; camera.updateProjectionMatrix();
+  camera.aspect = w/h; camera.fov = w < 700 ? 52 : 36;
+  applyFrame(w, h);
   if (composer){
     composer.setSize(w, h);
     if (bloomPass.setSize) bloomPass.setSize(w*PR, h*PR);
@@ -2349,6 +2359,8 @@ if (EMBED){
     if (m.type === 'interactive'){ controls.enabled = !!m.v; controls.enableZoom = !!m.v; controls.enablePan = !!m.v; if (!m.v && World.ready) View.set('front', 1.2); }
     if (m.type === 'view' && World.ready) View.set(m.mode);
     if (m.type === 'sound') SOUND = !!m.v;
+    if (m.type === 'frame'){ FRAME.x = +m.x || 0; FRAME.y = +m.y || 0; FRAME.zoom = +m.zoom || 1; applyFrame(); }
+    if (m.type === 'interactive') applyFrame();
   });
   /* Esc dentro la scena chiude la vista estesa nella pagina */
   addEventListener('keydown', e => { if (e.key === 'Escape') parent.postMessage({src:'frontline', type:'close'}, location.origin); });

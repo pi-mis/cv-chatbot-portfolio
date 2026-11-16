@@ -27,7 +27,10 @@
     loadedLang = window.currentLang || 'en';
     frame.src = `/frontline/?embed=1&lang=${loadedLang}`;
   }
-  frame.addEventListener('load', () => { send({ type: 'visible', v: visible || expanded }); send({ type: 'interactive', v: expanded }); applySound(); });
+  // nell'apertura la scheda Live copre l'angolo in basso a sinistra: la scena si sposta a destra e in alto
+  const HERO_FRAME = () => (window.matchMedia('(max-width: 639px)').matches ? { x: 0, y: -0.04, zoom: 1.05 } : { x: 0.17, y: -0.1, zoom: 1.12 });
+  frame.addEventListener('load', () => { send({ type: 'visible', v: visible || expanded }); send(Object.assign({ type: 'frame' }, HERO_FRAME())); send({ type: 'interactive', v: expanded }); applySound(); });
+  window.addEventListener('resize', () => send(Object.assign({ type: 'frame' }, HERO_FRAME())));
   if (document.readyState === 'complete') setTimeout(load, 300);
   else window.addEventListener('load', () => setTimeout(load, 300));
 

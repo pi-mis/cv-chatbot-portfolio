@@ -76,9 +76,8 @@
   let projects = [];                    // lista finale dopo l'unione curati + GitHub
   let edges = [];                       // [i, j, traitsCondivisi]
   let filter = 'all';
-  let view = 'net';
-  try { view = localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'net'; } catch (e) {}
-  if (window.matchMedia('(max-width: 360px)').matches) view = 'list';
+  // solo la rete 3D (la vista lista è stata tolta)
+  const view = 'net';
 
   function build() {
     const t = T();
@@ -195,20 +194,11 @@
       b.onclick = () => { filter = k; if (focus != null && !matches(projects[focus])) clearFocus(true); renderControls(); applyFilter(); renderList(); };
       els.filters.appendChild(b);
     });
-    els.toggle.querySelectorAll('button').forEach((b) => {
-      b.setAttribute('aria-pressed', String(b.dataset.view === view));
-      b.querySelector('span').textContent = b.dataset.view === 'net' ? t.view3d : t.viewList;
-    });
     els.net.hidden = view !== 'net';
     els.list.hidden = view !== 'list';
     els.hint.textContent = window.matchMedia('(pointer: coarse)').matches ? t.hintTouch : t.hint;
   }
-  els.toggle.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
-    view = b.dataset.view;
-    try { localStorage.setItem(VIEW_KEY, view); } catch (e) {}
-    renderControls();
-    if (view === 'net') { resize(); kick(); }
-  }));
+
 
   const matches = (p) => filter === 'all' || p.tags.includes(filter);
 
