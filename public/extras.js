@@ -33,6 +33,7 @@
   // ---------- Nastro dei ticker ----------
   const track = $('tickerTrack');
   function renderTicker() {
+    if (!track) return;
     const items = T().ticker.items;
     track.innerHTML = '';
     // due copie per lo scorrimento continuo; la seconda è nascosta agli screen reader
@@ -57,13 +58,12 @@
     });
   }
   // pausa quando un elemento riceve il focus da tastiera
-  track.addEventListener('focusin', () => track.classList.add('hold'));
-  track.addEventListener('focusout', () => track.classList.remove('hold'));
+  if (track) { track.addEventListener('focusin', () => track.classList.add('hold')); track.addEventListener('focusout', () => track.classList.remove('hold')); }
 
   // ---------- Palette comandi ----------
   const kbar = $('kbar'), input = $('kbarInput'), list = $('kbarList');
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
-  $('kbarKey').textContent = isMac ? '⌘K' : 'Ctrl K';
+  if ($('kbarKey')) $('kbarKey').textContent = isMac ? '⌘K' : 'Ctrl K';
   let entries = [], active = 0, lastFocus = null;
 
   function buildEntries() {
@@ -74,7 +74,7 @@
     });
     out.push({ group: p.act, label: p.actions.tape, run: () => goGame('tape', true) });
     out.push({ group: p.act, label: p.actions.carry, run: () => goGame('carry', true) });
-    out.push({ group: p.act, label: p.actions.email, run: () => $('copyEmail').click() });
+    out.push({ group: p.act, label: p.actions.email, run: () => { location.href = 'mailto:pietro.mischi@yahoo.it'; } });
     out.push({ group: p.act, label: p.actions.cv, run: () => window.open('https://www.linkedin.com/in/pietro-mischi', '_blank', 'noopener') });
     ['it', 'en', 'sv'].filter((l) => l !== window.currentLang).forEach((l) =>
       out.push({ group: p.act, label: p.actions[l], run: () => document.querySelector(`[data-lang="${l}"]`).click() })
@@ -165,13 +165,13 @@
     else if (e.key === 'Tab') e.preventDefault(); // il focus resta nella finestra
   });
   kbar.addEventListener('click', (e) => { if (e.target.hasAttribute('data-close')) close(); });
-  $('kbarBtn').onclick = () => open();
+  if ($('kbarBtn')) $('kbarBtn').onclick = () => open();
   document.addEventListener('keydown', (e) => {
     if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); kbar.hidden ? open() : close(); }
   });
 
   // ---------- Pulsante flottante: visibile quando la chat è fuori schermo ----------
-  const fab = $('fab');
+  const fab = $('fab') || { hidden: true };
   fab.onclick = () => open();
   const chatSection = $('twin');
   new IntersectionObserver(([en]) => {

@@ -61,7 +61,7 @@
   let X, Y, PAD;
   function draw() {
     const box = $('jrChart').getBoundingClientRect();
-    W = box.width; H = window.matchMedia('(max-width: 620px)').matches ? 250 : 320;
+    W = box.width; H = parseInt(getComputedStyle($('jrChart')).getPropertyValue('--jr-h'), 10) || (window.matchMedia('(max-width: 620px)').matches ? 250 : 320);
     if (!W) return;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.setAttribute('height', H);
