@@ -70,7 +70,10 @@
     const t = T(), p = t.palette;
     const out = [];
     document.querySelectorAll('.nav a').forEach((a) => {
-      out.push({ group: p.go, label: a.textContent, run: () => document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }) });
+      const h = a.getAttribute('href') || '';
+      if (/^https?:/.test(h)) { out.push({ group: p.go, label: a.textContent.trim(), run: () => window.open(h, '_blank', 'noopener') }); return; }
+      if (!h.startsWith('#') || h.length < 2) return;
+      out.push({ group: p.go, label: a.textContent.trim(), run: () => { const el = document.querySelector(h); if (el) el.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' }); } });
     });
     out.push({ group: p.act, label: p.actions.tape, run: () => goGame('tape', true) });
     out.push({ group: p.act, label: p.actions.carry, run: () => goGame('carry', true) });

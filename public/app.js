@@ -194,7 +194,7 @@
       if (en.isIntersecting) links.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + en.target.id));
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
-  links.forEach((a) => { const s = document.querySelector(a.getAttribute('href')); if (s) obs.observe(s); });
+  links.forEach((a) => { const h = a.getAttribute('href') || ''; const s = h.startsWith('#') && h.length > 1 ? document.querySelector(h) : null; if (s) obs.observe(s); });
 
   applyLanguage();
 })();
