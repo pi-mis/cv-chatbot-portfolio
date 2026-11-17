@@ -11,6 +11,8 @@
         ctaMain: 'Ask my AI twin',
         ctaProjects: 'See my projects',
         ctaResearch: 'See my research',
+        menu: { quant: 'Quant research', tools: 'Tools', spx: 'S&P 500 volatility strategy', spxD: 'Nelson-Siegel term structure backtest', dvol: 'Bitcoin DVOL strategy', dvolD: 'Implied volatility signals on BTC', fees: 'Bitcoin fee dynamics', feesD: 'Econometrics of on-chain fees', flD: 'Live order book in 3D', twin: 'AI twin', twinD: 'Answers from my CV', essayD: 'KTH essay on gas markets' },
+        phLabel: 'Photos of Pietro', phPrev: 'Previous photo', phNext: 'Next photo', independent: 'Independent research',
         ph1: 'Pietro Mischi · MSc Banking and Finance',
         ph2: 'Stockholm Marathon, 2026',
         ph3: 'Balkans, autumn 2026',
@@ -63,6 +65,8 @@
         ctaMain: 'Chiedi al mio gemello AI',
         ctaProjects: 'Guarda i progetti',
         ctaResearch: 'Guarda le ricerche',
+        menu: { quant: 'Ricerca quantitativa', tools: 'Strumenti', spx: 'Strategia di volatilità S&P 500', spxD: 'Backtest con la struttura a termine Nelson-Siegel', dvol: 'Strategia BTC DVOL', dvolD: 'Segnali dalla volatilità implicita di Bitcoin', fees: 'Fee delle transazioni Bitcoin', feesD: 'Econometria delle fee on-chain', flD: 'Il book ordini dal vivo in 3D', twin: 'Gemello AI', twinD: 'Risponde dal mio CV', essayD: 'Saggio KTH sui mercati del gas' },
+        phLabel: 'Foto di Pietro', phPrev: 'Foto precedente', phNext: 'Foto successiva', independent: 'Ricerca indipendente',
         ph1: 'Pietro Mischi · MSc Banking and Finance',
         ph2: 'Maratona di Stoccolma, 2026',
         ph3: 'Balcani, autunno 2026',
@@ -115,6 +119,8 @@
         ctaMain: 'Fråga min AI-tvilling',
         ctaProjects: 'Se mina projekt',
         ctaResearch: 'Se min forskning',
+        menu: { quant: 'Kvantitativ forskning', tools: 'Verktyg', spx: 'Volatilitetsstrategi för S&P 500', spxD: 'Backtest med Nelson-Siegels terminsstruktur', dvol: 'BTC DVOL-strategi', dvolD: 'Signaler från Bitcoins implicita volatilitet', fees: 'Bitcoins transaktionsavgifter', feesD: 'Ekonometri för avgifter on-chain', flD: 'Orderboken live i 3D', twin: 'AI-tvilling', twinD: 'Svarar utifrån mitt CV', essayD: 'KTH-essä om gasmarknader' },
+        phLabel: 'Foton av Pietro', phPrev: 'Föregående foto', phNext: 'Nästa foto', independent: 'Oberoende forskning',
         ph1: 'Pietro Mischi · MSc Banking and Finance',
         ph2: 'Stockholm Marathon, 2026',
         ph3: 'Balkan, hösten 2026',
@@ -181,6 +187,15 @@
     document.title = t.title;
   }
   window.addEventListener('langchange', renderFaq);
+  // etichette accessibili tradotte (data-i18n-aria)
+  function renderAria() {
+    const T = window.SITE_TEXT[window.currentLang || 'en'];
+    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+      const v = el.dataset.i18nAria.split('.').reduce((a, k) => (a ? a[k] : undefined), T);
+      if (typeof v === 'string') el.setAttribute('aria-label', v);
+    });
+  }
+  window.addEventListener('langchange', renderAria);
 
   // telefono: un solo pulsante che passa alla lingua successiva (IT, EN, SV)
   const cyc = document.getElementById('langCycle');

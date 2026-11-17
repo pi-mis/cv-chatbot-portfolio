@@ -68,7 +68,7 @@
       art.querySelector('.rs-cover').onclick = () => openViewer(it, read);
       const types = art.querySelector('.rs-types');
       [...new Set(it.files.map((f) => f.type))].forEach((ty) => { const s = document.createElement('span'); s.className = 'rs-type ' + ty; s.textContent = t.types[ty] || ty.toUpperCase(); types.appendChild(s); });
-      art.querySelector('.rs-kicker').textContent = [pick(it.kind), it.course, it.institution, monthLabel(it.date)].filter(Boolean).join(' · ');
+      art.querySelector('.rs-kicker').textContent = [pick(it.kind), it.course, pick(it.institution), monthLabel(it.date)].filter(Boolean).join(' · ');
       art.querySelector('h3').textContent = it.title;
       art.querySelector('.rs-sub').textContent = it.subtitle || '';
       art.querySelector('.rs-sum').textContent = pick(it.summary);

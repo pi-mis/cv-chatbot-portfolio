@@ -254,3 +254,9 @@
   .note-card__line { padding: 3px 0; }
   .note-card__line:last-of-type, .note-card__foot { display: none; }
 }
+
+/* menu: nome e descrizione su due righe */
+.menu-col a b { font-weight: 500; display: block; }
+/* telefono: lo scorrimento col dito passa sopra la scena 3D */
+.fl-stage:not(.expanded) iframe { touch-action: pan-y; }
+.fl-stage:not(.expanded)::before { content: ""; position: absolute; inset: 0; z-index: 1; touch-action: pan-y; }

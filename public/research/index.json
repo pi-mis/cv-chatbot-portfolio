@@ -61,7 +61,7 @@
       "id": "spx-vol-strategy",
       "date": "2026-04",
       "course": "",
-      "institution": "Independent research",
+      "institution": {"en": "Independent research", "it": "Ricerca indipendente", "sv": "Oberoende forskning"},
       "kind": {
         "en": "Strategy paper and backtest",
         "it": "Paper di strategia e backtest",
